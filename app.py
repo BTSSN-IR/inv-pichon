@@ -16,6 +16,10 @@ def login():
 def scan():
     return render_template('scan.html')
 
+@app.router("/device_information")
+def device_information():
+    return render_template('device_information.html')
+
 UPLOAD_FOLDER = '/upload/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&display=swap" rel="stylesheet">
+    <title>Pichon Inventory - Home</title>
+    <link rel="icon" type="image/png" href="/static/favicon-pichon.png">
+</head>
+
+<body>
+    <a href="{{ url_for('home')}}">
+        <img id="logo_entreprise" src="../static/samson-agro-logo.svg" alt = "logo_entreprise">
+    </a>
+    <div id="scan-page">
+        <p id="title">Device information</p>
+        <form action="" method="get">
+            <p1 id=""
+            <input id="Hostname" type="text" >
+            <br>
+            <input id="IP_Adress" type="text" >
+            <br>
+            <input id="Serial_Number" type="text" >
+            <br>
+            <input id="Assigned_User" type="text" >       
+        </form>
+    </div>
+</body>
+
+<style>
+    body {
+        background-color: #282828;
+    }
+
+    #logo_entreprise {
+        display: flex;
+        height: 4.7rem;
+        width: 16.4rem;
+        position: absolute;
+        left: 0px;
+        padding: 20px 20px;
+        vertical-align: top;
+    }
+    
+    #title {
+        color: #ffffff;
+        font-family: Inter, 'Source Sans Pro';
+        font-size: 4rem;
+        font-weight: 800;
+        line-height: 1.2125;
+        margin: 7rem 0.1rem 4.7rem 0rem;
+        white-space: nowrap;
+    }
+
+    #Nom_equipement_utlisateur {
+        resize : both;
+    }
+
+    #scan-page {
+    align-items: center;
+    background-color: #282828;
+
+    display: flex;
+    flex-direction: column;
+    }
+
+</style>
