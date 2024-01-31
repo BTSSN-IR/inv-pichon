@@ -11,7 +11,9 @@
 </head>
 <body>
     <div class="homepage" id="17:43">
-        <img class="image-removebg-preview-1-qVf" src="/static/samson-agro-logo.svg" id="17:44"/>
+        <a href="{{ url_for('home')}}">
+            <img class="samson-logo" src="/static/samson-agro-logo.svg" id="6:4"/>
+        </a>
         <p class="home-iJZ" id="17:45">Home</p>
         <div class="boutons-menu-QhB" id="36:10">
             <input type="button" class="main-button" id="PdMySfPma6V194N3bZJ5gH" value="ADD EQUIPMENT">
@@ -20,7 +22,7 @@
         </div>
         <input type="text" class="barre-recherche-Guj" id="17:42" placeholder="Search">
         <br/>
-        <a href="{{ url_for('home') }}">
+        <a href="{{ url_for('login') }}">
             <input type="button" class="login-button" id="36:5" value="Log in">
         </a>
     </div>
@@ -29,37 +31,35 @@
 
 <style>
 
-.homepage {
-    align-items: flex-start;
-    background-color: #282828;
-    box-sizing: border-box;
-    display: flex;
-    overflow: hidden;
-    padding: 2.1rem 3.4rem 2.1rem 2.7rem;
-    position: relative;
-    width: 100%;
-}
-
 body {
     background-color: #282828;
 }
 
-.image-removebg-preview-1-qVf {
-    flex-shrink: 0;
-    height: 4.7rem;
-    margin: 0.3rem 3.7rem 0rem 0rem;
-    object-fit: cover;
-    vertical-align: top;
-    width: 16.4rem;
+.homepage {
+    align-items: center;
+    background-color: #282828;
+
+    display: flex;
+    flex-direction: column;
 }
+.samson-logo {
+        display: flex;
+        height: 4.7rem;
+        width: 16.4rem;
+        position: absolute;
+        left: 0px;
+        padding: 20px 20px;
+        vertical-align: top;
+        
+    }
+
 .home-iJZ {
     color: #ffffff;
-    flex-shrink: 0;
     font-family: Inter, 'Source Sans Pro';
-    font-size: 3rem;
+    font-size: 4rem;
     font-weight: 800;
     line-height: 1.2125;
-    margin-right: 3rem;
+    margin: 15rem 0.1rem 4.7rem 0rem;
     white-space: nowrap;
 }
 .boutons-menu-QhB {
