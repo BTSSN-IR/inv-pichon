@@ -18,7 +18,9 @@
         <div class="boutons-menu-QhB" id="36:10">
             <input type="button" class="main-button" id="PdMySfPma6V194N3bZJ5gH" value="ADD EQUIPMENT">
             <input type="button" class="main-button" id="PdMyWumh3VrpQ7aBgJnSFw"- value="SEARCH DATABASE">
-            <input type="button" class="main-button" id="PdMya5M5pwEkwoVakz1buX" value="SCAN QR CODE">
+            <a href="{{ url_for('scan') }}">
+                <input type="button" class="main-button" id="PdMya5M5pwEkwoVakz1buX" value="SCAN QRCODE">
+            </a>
         </div>
         <input type="text" class="barre-recherche-Guj" id="17:42" placeholder="Search">
         <br/>
@@ -59,7 +61,7 @@ body {
     font-size: 4rem;
     font-weight: 800;
     line-height: 1.2125;
-    margin: 15rem 0.1rem 4.7rem 0rem;
+    margin: 7rem 0.1rem 0rem 0rem;
     white-space: nowrap;
 }
 .boutons-menu-QhB {
@@ -132,5 +134,17 @@ body {
     width: 8.2rem;
   }
 
+a:link { 
+    text-decoration: none; 
+} 
+a:visited { 
+    text-decoration: none; 
+} 
+a:hover { 
+    text-decoration: none; 
+} 
+a:active { 
+    text-decoration: none; 
+}
 
 </style>
