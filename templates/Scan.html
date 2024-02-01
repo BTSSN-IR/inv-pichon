@@ -21,12 +21,19 @@
         </video>
     
     </div>
-    <a href="{{ url_for('upload_file')}}">
-        <button id="upload_bouton">Fichier <img id="upload-image" src="/static/upload-svgrepo-com.svg" style="margin: 0 5px;"></button> 
-    </a>
-    </div>
-    
+    <button id="upload_bouton">Fichier <img id="upload-image" src="/static/upload-svgrepo-com.svg" style="margin: 0 5px;"></button>
 
+    <form action="http://localhost:5000/upload" method="POST" enctype="multipart/form-data" id="upload-form">
+        <input type="file" name="file" id="file">
+    </form>
+
+    <script>
+        document.getElementById("file").onchange = function() {
+            document.getElementById("upload-form").submit();
+        };
+    </script>
+
+    </div>
 </body>
 
 <script>
