@@ -4,8 +4,12 @@ app = Flask(__name__)
 
 from werkzeug.utils import secure_filename
 
+loggedin = False
+
 @app.route("/")
 def home():
+    if loggedin == True:
+        print('Logged in')
     return render_template('home.html')
 
 @app.route("/login")
@@ -45,3 +49,18 @@ def upload():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         return render_template('scan.html')
+    
+@app.route('/login_form', methods = ['GET', 'POST'])
+def login_form():
+    if request.method == 'POST':
+        userid = request.form.get('userid')
+        password = request.form.get('password')
+    print(userid, password)
+    if (userid, password) == ('Gwendal', 'gt'):
+        loggedin = True
+        return render_template('home.html')
+    print('logged in')
+    
+    return render_template('login.html')
+    
+# https://www.refbax.com/cours-en-ligne/comment-lire-un-qr-code-avec-python

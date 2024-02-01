@@ -15,10 +15,10 @@
             <img class="samson-logo" src="/static/samson-agro-logo.svg" id="6:4"/>
         </a>
         <p class="login-Jfo" id="2:10">Login</p>
-        <form action="" method="get">
-            <input type="text" placeholder="ID">
-            <input type="text" placeholder="Password">    
-            <input type="submit" class="bouton-submit" id="17:52" value="SUBMIT" style="margin: auto;">  
+        <form action="{{ url_for('login_form') }}" method="post">
+            <input class="login-input" type="text" placeholder="Username" name="userid">
+            <input class="login-input" type="password" placeholder="Password" name="password">    
+            <input class="login-input" type="submit" class="bouton-submit" id="17:52" value="SUBMIT" style="margin: auto;">  
         </form>
         
 
@@ -28,7 +28,7 @@
 
 <style>
 
-input[type=text] {
+.login-input {
         background-color: #404040;
         display: flex;
         color: #ffffff;
