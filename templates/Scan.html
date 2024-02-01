@@ -19,7 +19,7 @@
     <div id="container">
         <video autoplay="true" id="videoElement">
         </video>
-    
+
     </div>
     <button id="upload_bouton">Fichier <img id="upload-image" src="/static/upload-svgrepo-com.svg" style="margin: 0 5px;"></button>
 
@@ -42,7 +42,7 @@
     navigator.mediaDevices.getUserMedia({ video: true })
         .then(function (stream) {
         video.srcObject = stream;
-        })                                                         // lien pour l'explixcation de la fonction JS : https://www.kirupa.com/html5/accessing_your_webcam_in_html5.htm
+        })                                                         // lien pour l'explication de la fonction JS : https://www.kirupa.com/html5/accessing_your_webcam_in_html5.htm
         .catch(function (err0r) {
         console.log("Something went wrong!");
         });
@@ -109,6 +109,7 @@
 
     #container {
 	margin: 10px auto;
+    margin-bottom: 50px ;
 	width: 500px;
 	height: 375px;
 	border: 5px #FFF solid;
