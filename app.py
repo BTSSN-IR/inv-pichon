@@ -2,6 +2,9 @@ from flask import Flask, request, url_for, redirect, render_template, flash
 import os
 app = Flask(__name__)
 
+import pyzbar
+import PIL.Image
+
 from werkzeug.utils import secure_filename
 
 loggedin = False
@@ -30,7 +33,7 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/upload', methods = ['GET', 'POST'])
 def upload():
@@ -48,8 +51,13 @@ def upload():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return render_template('scan.html')
-    
+        image = PIL.Image.open(file)
+        codes = pyzbar.pyzbar.decode(image)
+        redirection = codes[0].data.decode()
+        return render_template(redirection)
+
+
+
 @app.route('/login_form', methods = ['GET', 'POST'])
 def login_form():
     if request.method == 'POST':
@@ -64,3 +72,4 @@ def login_form():
     return render_template('login.html')
     
 # https://www.refbax.com/cours-en-ligne/comment-lire-un-qr-code-avec-python
+
