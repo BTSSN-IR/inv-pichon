@@ -2,7 +2,7 @@ from flask import Flask, request, url_for, redirect, render_template, flash
 import os
 app = Flask(__name__)
 
-import pyzbar
+import pyzbar.pyzbar
 import PIL.Image
 
 from werkzeug.utils import secure_filename
@@ -54,7 +54,7 @@ def upload():
         image = PIL.Image.open(file)
         codes = pyzbar.pyzbar.decode(image)
         redirection = codes[0].data.decode()
-        return render_template(redirection)
+        return redirect(redirection)
 
 
 
@@ -70,6 +70,3 @@ def login_form():
     print('logged in')
     
     return render_template('login.html')
-    
-# https://www.refbax.com/cours-en-ligne/comment-lire-un-qr-code-avec-python
-
