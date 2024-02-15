@@ -2,9 +2,10 @@ from flask import Flask, request, url_for, redirect, render_template, flash
 import os
 app = Flask(__name__)
 
+app.config['SECRET_KEY'] = os.urandom(24)
+
 import pyzbar.pyzbar
 import PIL.Image
-
 from werkzeug.utils import secure_filename
 
 loggedin = False
@@ -55,8 +56,6 @@ def upload():
         codes = pyzbar.pyzbar.decode(image)
         redirection = codes[0].data.decode()
         return redirect(redirection)
-
-
 
 @app.route('/login_form', methods = ['GET', 'POST'])
 def login_form():
