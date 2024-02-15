@@ -1,5 +1,7 @@
 from flask import Flask, request, url_for, redirect, render_template, flash
 import os
+import mysql.connector
+
 app = Flask(__name__)
 
 import pyzbar
