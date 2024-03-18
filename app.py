@@ -11,8 +11,8 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.urandom(24)
 
-import pyzbar.pyzbar
-import PIL.Image
+#import pyzbar.pyzbar
+#import PIL.Image
 
 from werkzeug.utils import secure_filename
 
@@ -25,6 +25,11 @@ def home():
 @app.route("/login")
 def login():
     return render_template('login.html')
+
+@app.route("/add_user")
+def add_user():
+    return render_template('add_user.html')
+
 
 @app.route("/scan")
 def scan():
