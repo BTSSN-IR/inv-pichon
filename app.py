@@ -1,15 +1,18 @@
 from flask import Flask, request, url_for, redirect, render_template, flash
 import os
 import mysql.connector
+import sqlite3
 
+global loggedin
+loggedin = False
+global utilisateur_connecte
+utilisateur_connecte = 'invité'
 app = Flask(__name__)
 
-import pyzbar.pyzbar
-import PIL.Image
+#import pyzbar.pyzbar
+#import PIL.Image
 
 from werkzeug.utils import secure_filename
-
-loggedin = False
 
 @app.route("/")
 def home():
@@ -23,11 +26,17 @@ def login():
 
 @app.route("/scan")
 def scan():
-    return render_template('scan.html')
+    if loggedin ==True:
+        return render_template('scan.html')
+    return render_template('login.html')
 
 @app.route("/device_information")
 def device_information():
     return render_template('device_information.html')
+
+@app.route("/user_information", methods=['GET','POST'])
+def user_information():
+    return render_template('user_infomation.html')
 
 
 app.config['UPLOAD_FOLDER'] = 'upload/'
@@ -37,6 +46,8 @@ def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
+"""
 @app.route('/upload', methods = ['GET', 'POST'])
 def upload():
     if request.method == 'POST':
@@ -58,17 +69,32 @@ def upload():
         redirection = codes[0].data.decode()
         return redirect(redirection)
 
-
+"""
 
 @app.route('/login_form', methods = ['GET', 'POST'])
 def login_form():
+    global loggedin
+    loggedin = False
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
     if request.method == 'POST':
         userid = request.form.get('userid')
         password = request.form.get('password')
-    print(userid, password)
-    if (userid, password) == ('Gwendal', 'gt'):
+        escaped_username = userid.replace("'", "''") #evite injection sql
+        cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(escaped_username))
+        #cur.execute("SELECT username FROM Admins WHERE username = ?", (userid, ))
+        username_bdd = cur.fetchall()
+        escaped_mdp = password.replace("'", "''") #evite injection sql
+        cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(escaped_mdp))
+        #cur.execute("SELECT password FROM Admins WHERE password = ?", (password, ))
+        mdp_bdd = cur.fetchall()
+        if username_bdd == [] or mdp_bdd == []:
+            loggedin = False
+            print("Mauvais MDP")
+            conn.close()
+            return render_template('login.html',mot_retour_connexion="Utilisateur ou Mot de passe invalide")
+    if (userid, password) == (username_bdd[0][0], mdp_bdd[0][0]):
         loggedin = True
-        return render_template('home.html')
-    print('logged in')
-    
-    return render_template('login.html')
+        conn.close()
+        print('logged in')
+        return render_template('home.html', utilisateur_connecte = username_bdd[0][0])
