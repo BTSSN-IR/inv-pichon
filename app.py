@@ -9,8 +9,10 @@ global utilisateur_connecte
 utilisateur_connecte = 'invité'
 app = Flask(__name__)
 
-#import pyzbar.pyzbar
-#import PIL.Image
+app.config['SECRET_KEY'] = os.urandom(24)
+
+import pyzbar.pyzbar
+import PIL.Image
 
 from werkzeug.utils import secure_filename
 
@@ -69,7 +71,7 @@ def upload():
         redirection = codes[0].data.decode()
         return redirect(redirection)
 
-"""
+
 
 @app.route('/login_form', methods = ['GET', 'POST'])
 def login_form():
