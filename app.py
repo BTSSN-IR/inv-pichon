@@ -70,7 +70,7 @@ def upload():
         codes = pyzbar.pyzbar.decode(image)
         redirection = codes[0].data.decode()
         return redirect(redirection)
-
+"""
 
 
 @app.route('/login_form', methods = ['GET', 'POST'])
