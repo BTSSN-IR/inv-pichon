@@ -11,8 +11,8 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.urandom(24)
 
-#import pyzbar.pyzbar
-#import PIL.Image
+import pyzbar.pyzbar
+import PIL.Image
 
 from werkzeug.utils import secure_filename
 
@@ -20,10 +20,16 @@ from werkzeug.utils import secure_filename
 def home():
     if loggedin == True:
         print('Logged in')
-    return render_template('home.html')
+    return render_template('home.html',utilisateur_connecte)
 
 @app.route("/login")
 def login():
+    return render_template('login.html')
+
+@app.route("/add_equipment")
+def add_equipment():
+    if loggedin == True:
+        return render_template('add_equipment.html')
     return render_template('login.html')
 
 @app.route("/add_user")
@@ -78,7 +84,7 @@ def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-"""
+
 @app.route('/upload', methods = ['GET', 'POST'])
 def upload():
     if request.method == 'POST':
@@ -99,7 +105,7 @@ def upload():
         codes = pyzbar.pyzbar.decode(image)
         redirection = codes[0].data.decode()
         return redirect(redirection)
-"""
+
 
 @app.route('/login_form', methods = ['GET', 'POST'])
 def login_form():
@@ -128,3 +134,19 @@ def login_form():
             conn.close()
             print('logged in')
             return render_template('home.html', utilisateur_connecte = username_bdd[0][0])
+        
+@app.route("/add_equipment_form", methods = ['GET', 'POST'])
+def add_equipment_form():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+
+    if loggedin == True:
+        print
+        if request.method == 'POST':
+            print('tets')
+            hostname = request.form.get('hostname-input')
+            serialnumber = request.form.get('serialnumber')
+            assigneduser = request.form.get('assigned-user')
+            print(hostname, serialnumber, assigneduser)
+        return render_template('add_equipment.html')
+    return render_template('login.html')

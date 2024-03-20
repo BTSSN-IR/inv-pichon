@@ -11,9 +11,15 @@
     <link rel="stylesheet" media="screen" type="text/css" href="../CSS/CSS_Scanner.css"/>
 </head>
 <body>
-    <a href="{{ url_for('home')}}">
-        <img id="logo_entreprise" src="/static/samson-agro-logo.svg" alt = "logo_entreprise">
-    </a>
+
+    <div class="barre">
+        <div class="barre-left">
+            <a href="{{ url_for('home')}}">
+                <img class="samson-logo" src="/static/samson-agro-logo.svg" id="6:4"/>
+            </a>
+        </div>
+    </div>
+
     <div id="scan-page">
         <p id="title">Scan QRCode</p>
 
@@ -26,7 +32,7 @@
     </form>
 
     <script>
-        document.getElementById("file").onchange = function() {
+        document.getElementById("upload_button").onchange = function() {
             document.getElementById("upload-form").submit();
         };
     </script>
@@ -48,11 +54,32 @@
 </script>
 
 <style>
-    body {
+body {
     background-color: #282828;
-    }
+}
 
-    #logo_entreprise {
+.barre {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.barre-left {
+    display: flex;
+}
+
+.samson-logo {
+    display: flex;
+    height: 4.7rem;
+    width: 16.4rem;
+    position: absolute;
+    left: 0px;
+    padding: 20px 20px;
+    vertical-align: top;    
+}
+
+#logo_entreprise {
         display: flex;
         height: 4.7rem;
         width: 16.4rem;

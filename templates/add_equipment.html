@@ -6,7 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&display=swap" rel="stylesheet">
-    <title>Pichon Inventory - Device Information</title>
+    <title>Pichon Inventory - Add Equipment</title>
     <link rel="icon" type="image/png" href="/static/favicon-pichon.png">
 </head>
 
@@ -19,25 +19,21 @@
         </div>
     </div>
     <div id="device-page">
-        <p id="title">Device information</p>
-        <form action="" method="get">
+        <p id="title">Add Equipment</p>
+        <form action="{{ url_for('add_equipment_form') }}" method="post">
             <div id="info-box">
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
                 <div id="label-input">
                     <label for="Hostname_entry" id="secondary-text"> Nom de l'appareil </label>
-                    <input id="Hostname_entry" type="text">
-                </div>
-                <div id="label-input">
-                    <label for="IP_Adress_entry" id="secondary-text"> Adresse IP </label>
-                    <input id="IP_Adress_entry" type="text">
+                    <input id="Hostname_entry" type="text" name="hostname-input">
                 </div>
                 <div id="label-input">
                     <label for="Serial_Number_entry" id="secondary-text"> Numéro de serie </label>
-                    <input id="Serial_Number_entry" type="text">
+                    <input id="Serial_Number_entry" type="text" name="serialnumber">
                 </div>
                 <div id="label-input">
                     <label for="Assigned_User_entry" id="secondary-text"> Utilisateur </label>
-                    <input id="Assigned_User_entry" type="text">  
+                    <input id="Assigned_User_entry" type="text" name="assigned-user">
                 </div>
             </div>
         </form>
