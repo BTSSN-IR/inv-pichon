@@ -10,10 +10,20 @@
     <link rel="icon" type="image/png" href="/static/favicon-pichon.png">
 </head>
 <body>
-    <div class="homepage">
-        <a href="{{ url_for('home')}}">
-            <img class="samson-logo" src="/static/samson-agro-logo.svg" id="6:4"/>
-        </a>
+        <div class="barre">
+            <div class="barre-left">
+                <a href="{{ url_for('home')}}">
+                    <img class="samson-logo" src="/static/samson-agro-logo.svg" id="6:4"/>
+                </a>
+            </div>
+            <div class="barre-right">
+                <div id="rechercher">
+                    <input type="text" class="barre-recherche-Guj" placeholder="Search">
+                </div>
+                <a href="{{ url_for('login') }}"><input type="button" class="login-button" value="Log in"></a>
+            </div>
+        </div>
+    
         <p1 class="home-iJZ" > Welcome {{utilisateur_connecte}} </p1>
         <p class="home-iJZ" id="17:45">Home</p>
         <div class="boutons-menu-QhB" id="36:10">
@@ -25,24 +35,34 @@
                 <input type="button" class="main-button" value="ADD USER">
             </a>
         </div>
-        <div id="rechercher">
-        <input type="text" class="barre-recherche-Guj" placeholder="Search">
-        </div>
+        
         <br/>
-        <a href="{{ url_for('login') }}">
-            <input type="button" class="login-button" value="Log in">
-        </a>
+        
     </div>
 </body>
 </html>
 
 <style>
 
+.barre {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.barre-right {
+    display: flex;
+}
+
+.barre-left {
+    display: flex;
+}
 body {
     background-color: #282828;
 }
 
-.homepage {
+body {
     align-items: center;
     background-color: #282828;
 
@@ -143,7 +163,7 @@ body {
     font-size: 4rem;
     font-weight: 800;
     line-height: 1.2125;
-    margin: 7rem 0.1rem 0rem 0rem;
+    /* margin: 7rem 0.1rem 0rem 0rem; */
     white-space: nowrap;
 }
 
