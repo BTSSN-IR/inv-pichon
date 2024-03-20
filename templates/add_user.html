@@ -14,12 +14,12 @@
         <a href="{{ url_for('home')}}">
             <img class="samson-logo" src="/static/samson-agro-logo.svg" id="6:4"/>
         </a>
-        <p class="login-Jfo" id="2:10">Ajouter un utilisateur</p>
-        <p1 class="login-Jfo1" >{{mot_retour_connexion}}</p1>
+        <p class="login-Jfo" id="2:10">Add User</p>
+        <h2><p class="login-Jfo1" >{{user_error}}</p></h2>
         <form action="{{ url_for('login_form') }}" method="post">
             <input class="login-input" type="text" placeholder="Username" name="userid">
             <input class="login-input" type="password" placeholder="Password" name="password">
-            <input class="login-input" type="password" placeholder="Password" name="password">     
+            <input class="login-input" type="password" placeholder="Confirm password" name="confirm_password">     
             <input class="login-input" type="submit" class="bouton-submit" id="17:52" value="CREATE" style="margin: auto;">  
         </form>
 

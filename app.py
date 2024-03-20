@@ -30,6 +30,32 @@ def login():
 def add_user():
     return render_template('add_user.html')
 
+@app.route("/add_user_form", methods = ['GET', 'POST'])
+def add_user_form():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if loggedin == True:
+        if request.method == 'POST':
+            userid = request.form.get('userid')
+            password = request.form.get('password')
+            confirm_password =  request.form.get('confirm_password')
+            print(userid, password, confirm_password)
+            if password == confirm_password:
+                escaped_username = userid.replace("'", "''") #evite injection sql
+                cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(escaped_username))
+                username_bdd = cur.fetchall()
+                escaped_mdp = password.replace("'", "''") #evite injection sql
+                cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(escaped_mdp))
+                mdp_bdd = cur.fetchall()
+                if (userid, password) != (username_bdd[0][0], mdp_bdd[0][0]):
+                    cur.execute("INSERT INTO Admins(username) VALUES (?)",(userid, ))
+                    cur.execute("INSERT INTO Admins(password) VALUES (?)",(password, ))
+                    return render_template('home.html')
+                return render_template('add_user.html',user_error="Le compte existe deja")
+            return render_template('add_user.html',user_error="Les mots de passe ne correspondent pas")
+        return render_template('add_user.html')
+    else :
+        return render_template('login.html')
 
 @app.route("/scan")
 def scan():
@@ -45,14 +71,12 @@ def device_information():
 def user_information():
     return render_template('user_infomation.html')
 
-
 app.config['UPLOAD_FOLDER'] = 'upload/'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 """
 @app.route('/upload', methods = ['GET', 'POST'])
@@ -77,7 +101,6 @@ def upload():
         return redirect(redirection)
 """
 
-
 @app.route('/login_form', methods = ['GET', 'POST'])
 def login_form():
     global loggedin
@@ -100,8 +123,8 @@ def login_form():
             print("Mauvais MDP")
             conn.close()
             return render_template('login.html',mot_retour_connexion="Utilisateur ou Mot de passe invalide")
-    if (userid, password) == (username_bdd[0][0], mdp_bdd[0][0]):
-        loggedin = True
-        conn.close()
-        print('logged in')
-        return render_template('home.html', utilisateur_connecte = username_bdd[0][0])
+        if (userid, password) == (username_bdd[0][0], mdp_bdd[0][0]):
+            loggedin = True
+            conn.close()
+            print('logged in')
+            return render_template('home.html', utilisateur_connecte = username_bdd[0][0])
