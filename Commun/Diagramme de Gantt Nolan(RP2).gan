@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2023-12-25" view-index="0" gantt-divider-location="351" resource-divider-location="300" version="3.3.3300" locale="fr_FR">
+<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2024-01-01" view-index="0" gantt-divider-location="351" resource-divider-location="300" version="3.3.3305" locale="fr_FR">
     <description/>
     <view zooming-state="default:7" id="gantt-chart">
         <field id="tpd3" name="Nom" width="197" order="0"/>
@@ -45,13 +45,11 @@
         <task id="6" uid="2df98b48591a4eaaa968096adb1e15f6" name="Ralisation du site WEB" meeting="false" start="2024-01-29" duration="5" complete="0" thirdDate="2024-01-08" thirdDate-constraint="0" expand="true"/>
         <task id="7" uid="f6c46c2c737e4a60874c802d5daef877" name="Integration du rendu camera + scan d'une image" meeting="false" start="2024-02-05" duration="5" complete="0" thirdDate="2024-01-08" thirdDate-constraint="0" expand="true"/>
         <task id="8" uid="9475ac6776bb421a918a764882daa097" name="lecture QRCode a partir d'un fichier" meeting="false" start="2024-02-12" duration="5" complete="0" thirdDate="2024-01-08" thirdDate-constraint="0" expand="true"/>
-        <task id="9" uid="f22bf76979754b25b8eb2542723b02af" name="Voayage Vietnam" meeting="false" start="2024-02-19" duration="15" complete="0" thirdDate="2024-01-08" thirdDate-constraint="0" expand="true"/>
-        <task id="10" uid="513faf76dde44bccbc7d9eeb9ca9910f" name="Preparation Revue de Projet n°2" meeting="false" start="2024-03-11" duration="5" complete="0" thirdDate="2024-01-08" thirdDate-constraint="0" expand="true"/>
-        <task id="15" uid="a1f7de83915d48a1bf8d12a63b226e4e" name="Recherche pour la lecture avec caméra" meeting="false" start="2024-03-11" duration="5" complete="0" thirdDate="2024-02-05" thirdDate-constraint="0" expand="true"/>
-        <task id="11" uid="929f5dac427d44e38eaca371ac480cf8" name="Revue de Projet n°2" meeting="false" start="2024-03-18" duration="1" complete="0" thirdDate="2024-01-08" thirdDate-constraint="0" expand="true"/>
-        <task id="12" uid="aee49b196a994a2bb86e502b693089d8" name="tâche_12" meeting="false" start="2024-01-08" duration="1" complete="0" expand="true"/>
-        <task id="13" uid="3539203e97b543779eb98b4c1a1fc504" name="tâche_13" meeting="false" start="2024-01-08" duration="1" complete="0" expand="true"/>
-        <task id="14" uid="5773a1231de4407a945defc562b949a7" name="tâche_14" meeting="false" start="2024-01-08" duration="1" complete="0" expand="true"/>
+        <task id="9" uid="f22bf76979754b25b8eb2542723b02af" name="Voyage Vietnam (contrainte)" meeting="false" start="2024-02-19" duration="12" complete="0" thirdDate="2024-01-08" thirdDate-constraint="0" expand="true"/>
+        <task id="15" uid="a1f7de83915d48a1bf8d12a63b226e4e" name="Recherche pour la lecture avec caméra" meeting="false" start="2024-03-11" duration="1" complete="0" thirdDate="2024-02-05" thirdDate-constraint="0" expand="true"/>
+        <task id="12" uid="aee49b196a994a2bb86e502b693089d8" name="Realisation de la page de connexion" meeting="false" start="2024-03-12" duration="4" complete="0" expand="true"/>
+        <task id="10" uid="513faf76dde44bccbc7d9eeb9ca9910f" name="Preparation Revue de Projet n°2" meeting="false" start="2024-03-18" duration="3" complete="0" thirdDate="2024-01-08" thirdDate-constraint="0" expand="true"/>
+        <task id="11" uid="929f5dac427d44e38eaca371ac480cf8" name="Revue de Projet n°2" meeting="false" start="2024-03-21" duration="1" complete="0" thirdDate="2024-01-08" thirdDate-constraint="0" expand="true"/>
     </tasks>
     <resources/>
     <allocations/>
