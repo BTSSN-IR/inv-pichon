@@ -20,7 +20,7 @@
     </div>
     <div id="device-page">
         <p id="title">Add Equipment</p>
-        <form action="{{ url_for('add_equipment_form') }}" method="post">
+        <form action="{{ url_for('add_equipment_form') }}" method="POST">
             <div id="info-box">
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
                 <div id="label-input">
@@ -36,11 +36,12 @@
                     <input id="Assigned_User_entry" type="text" name="assigned-user">
                 </div>
             </div>
+            <a href="">
+                <button id="valider_bouton"> Valider <img id="image_validaion" src="/static/checked-mark-svgrepo-com.svg" style="margin: 0 7px;"></button> 
+            </a>
         </form>
 
-        <a href="">
-            <button id="valider_bouton"> Valider <img id="image_validaion" src="/static/checked-mark-svgrepo-com.svg" style="margin: 0 7px;"></button> 
-        </a>
+
     </div>
 
 </body>

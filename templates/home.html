@@ -12,19 +12,22 @@
 <body>
         <div class="barre">
             <div class="barre-left">
-                <a href="{{ url_for('home')}}">
-                    <img class="samson-logo" src="/static/samson-agro-logo.svg" id="6:4"/>
-                </a>
+                <div class="samson-button">
+                    <a href='{{ url_for("home")}}'>
+                        <img class="samson-logo" src="/static/samson-agro-logo.svg" id="6:4"/>
+                    </a>
+                </div>
+                
             </div>
             <div class="barre-right">
+                <p class="welcome-text"> Welcome {{utilisateur_connecte}} </p>
                 <div id="rechercher">
                     <input type="text" class="barre-recherche-Guj" placeholder="Search">
                 </div>
                 <a href="{{ url_for('login') }}"><input type="button" class="login-button" value="Log in"></a>
             </div>
         </div>
-    
-        <p1 class="home-iJZ" > Welcome {{utilisateur_connecte}} </p1>
+
         <p class="home-iJZ" id="17:45">Home</p>
         <div class="boutons-menu-QhB" id="36:10">
             <a href="{{ url_for('add_equipment') }}">           
@@ -59,6 +62,11 @@
 
 .barre-left {
     display: flex;
+    flex-direction: row;
+    width: 1000px;
+}
+.barre-left a {
+    width: 200px;
 }
 
 body {
@@ -75,7 +83,16 @@ body {
         position: absolute;
         left: 0px;
         padding: 20px 20px;
-        vertical-align: top;     
+        /* vertical-align: top;      */
+}
+
+.welcome-text {
+    color: #ffffff;
+    font-family: Inter, 'Source Sans Pro';
+    font-size: 3rem;
+    /* font-weight: 800; */
+    /* margin: 10%; */
+    padding: 0 50px;
 }
 
 .home-iJZ {
@@ -84,8 +101,8 @@ body {
     font-size: 4rem;
     font-weight: 800;
     line-height: 1.2125;
-    margin: 7rem 0.1rem 0rem 0rem;
-    white-space: nowrap;
+    /* margin: 7rem 0.1rem 0rem 0rem; */
+
 }
 .boutons-menu-QhB {
     align-items: center;

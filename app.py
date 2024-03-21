@@ -20,7 +20,7 @@ from werkzeug.utils import secure_filename
 def home():
     if loggedin == True:
         print('Logged in')
-    return render_template('home.html',utilisateur_connecte)
+    return render_template('home.html')
 
 @app.route("/login")
 def login():
@@ -53,9 +53,9 @@ def add_user_form():
                 escaped_mdp = password.replace("'", "''") #evite injection sql
                 cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(escaped_mdp))
                 mdp_bdd = cur.fetchall()
-                if (userid, password) != (username_bdd[0][0], mdp_bdd[0][0]):
-                    cur.execute("INSERT INTO Admins(username) VALUES (?)",(userid, ))
-                    cur.execute("INSERT INTO Admins(password) VALUES (?)",(password, ))
+                if (username_bdd, mdp_bdd) == ([], []):
+                    cur.execute(f"INSERT INTO Admins(username) VALUES ({userid})")
+                    cur.execute("INSERT INTO Admins(password) VALUES (?)",(str(password), ))
                     return render_template('home.html')
                 return render_template('add_user.html',user_error="Le compte existe deja")
             return render_template('add_user.html',user_error="Les mots de passe ne correspondent pas")
@@ -139,14 +139,14 @@ def login_form():
 def add_equipment_form():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
-
     if loggedin == True:
-        print
         if request.method == 'POST':
-            print('tets')
             hostname = request.form.get('hostname-input')
             serialnumber = request.form.get('serialnumber')
             assigneduser = request.form.get('assigned-user')
-            print(hostname, serialnumber, assigneduser)
+            print(f'hostname : {hostname}; serialnumber : {serialnumber}; user : {assigneduser}')
+
+            cur.execute(f"INSERT INTO Computers (hostname, serialnumber, mainuser) VALUES = '{hostname}, {serialnumber}, {assigneduser}'")
+
         return render_template('add_equipment.html')
     return render_template('login.html')
