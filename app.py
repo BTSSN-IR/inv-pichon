@@ -11,8 +11,8 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.urandom(24)
 
-#import pyzbar.pyzbar
-#import PIL.Image
+import pyzbar.pyzbar
+import PIL.Image
 
 from werkzeug.utils import secure_filename
 
@@ -24,6 +24,12 @@ def home():
 
 @app.route("/login")
 def login():
+    return render_template('login.html')
+
+@app.route("/add_equipment")
+def add_equipment():
+    if loggedin == True:
+        return render_template('add_equipment.html')
     return render_template('login.html')
 
 @app.route("/add_user")
@@ -47,9 +53,9 @@ def add_user_form():
                 escaped_mdp = password.replace("'", "''") #evite injection sql
                 cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(escaped_mdp))
                 mdp_bdd = cur.fetchall()
-                if (userid, password) != (username_bdd[0][0], mdp_bdd[0][0]):
-                    cur.execute("INSERT INTO Admins(username) VALUES (?)",(userid, ))
-                    cur.execute("INSERT INTO Admins(password) VALUES (?)",(password, ))
+                if (username_bdd, mdp_bdd) == ([], []):
+                    cur.execute(f"INSERT INTO Admins(username) VALUES ({userid})")
+                    cur.execute("INSERT INTO Admins(password) VALUES (?)",(str(password), ))
                     return render_template('home.html')
                 return render_template('add_user.html',user_error="Le compte existe deja")
             return render_template('add_user.html',user_error="Les mots de passe ne correspondent pas")
@@ -78,7 +84,7 @@ def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-"""
+
 @app.route('/upload', methods = ['GET', 'POST'])
 def upload():
     if request.method == 'POST':
@@ -99,7 +105,7 @@ def upload():
         codes = pyzbar.pyzbar.decode(image)
         redirection = codes[0].data.decode()
         return redirect(redirection)
-"""
+
 
 @app.route('/login_form', methods = ['GET', 'POST'])
 def login_form():
@@ -128,3 +134,19 @@ def login_form():
             conn.close()
             print('logged in')
             return render_template('home.html', utilisateur_connecte = username_bdd[0][0])
+        
+@app.route("/add_equipment_form", methods = ['GET', 'POST'])
+def add_equipment_form():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if loggedin == True:
+        if request.method == 'POST':
+            hostname = request.form.get('hostname-input')
+            serialnumber = request.form.get('serialnumber')
+            assigneduser = request.form.get('assigned-user')
+            print(f'hostname : {hostname}; serialnumber : {serialnumber}; user : {assigneduser}')
+
+            cur.execute(f"INSERT INTO Computers (hostname, serialnumber, mainuser) VALUES = '{hostname}, {serialnumber}, {assigneduser}'")
+
+        return render_template('add_equipment.html')
+    return render_template('login.html')

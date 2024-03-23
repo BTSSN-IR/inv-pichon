@@ -11,9 +11,13 @@
 </head>
 <body>
     <div class="login-page" id="17:23">
-        <a href="{{ url_for('home')}}">
-            <img class="samson-logo" src="/static/samson-agro-logo.svg" id="6:4"/>
-        </a>
+        <div class="barre">
+            <div class="barre-left">
+                <a href="{{ url_for('home')}}">
+                    <img class="samson-logo" src="/static/samson-agro-logo.svg" id="6:4"/>
+                </a>
+            </div>
+        </div>
         <p class="login-Jfo" id="2:10">Login</p>
         <p1 class="login-Jfo1" >{{mot_retour_connexion}}</p1>
         <form action="{{ url_for('login_form') }}" method="post">
@@ -27,6 +31,17 @@
 </html>
 
 <style>
+
+.barre {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.barre-left {
+    display: flex;
+}
 
 .login-input {
         background-color: #404040;
@@ -54,17 +69,16 @@ body {
 
     display: flex;
     flex-direction: column;
-
-    .samson-logo {
-        display: flex;
-        height: 4.7rem;
-        width: 16.4rem;
-        position: absolute;
-        left: 0px;
-        padding: 20px 20px;
-        vertical-align: top;
-        
     }
+.samson-logo {
+    display: flex;
+    height: 4.7rem;
+    width: 16.4rem;
+    position: absolute;
+    left: 0px;
+    padding: 20px 20px;
+    vertical-align: top;    
+}
 
     .login-Jfo {
         color: #ffffff;

@@ -11,9 +11,13 @@
 </head>
 
 <body>
-    <a href="{{ url_for('home')}}">
-        <img id="logo_entreprise" src="../static/samson-agro-logo.svg" alt = "logo_entreprise">
-    </a>
+    <div class="barre">
+        <div class="barre-left">
+            <a href="{{ url_for('home')}}">
+                <img class="samson-logo" src="/static/samson-agro-logo.svg" id="6:4"/>
+            </a>
+        </div>
+    </div>
     <div id="device-page">
         <p id="title">information Utilisateur</p>
         <form action="" method="get">
@@ -68,6 +72,17 @@
     body {
         background-color: #282828;
     }
+
+.barre {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.barre-right {
+    display: flex;
+}
 
 #label-input {
     text-align: right;
