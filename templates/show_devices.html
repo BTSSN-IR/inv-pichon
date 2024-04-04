@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&display=swap" rel="stylesheet">
+    <title>Pichon Inventory - Devices</title>
+    <link rel="icon" type="image/png" href="/static/favicon-pichon.png">
+</head>
+<body>
+    <div class="device-page" id="17:23">
+        <div class="barre">
+            <div class="barre-left">
+                <a href="{{ url_for('home')}}">
+                    <img class="samson-logo" src="/static/samson-agro-logo.svg" id="6:4"/>
+                </a>
+            </div>
+        </div>
+        <p class="device-Jfo" id="2:10">Device information</p>
+        <table>
+            {% for row in test %}
+            <tr>
+              <th> {{ row[0] }}</th>
+              <th> {{ row[1] }}</th>
+              <th> {{ row[2] }}</th>
+            </tr> 
+            {% endfor %}
+          </table>
+        <p1 class="device-Jfo1" >{{html}}</p1>
+
+    </div>
+</body>
+</html>
+
+<style>
+
+.barre {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.barre-left {
+    display: flex;
+}
+
+body {
+    background-color: #282828;
+}
+
+    .device-page {
+    align-items: center;
+    background-color: #282828;
+
+    display: flex;
+    flex-direction: column;
+    }
+.samson-logo {
+    display: flex;
+    height: 4.7rem;
+    width: 16.4rem;
+    position: absolute;
+    left: 0px;
+    padding: 20px 20px;
+    vertical-align: top;    
+}
+
+    .device-Jfo {
+        color: #ffffff;
+        font-family: Inter, 'Source Sans Pro';
+        font-size: 4rem;
+        font-weight: 800;
+        line-height: 1.2125;
+        margin: 15rem 0.1rem 4.7rem 0rem;
+        white-space: nowrap;
+    }
+
+    .device-Jfo1 {
+        color: #ff0000;
+        font-family: Inter, 'Source Sans Pro';
+        font-size: 3rem;
+        font-weight: 800;
+        line-height: 1.2125;
+        margin: 1rem 0.1rem 4.7rem 0rem;
+        white-space: nowrap;
+    }
+</style>

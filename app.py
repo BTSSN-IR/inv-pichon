@@ -26,6 +26,14 @@ def home():
 def login():
     return render_template('login.html')
 
+@app.route("/show_devices")
+def show_devices():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    cur.execute("SELECT * from Admins")
+    html = cur.fetchall()
+    return render_template('show_devices.html',test=html)
+
 @app.route("/add_equipment")
 def add_equipment():
     if loggedin == True:
@@ -48,14 +56,14 @@ def add_user_form():
             print(userid, password, confirm_password)
             if password == confirm_password:
                 escaped_username = userid.replace("'", "''") #evite injection sql
-                cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(escaped_username))
+                cur.execute("SELECT username FROM Admins WHERE username = '{}'").format(escaped_username)
                 username_bdd = cur.fetchall()
                 escaped_mdp = password.replace("'", "''") #evite injection sql
-                cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(escaped_mdp))
+                cur.execute("SELECT password FROM Admins WHERE password = '{}'").format(escaped_mdp)
                 mdp_bdd = cur.fetchall()
                 if (username_bdd, mdp_bdd) == ([], []):
-                    cur.execute(f"INSERT INTO Admins(username) VALUES ({userid})")
-                    cur.execute("INSERT INTO Admins(password) VALUES (?)",(str(password), ))
+                    print("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\"").format(escaped_username,escaped_mdp)
+                    cur.execute("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\"").format(escaped_username,escaped_mdp)
                     return render_template('home.html')
                 return render_template('add_user.html',user_error="Le compte existe deja")
             return render_template('add_user.html',user_error="Les mots de passe ne correspondent pas")
@@ -71,7 +79,7 @@ def scan():
 
 @app.route("/device_information")
 def device_information():
-    return render_template('device_information.html')
+    return render_template('device_information_search.html')
 
 @app.route("/user_information", methods=['GET','POST'])
 def user_information():
@@ -150,3 +158,6 @@ def add_equipment_form():
 
         return render_template('add_equipment.html')
     return render_template('login.html')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')
