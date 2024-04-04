@@ -23,10 +23,12 @@
     <div id="scan-page">
         <p id="title">Scan QRCode</p>
 
-    <div id="container">
-        <video autoplay="true" id="videoElement">
-        </video>
-    </div>
+        <div class="container">
+            <div class="section">
+                <div id="my-qr-reader">
+                </div>
+            </div>
+        </div>
     <form action="http://localhost:5000/upload" method="POST" enctype="multipart/form-data" id="upload-form">
         <input type="file" name="file" id="upload_button">
     </form>
@@ -40,20 +42,98 @@
     </div>
 </body>
 
+<script src="https://unpkg.com/html5-qrcode"></script>
+
 <script>
-    var video = document.querySelector("#videoElement");
-    if (navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(function (stream) {
-        video.srcObject = stream;
-        })                                                         // lien pour l'explication de la fonction JS : https://www.kirupa.com/html5/accessing_your_webcam_in_html5.htm
-        .catch(function (err0r) {
-        console.log("Something went wrong!");
-        });
-}
+    function domReady(fn) {
+        if (
+            document.readyState === "complete" ||
+            document.readyState === "interactive"
+        ) {
+            setTimeout(fn, 1000);
+        } else {
+            document.addEventListener("DOMContentLoaded", fn);
+        }
+    }
+    
+    domReady(function () {
+    
+        // If found you qr code
+        function onScanSuccess(decodeText, decodeResult) {
+            alert("You Qr is : " + decodeText);
+            console.log(decodeText);
+        }
+    
+        let htmlscanner = new Html5QrcodeScanner(
+            "my-qr-reader",
+            { fps: 10, qrbos: 0 }
+        );
+        htmlscanner.render(onScanSuccess);
+    });
 </script>
 
 <style>
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+    max-height: 500px;
+    margin: 5px;
+}
+
+.section {
+    background-color: #303030;
+    padding: 50px 30px;
+    border: 1.5px solid #b2b2b2;
+    border-radius: 0.25em;
+    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.25);
+}
+
+#my-qr-reader {
+    padding: 20px !important;
+    border: 1.5px solid #b2b2b2 !important;
+    border-radius: 8px;
+}
+ 
+#my-qr-reader img[alt="Info icon"] {
+    display: none;
+}
+ 
+#my-qr-reader img[alt="Camera based scan"] {
+    width: 100px !important;
+    height: 100px !important;
+}
+ 
+button {
+    padding: 10px 20px;
+    border: 1px solid #b2b2b2;
+    outline: none;
+    border-radius: 0.25em;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    background-color: #008000ad;
+    transition: 0.3s background-color;
+}
+ 
+button:hover {
+    background-color: #008000;
+}
+ 
+#html5-qrcode-anchor-scan-type-change {
+    text-decoration: none !important;
+    color: #1d9bf0;
+}
+ 
+video {
+    width: 100% !important;
+    border: 1px solid #b2b2b2 !important;
+    border-radius: 0.25em;
+}
+
 body {
     background-color: #282828;
 }
@@ -142,21 +222,6 @@ body {
 
         display: flex;
         flex-direction: column;
-    }
-
-
-    #container {
-        margin: 10px auto;
-        margin-bottom: 50px ;
-        width: 500px;
-        height: 375px;
-        border: 5px #FFF solid;
-    }
-
-    #videoElement {
-        width: 500px;
-        height: 375px;
-        background-color: #404040;
     }
 </style>
 
