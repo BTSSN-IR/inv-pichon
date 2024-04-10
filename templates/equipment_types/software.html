@@ -19,51 +19,27 @@
         </div>
     </div>
     <div id="device-page">
-        <p id="title">Add Equipment</p>
+        <p id="title">Add Equipment - Software</p>
+        <form action="{{ url_for('add_equipment_screen_form') }}" method="POST">
             <div id="info-box">
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
-                <select id="equipment_type_select" onchange="RedirectEquipment(this);">
-                    <option value="default">Choose one device type</option>
-                    <option value="computer">Computer</option>
-                    <option value="screen">Screen</option>
-                    <option value="phone">Phone</option>
-                    <option value="employee">Employee</option>
-                    <option value="mouse">Mouse</option>
-                    <option value="keyboard">Keyboard</option>
-                    <option value="printer">Printer</option>
-                    <option value="software">Software</option>
-                </select>
-
-            <script>
-                function RedirectEquipment(sel) {
-                    if (sel.options[sel.selectedIndex].text == "Computer") {
-                        window.location.href = "/equipment_types/computer";
-                    }
-                    if (sel.options[sel.selectedIndex].text == "Screen") {
-                        window.location.href = "/equipment_types/screen";
-                    }
-                    if (sel.options[sel.selectedIndex].text == "Phone") {
-                        window.location.href = "/equipment_types/phone";
-                    }
-                    if (sel.options[sel.selectedIndex].text == "Employee") {
-                        window.location.href = "/equipment_types/employee";
-                    }
-                    if (sel.options[sel.selectedIndex].text == "Mouse") {
-                        window.location.href = "/equipment_types/mouse";
-                    }
-                    if (sel.options[sel.selectedIndex].text == "Keyboard") {
-                        window.location.href = "/equipment_types/keyboard";
-                    }
-                    if (sel.options[sel.selectedIndex].text == "Printer") {
-                        window.location.href = "/equipment_types/printer";
-                    }
-                    if (sel.options[sel.selectedIndex].text == "Software") {
-                        window.location.href = "/equipment_types/software";
-                    }
-                }
-            </script>            
-        </div>
-
+                <div id="label-input">
+                    <label for="Hostname_entry" id="secondary-text"> Nom de l'appareil </label>
+                    <input id="Hostname_entry" type="text" name="hostname-input">
+                </div>
+                <div id="label-input">
+                    <label for="Serial_Number_entry" id="secondary-text"> Numéro de serie </label>
+                    <input id="Serial_Number_entry" type="text" name="serialnumber">
+                </div>
+                <div id="label-input">
+                    <label for="Assigned_User_entry" id="secondary-text"> Utilisateur </label>
+                    <input id="Assigned_User_entry" type="text" name="assigned-user">
+                </div>
+            </div>
+            <a href="">
+                <button id="valider_bouton"> Valider <img id="image_validaion" src="/static/checked-mark-svgrepo-com.svg" style="margin: 0 7px;"></button> 
+            </a>
+        </form>
     </div>
 
 </body>

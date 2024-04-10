@@ -19,51 +19,43 @@
         </div>
     </div>
     <div id="device-page">
-        <p id="title">Add Equipment</p>
+        <p id="title">Add Equipment - Employee</p>
+        <form action="{{ url_for('add_equipment_employee_form') }}" method="POST">
             <div id="info-box">
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
-                <select id="equipment_type_select" onchange="RedirectEquipment(this);">
-                    <option value="default">Choose one device type</option>
-                    <option value="computer">Computer</option>
-                    <option value="screen">Screen</option>
-                    <option value="phone">Phone</option>
-                    <option value="employee">Employee</option>
-                    <option value="mouse">Mouse</option>
-                    <option value="keyboard">Keyboard</option>
-                    <option value="printer">Printer</option>
-                    <option value="software">Software</option>
-                </select>
-
-            <script>
-                function RedirectEquipment(sel) {
-                    if (sel.options[sel.selectedIndex].text == "Computer") {
-                        window.location.href = "/equipment_types/computer";
-                    }
-                    if (sel.options[sel.selectedIndex].text == "Screen") {
-                        window.location.href = "/equipment_types/screen";
-                    }
-                    if (sel.options[sel.selectedIndex].text == "Phone") {
-                        window.location.href = "/equipment_types/phone";
-                    }
-                    if (sel.options[sel.selectedIndex].text == "Employee") {
-                        window.location.href = "/equipment_types/employee";
-                    }
-                    if (sel.options[sel.selectedIndex].text == "Mouse") {
-                        window.location.href = "/equipment_types/mouse";
-                    }
-                    if (sel.options[sel.selectedIndex].text == "Keyboard") {
-                        window.location.href = "/equipment_types/keyboard";
-                    }
-                    if (sel.options[sel.selectedIndex].text == "Printer") {
-                        window.location.href = "/equipment_types/printer";
-                    }
-                    if (sel.options[sel.selectedIndex].text == "Software") {
-                        window.location.href = "/equipment_types/software";
-                    }
-                }
-            </script>            
-        </div>
-
+                <div id="label-input">
+                    <label for="firstname_entry" id="secondary-text"> Prénom </label>
+                    <input id="firstname_entry" type="text" name="firstname-input">
+                </div>
+                <div id="label-input">
+                    <label for="familyname_entry" id="secondary-text"> Nom </label>
+                    <input id="familyname_entry" type="text" name="familyname_input">
+                </div>
+                <div id="label-input">
+                    <label for="department_entry" id="secondary-text"> Service </label>
+                    <input id="department_entry" type="text" name="department_input">
+                </div>
+                <div id="label-input">
+                    <label for="email_entry" id="secondary-text"> E-mail </label>
+                    <input id="email_entry" type="text" name="email_input">
+                </div>
+                <div id="label-input">
+                    <label for="computer_entry" id="secondary-text"> Ordinateur </label>
+                    <input id="computer_entry" type="text" name="computer_input">
+                </div>
+                <div id="label-input">
+                    <label for="phone_entry" id="secondary-text"> Téléphone </label>
+                    <input id="phone_entry" type="text" name="phone_input">
+                </div>
+                <div id="label-input">
+                    <label for="mouse_entry" id="secondary-text"> Souris </label>
+                    <input id="mouse_entry" type="text" name="mouse_input">
+                </div>
+            </div>
+            <a href="">
+                <button id="valider_bouton"> Valider <img id="image_validaion" src="/static/checked-mark-svgrepo-com.svg" style="margin: 0 7px;"></button> 
+            </a>
+        </form>
     </div>
 
 </body>

@@ -1,7 +1,9 @@
-from flask import Flask, request, url_for, redirect, render_template, flash
+from flask import Flask, request, url_for, redirect, render_template, flash, send_file
 import os
 import mysql.connector
 import sqlite3
+import qrcode
+import qrcode.constants
 
 global loggedin
 loggedin = False
@@ -15,6 +17,19 @@ import pyzbar.pyzbar
 import PIL.Image
 
 from werkzeug.utils import secure_filename
+
+def generate_qrcode():
+    data = request.form.get('serialnumber-input')
+    qr = qrcode.QRCode(version = 1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size = 10, border = 4)
+    qr.add_data(data)
+    qr.make(fit = True)
+
+    image = qr.make_image(fill_color = "black", back_color = "white")
+    # uploaded_file = request.files[image]
+    # uploaded_file_path = os.path.join('upload', uploaded_file.filename)
+    # uploaded_file.save(uploaded_file_path)
+    image.save("test.png")
+    return send_file("test.png", as_attachment=True)
 
 @app.route("/")
 def home():
@@ -42,7 +57,9 @@ def add_equipment():
 
 @app.route("/add_user")
 def add_user():
-    return render_template('add_user.html')
+    if loggedin == True:
+        return render_template('add_user.html')
+    return render_template('login.html')
 
 @app.route("/add_user_form", methods = ['GET', 'POST'])
 def add_user_form():
@@ -56,14 +73,15 @@ def add_user_form():
             print(userid, password, confirm_password)
             if password == confirm_password:
                 escaped_username = userid.replace("'", "''") #evite injection sql
-                cur.execute("SELECT username FROM Admins WHERE username = '{}'").format(escaped_username)
+                cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(escaped_username))
                 username_bdd = cur.fetchall()
                 escaped_mdp = password.replace("'", "''") #evite injection sql
-                cur.execute("SELECT password FROM Admins WHERE password = '{}'").format(escaped_mdp)
+                cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(escaped_mdp))
                 mdp_bdd = cur.fetchall()
                 if (username_bdd, mdp_bdd) == ([], []):
-                    print("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\"").format(escaped_username,escaped_mdp)
-                    cur.execute("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\"").format(escaped_username,escaped_mdp)
+                    # print("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\"").format(escaped_username,escaped_mdp)
+                    cur.execute("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\")".format(escaped_username,escaped_mdp))
+                    conn.commit()
                     return render_template('home.html')
                 return render_template('add_user.html',user_error="Le compte existe deja")
             return render_template('add_user.html',user_error="Les mots de passe ne correspondent pas")
@@ -85,8 +103,141 @@ def device_information():
 def user_information():
     return render_template('user_infomation.html')
 
+@app.route("/equipment_types/computer", methods=['GET','POST'])
+def add_computer():
+    return render_template('equipment_types/computer.html')
+
+@app.route("/add_equipment_form_computer_appliquer", methods = ['GET','POST'])
+def add_equipment_computer_form():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        hostname = request.form.get('hostname-input')
+        serialnumber = request.form.get('serialnumber-input')
+        assigneduser = request.form.get('assigneduser-input')
+        print(f'hostname : {hostname}; serialnumber : {serialnumber}; user : {assigneduser}')
+        print(f"INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{hostname}\",\"{serialnumber}\",\"{assigneduser}\")")
+        cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
+        conn.commit()
+        generate_qrcode()
+    return render_template('equipment_types/computer.html')
+    
+@app.route("/equipment_types/screen", methods=['GET','POST'])
+def add_screen():
+    return render_template('equipment_types/screen.html')
+
+@app.route("/add_equipment_form_screen_appliquer", methods = ['GET','POST'])
+def add_equipment_screen_form():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        make = request.form.get('make-input')
+        model = request.form.get('model-input')
+        serialnumber = request.form.get('serialnumber-input')
+        purchasedate = request.form.get('purchase-input')
+        assigneduser = request.form.get('assigneduser-input')
+        cur.execute("INSERT INTO Screens(make, model, serialnumber, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make, model, serialnumber, purchasedate, assigneduser))
+        conn.commit()
+    return render_template('equipment_types/screen.html')
+
+@app.route("/equipment_types/phone", methods=['GET','POST'])
+def add_phone():
+    return render_template('equipment_types/phone.html')
+
+@app.route("/add_equipment_form_phone_appliquer", methods = ['GET','POST'])
+def add_equipment_phone_form():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        model = request.form.get('model')
+        serialnumber = request.form.get('serialnumber-input')
+        phonenumber = request.form.get('phonenumber-input')
+        purchase = request.form.get('purchase-input')
+        maker = request.form.get('maker-input')
+        assigneduser = request.form.get('assigneduser-input')
+        cur.execute("INSERT INTO Phones(make, model, serialnumber, purchasedate, phonenumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(maker,model, serialnumber, purchase, phonenumber, assigneduser))
+        conn.commit()
+    return render_template('equipment_types/phone.html')
+
+@app.route("/equipment_types/employee", methods=['GET','POST'])
+def add_employee():
+    return render_template('equipment_types/employee.html')
+
+@app.route("/add_equipment_form_employee_appliquer", methods = ['GET','POST'])
+def add_equipment_employee_form():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        hostname = request.form.get('hostname-input')
+        serialnumber = request.form.get('serialnumber')
+        assigneduser = request.form.get('assigned-user')
+        cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
+    return render_template('equipment_types/employee.html')
+
+@app.route("/equipment_types/mouse", methods=['GET','POST'])
+def add_mouse():
+    return render_template('equipment_types/mouse.html')
+
+@app.route("/add_equipment_form_mouse_appliquer", methods = ['GET','POST'])
+def add_equipment_mouse_form():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        hostname = request.form.get('hostname-input')
+        serialnumber = request.form.get('serialnumber')
+        assigneduser = request.form.get('assigned-user')
+        cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
+    return render_template('equipment_types/mouse.html')
+
+@app.route("/equipment_types/keyboard", methods=['GET','POST'])
+def add_keyboard():
+    return render_template('equipment_types/keyboard.html')
+
+@app.route("/add_equipment_form_keyboard_appliquer", methods = ['GET','POST'])
+def add_equipment_keyboard_form():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        hostname = request.form.get('hostname-input')
+        serialnumber = request.form.get('serialnumber')
+        assigneduser = request.form.get('assigned-user')
+        cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
+    return render_template('equipment_types/keyboard.html')
+
+@app.route("/equipment_types/printer", methods=['GET','POST'])
+def add_printer():
+    return render_template('equipment_types/printer.html')
+
+@app.route("/add_equipment_form_printer_appliquer", methods = ['GET','POST'])
+def add_equipment_printer_form():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        hostname = request.form.get('hostname-input')
+        serialnumber = request.form.get('serialnumber')
+        assigneduser = request.form.get('assigned-user')
+        cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
+    return render_template('equipment_types/printer.html')
+
+@app.route("/equipment_types/software", methods=['GET','POST'])
+def add_software():
+    return render_template('equipment_types/software.html')
+
+@app.route("/add_equipment_form_software_appliquer", methods = ['GET','POST'])
+def add_equipment_software_form():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        hostname = request.form.get('hostname-input')
+        serialnumber = request.form.get('serialnumber')
+        assigneduser = request.form.get('assigned-user')
+        cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
+    return render_template('equipment_types/softare.html')
+
+
 app.config['UPLOAD_FOLDER'] = 'upload/'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -126,11 +277,9 @@ def login_form():
         password = request.form.get('password')
         escaped_username = userid.replace("'", "''") #evite injection sql
         cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(escaped_username))
-        #cur.execute("SELECT username FROM Admins WHERE username = ?", (userid, ))
         username_bdd = cur.fetchall()
         escaped_mdp = password.replace("'", "''") #evite injection sql
         cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(escaped_mdp))
-        #cur.execute("SELECT password FROM Admins WHERE password = ?", (password, ))
         mdp_bdd = cur.fetchall()
         if username_bdd == [] or mdp_bdd == []:
             loggedin = False
@@ -142,22 +291,7 @@ def login_form():
             conn.close()
             print('logged in')
             return render_template('home.html', utilisateur_connecte = username_bdd[0][0])
-        
-@app.route("/add_equipment_form", methods = ['GET', 'POST'])
-def add_equipment_form():
-    conn = sqlite3.connect('inv_pichon.db')
-    cur = conn.cursor()
-    if loggedin == True:
-        if request.method == 'POST':
-            hostname = request.form.get('hostname-input')
-            serialnumber = request.form.get('serialnumber')
-            assigneduser = request.form.get('assigned-user')
-            print(f'hostname : {hostname}; serialnumber : {serialnumber}; user : {assigneduser}')
-
-            cur.execute(f"INSERT INTO Computers (hostname, serialnumber, mainuser) VALUES = '{hostname}, {serialnumber}, {assigneduser}'")
-
-        return render_template('add_equipment.html')
-    return render_template('login.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')
+    # app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')
+    app.run(host='0.0.0.0', port=5000, debug=True)
