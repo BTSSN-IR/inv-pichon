@@ -156,9 +156,9 @@ def add_equipment_phone_form():
         serialnumber = request.form.get('serialnumber-input')
         phonenumber = request.form.get('phonenumber-input')
         purchase = request.form.get('purchase-input')
-        maker = request.form.get('maker-input')
+        make = request.form.get('make-input')
         assigneduser = request.form.get('assigneduser-input')
-        cur.execute("INSERT INTO Phones(make, model, serialnumber, purchasedate, phonenumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(maker,model, serialnumber, purchase, phonenumber, assigneduser))
+        cur.execute("INSERT INTO Phones(make, model, serialnumber, purchasedate, phonenumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make,model, serialnumber, purchase, phonenumber, assigneduser))
         conn.commit()
     return render_template('equipment_types/phone.html')
 
@@ -192,10 +192,11 @@ def add_equipment_mouse_form():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
-        hostname = request.form.get('hostname-input')
-        serialnumber = request.form.get('serialnumber')
-        assigneduser = request.form.get('assigned-user')
-        cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
+        make = request.form.get('make-input')
+        model = request.form.get('model-input')
+        mainuser = request.form.get('mainuser-input')
+        cur.execute("INSERT INTO Mouse(make, model, user) VALUES (\"{}\",\"{}\",\"{}\")".format(make, model, mainuser))
+        conn.commit()
     return render_template('equipment_types/mouse.html')
 
 @app.route("/equipment_types/keyboard", methods=['GET','POST'])
@@ -223,9 +224,12 @@ def add_equipment_printer_form():
     cur = conn.cursor()
     if request.method == 'POST':
         hostname = request.form.get('hostname-input')
-        serialnumber = request.form.get('serialnumber')
-        assigneduser = request.form.get('assigned-user')
-        cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
+        make = request.form.get('make-input')
+        model = request.form.get('model-input')
+        purchasedate = request.form.get('purchasedate-input')
+        serialnumber = request.form.get('serialnumber-input')
+        cur.execute("INSERT INTO Printers(hostname, make, model, serialnumber, purchasedate) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname,make,model,serialnumber,purchasedate))
+        conn.commit()
     return render_template('equipment_types/printer.html')
 
 @app.route("/equipment_types/software", methods=['GET','POST'])
