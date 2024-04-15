@@ -20,24 +20,20 @@
     </div>
     <div id="device-page">
         <p id="title">Add Equipment - Software</p>
-        <form action="{{ url_for('add_equipment_screen_form') }}" method="POST">
+        <form action="{{ url_for('add_equipment_software_form') }}" method="POST">
             <div id="info-box">
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
                 <div id="label-input">
-                    <label for="Hostname_entry" id="secondary-text"> Nom de l'appareil </label>
-                    <input id="Hostname_entry" type="text" name="hostname-input">
+                    <label for="name_entry" id="secondary-text"> Name </label>
+                    <input id="name_entry" type="text" name="name-input">
                 </div>
                 <div id="label-input">
-                    <label for="Serial_Number_entry" id="secondary-text"> Numéro de serie </label>
-                    <input id="Serial_Number_entry" type="text" name="serialnumber">
-                </div>
-                <div id="label-input">
-                    <label for="Assigned_User_entry" id="secondary-text"> Utilisateur </label>
-                    <input id="Assigned_User_entry" type="text" name="assigned-user">
+                    <label for="description_entry" id="secondary-text"> Description </label>
+                    <input id="description_entry" type="text" name="description-input">
                 </div>
             </div>
             <a href="">
-                <button id="valider_bouton"> Valider <img id="image_validaion" src="/static/checked-mark-svgrepo-com.svg" style="margin: 0 7px;"></button> 
+                <button id="valider_bouton"> Submit <img id="image_validaion" src="/static/checked-mark-svgrepo-com.svg" style="margin: 0 7px;"></button> 
             </a>
         </form>
     </div>

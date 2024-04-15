@@ -241,11 +241,11 @@ def add_equipment_software_form():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
-        hostname = request.form.get('hostname-input')
-        serialnumber = request.form.get('serialnumber')
-        assigneduser = request.form.get('assigned-user')
-        cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
-    return render_template('equipment_types/softare.html')
+        name = request.form.get('name-input')
+        description = request.form.get('description-input')
+        cur.execute("INSERT INTO Software(name, description) VALUES (\"{}\",\"{}\")".format(name,description))
+        conn.commit()
+    return render_template('equipment_types/software.html')
 
 
 app.config['UPLOAD_FOLDER'] = 'upload/'

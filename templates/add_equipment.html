@@ -29,7 +29,6 @@
                     <option value="phone">Phone</option>
                     <option value="employee">Employee</option>
                     <option value="mouse">Mouse</option>
-                    <option value="keyboard">Keyboard</option>
                     <option value="printer">Printer</option>
                     <option value="software">Software</option>
                 </select>
@@ -51,9 +50,6 @@
                     if (sel.options[sel.selectedIndex].text == "Mouse") {
                         window.location.href = "/equipment_types/mouse";
                     }
-                    if (sel.options[sel.selectedIndex].text == "Keyboard") {
-                        window.location.href = "/equipment_types/keyboard";
-                    }
                     if (sel.options[sel.selectedIndex].text == "Printer") {
                         window.location.href = "/equipment_types/printer";
                     }
@@ -69,6 +65,16 @@
 </body>
 
 <style>
+
+#equipment_type_select {
+    color: #ffffff;
+    background-color: #404040;
+    font-size: large;
+    border: 2px solid #ffffff;
+    border-radius: 150px;
+    height: 3rem;
+}
+
 body {
     background-color: #282828;
 }
