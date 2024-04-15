@@ -18,6 +18,21 @@ import PIL.Image
 
 from werkzeug.utils import secure_filename
 
+import base64
+
+def encode_password(password):
+    password = password.encode('ascii')
+    password_encoded = base64.b64encode(password).decode('ascii')
+    print('mdp b64 :', password_encoded)
+    return password_encoded
+
+def decode_password(password):
+    password = password.encode('ascii')
+    password_decoded = base64.b64decode(password).decode('ascii')
+    print('mdp decodé :', password_decoded)
+    return password_decoded
+
+
 def generate_qrcode():
     data = request.form.get('serialnumber-input')
     qr = qrcode.QRCode(version = 1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size = 10, border = 4)
@@ -85,6 +100,8 @@ def add_user_form():
                     # print("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\"").format(escaped_username,escaped_mdp)
                     cur.execute("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\")".format(escaped_username,escaped_mdp))
                     conn.commit()
+                    pass_encoded = encode_password(escaped_mdp)
+                    decode_password(pass_encoded)
                     return render_template('home.html')
                 return render_template('add_user.html',user_error="Le compte existe deja")
             return render_template('add_user.html',user_error="Les mots de passe ne correspondent pas")
