@@ -45,9 +45,12 @@ def login():
 def show_devices():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
-    cur.execute("SELECT * from Admins")
-    html = cur.fetchall()
-    return render_template('show_devices.html',test=html)
+    computers_table = cur.execute("SELECT * from Computers").fetchall()
+    screens_table = cur.execute("SELECT * from Screens").fetchall()
+    admins_table = cur.execute("SELECT * from Admins").fetchall()
+    phones_table = cur.execute("SELECT * from Phones").fetchall()
+    employees_table = cur.execute("SELECT * from Users").fetchall()
+    return render_template('show_devices.html',computers=computers_table, screens=screens_table, admins=admins_table, phones=phones_table, employees=employees_table)
 
 @app.route("/add_equipment")
 def add_equipment():
@@ -168,10 +171,16 @@ def add_equipment_employee_form():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
-        hostname = request.form.get('hostname-input')
-        serialnumber = request.form.get('serialnumber')
-        assigneduser = request.form.get('assigned-user')
-        cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
+        firstname = request.form.get('firstname-input')
+        lastname = request.form.get('lastname-input')
+        department = request.form.get('department-input')
+        email = request.form.get('email-input')
+        computer = request.form.get('computer-input')
+        phone = request.form.get('phone-input')
+        mouse = request.form.get('mouse-input')
+        print("INSERT INTO Users(firstname, lastname, department, email, computer, phone, mouse) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(firstname, lastname, department, email, computer, phone, mouse))
+        cur.execute("INSERT INTO Users(firstname, lastname, department, email, computer, phone, mouse) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(firstname, lastname, department, email, computer, phone, mouse))
+        conn.commit()
     return render_template('equipment_types/employee.html')
 
 @app.route("/equipment_types/mouse", methods=['GET','POST'])

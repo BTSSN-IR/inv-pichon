@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" href="/static/favicon-pichon.png">
 </head>
 <body>
-    <div class="device-page" id="17:23">
+    <div class="device-page">
         <div class="barre">
             <div class="barre-left">
                 <a href="{{ url_for('home')}}">
@@ -19,22 +19,164 @@
             </div>
         </div>
         <p class="device-Jfo" id="2:10">Device information</p>
-        <table>
-            {% for row in test %}
-            <tr>
-              <th> {{ row[0] }}</th>
-              <th> {{ row[1] }}</th>
-              <th> {{ row[2] }}</th>
-            </tr> 
-            {% endfor %}
-          </table>
-        <p1 class="device-Jfo1" >{{html}}</p1>
+        <div class="table-block">
+            <p class="table-title">Computers</p>
+            <table class="devices-table">
+                <tr>
+                    <th>Serial Number</th>
+                    <th>Hostname</th>
+                    <th>Main User</th>
+                    <th>Purchase Date</th>
+                    <th>Software</th>
+                </tr>
+                {% for row in computers %}
+                <tr class="devices-column">
+                <td> {{ row[0] }}</td>
+                <td> {{ row[1] }}</td>
+                <td> {{ row[2] }}</td>
+                <td> {{ row[3] }}</td>
+                <td> {{ row[4] }}</td>
+                </tr> 
+                {% endfor %}
+            </table>
+            <p1 class="device-Jfo1" >{{html}}</p1>
+        </div>
 
+        <div class="table-block">
+            <p class="table-title">Employees</p>
+            <table class="devices-table">
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Department</th>
+                    <th>E-Mail</th>
+                    <th>Computer</th>
+                    <th>Phone number</th>
+                    <th>Mouse</th>
+                </tr>
+                {% for row in employees %}
+                <tr class="devices-column">
+                    <td> {{ row[0] }}</td>
+                    <td> {{ row[1] }}</td>
+                    <td> {{ row[2] }}</td>
+                    <td> {{ row[3] }}</td>
+                    <td> {{ row[4] }}</td>
+                </tr> 
+                {% endfor %}
+            </table>
+            <p1 class="device-Jfo1" >{{html}}</p1>
+        </div>
+
+        <div class="table-block">
+            <p class="table-title">Phones</p>
+            <table class="devices-table">
+                <tr>
+                    <th>Serial Number</th>
+                    <th>Make</th>
+                    <th>Model</th>
+                    <th>Purchase Date</th>
+                    <th>Phone Number</th>
+                    <th>Main User</th>
+                </tr>
+                {% for row in phones %}
+                <tr class="devices-column">
+                <td> {{ row[0] }}</td>
+                <td> {{ row[1] }}</td>
+                <td> {{ row[2] }}</td>
+                <td> {{ row[3] }}</td>
+                <td> {{ row[4] }}</td>
+                </tr> 
+                {% endfor %}
+            </table>
+            <p1 class="device-Jfo1" >{{html}}</p1>
+        </div>
+    
+        <div class="table-block">
+            <p class="table-title">Screens</p>
+            <table class="devices-table">
+                <tr>
+                    <th>Serial Number</th>
+                    <th>Make</th>
+                    <th>Model</th>
+                    <th>Purchase Date</th>
+                    <th>Main User</th>
+                </tr>
+                {% for row in screens %}
+                <tr class="devices-column">
+                    <td> {{ row[0] }}</td>
+                    <td> {{ row[1] }}</td>
+                    <td> {{ row[2] }}</td>
+                    <td> {{ row[3] }}</td>
+                    <td> {{ row[4] }}</td>
+                </tr> 
+                {% endfor %}
+            </table>
+            <p1 class="device-Jfo1" >{{html}}</p1>
+        </div>
+
+        <div class="table-block">
+            <p class="table-title">Admins</p>
+            <table class="devices-table">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                </tr>
+                {% for row in admins %}
+                <tr class="devices-column">
+                    <td> {{ row[0] }}</td>
+                    <td> {{ row[1] }}</td>
+                    <td> {{ row[2] }}</td>
+                </tr> 
+                {% endfor %}
+            </table>
+            <p1 class="device-Jfo1" >{{html}}</p1>
+        </div>
     </div>
+
 </body>
 </html>
 
 <style>
+
+.table-block {
+    text-align: center;
+    
+}
+
+table.devices-table { 
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 13px; 
+    border-spacing: 0;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+table.devices-table th { 
+    border-bottom: 2px solid rgb(255, 255, 255);
+    padding: 10px; 
+}
+
+table.devices-table td { 
+    border-bottom: 1px solid rgb(255, 255, 255);
+    padding: 10px; 
+}
+
+.devices-table {
+    margin: auto;
+}
+
+table.devices-table tr:last-child > td {
+    border-bottom: none;
+}
+
+.table-title {
+    color: #ffffff;
+    font-family: Inter, 'Source Sans Pro';
+    font-size: 2rem;
+    text-align: center; /* Aligner le texte au centre */
+}
 
 .barre {
     display: flex;
@@ -51,13 +193,12 @@ body {
     background-color: #282828;
 }
 
-    .device-page {
-    align-items: center;
+.device-page {
     background-color: #282828;
-
-    display: flex;
+    display: flexbox;
     flex-direction: column;
-    }
+    align-items: center;
+}
 .samson-logo {
     display: flex;
     height: 4.7rem;
