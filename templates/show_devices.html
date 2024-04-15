@@ -8,6 +8,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&display=swap" rel="stylesheet">
     <title>Pichon Inventory - Devices</title>
     <link rel="icon" type="image/png" href="/static/favicon-pichon.png">
+
+    <!-- DataTables scripts -->
+    <link href="{{url_for('static', filename='datatables.min.css')}}" rel="stylesheet"> 
+    <script
+  src="https://code.jquery.com/jquery-3.7.1.js"
+  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+  crossorigin="anonymous"></script>
+    <script src="{{url_for('static', filename='datatables.min.js')}}"></script>
+
 </head>
 <body>
     <div class="device-page">
@@ -21,52 +30,69 @@
         <p class="device-Jfo" id="2:10">Device information</p>
         <div class="table-block">
             <p class="table-title">Computers</p>
-            <table class="devices-table">
-                <tr>
-                    <th>Serial Number</th>
-                    <th>Hostname</th>
-                    <th>Main User</th>
-                    <th>Purchase Date</th>
-                    <th>Software</th>
-                </tr>
-                {% for row in computers %}
-                <tr class="devices-column">
-                <td> {{ row[0] }}</td>
-                <td> {{ row[1] }}</td>
-                <td> {{ row[2] }}</td>
-                <td> {{ row[3] }}</td>
-                <td> {{ row[4] }}</td>
-                </tr> 
-                {% endfor %}
+            <table class="devices-table" id="ComputersTable">
+                <thead>
+                    <tr>
+                        <th>Serial Number</th>
+                        <th>Hostname</th>
+                        <th>Main User</th>
+                        <th>Purchase Date</th>
+                        <th>Software</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in computers %}
+                    <tr class="devices-column">
+                        <td> {{ row[0] }}</td>
+                        <td> {{ row[1] }}</td>
+                        <td> {{ row[2] }}</td>
+                        <td> {{ row[3] }}</td>
+                        <td> {{ row[4] }}</td>
+                    </tr> 
+                    {% endfor %}
+                </tbody>
             </table>
             <p1 class="device-Jfo1" >{{html}}</p1>
         </div>
 
+
+        <script> // Documentation ->  https://datatables.net/manual/index
+            let table = new DataTable('#ComputersTable', {
+                // options
+                searching: false
+            });
+        </script>
+
+
         <div class="table-block">
             <p class="table-title">Employees</p>
             <table class="devices-table">
-                <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Department</th>
-                    <th>E-Mail</th>
-                    <th>Computer</th>
-                    <th>Phone number</th>
-                    <th>Mouse</th>
-                </tr>
-                {% for row in employees %}
-                <tr class="devices-column">
-                    <td> {{ row[0] }}</td>
-                    <td> {{ row[1] }}</td>
-                    <td> {{ row[2] }}</td>
-                    <td> {{ row[3] }}</td>
-                    <td> {{ row[4] }}</td>
-                    <td> {{ row[5] }}</td>
-                    <td> {{ row[6] }}</td>
-                    <td> {{ row[7] }}</td>
-                </tr> 
-                {% endfor %}
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Department</th>
+                        <th>E-Mail</th>
+                        <th>Computer</th>
+                        <th>Phone number</th>
+                        <th>Mouse</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in employees %}
+                    <tr class="devices-column">
+                        <td> {{ row[0] }}</td>
+                        <td> {{ row[1] }}</td>
+                        <td> {{ row[2] }}</td>
+                        <td> {{ row[3] }}</td>
+                        <td> {{ row[4] }}</td>
+                        <td> {{ row[5] }}</td>
+                        <td> {{ row[6] }}</td>
+                        <td> {{ row[7] }}</td>
+                    </tr> 
+                    {% endfor %}
+                </tbody>
             </table>
             <p1 class="device-Jfo1" >{{html}}</p1>
         </div>
@@ -74,24 +100,28 @@
         <div class="table-block">
             <p class="table-title">Phones</p>
             <table class="devices-table">
-                <tr>
-                    <th>Serial Number</th>
-                    <th>Make</th>
-                    <th>Model</th>
-                    <th>Purchase Date</th>
-                    <th>Phone Number</th>
-                    <th>Main User</th>
-                </tr>
-                {% for row in phones %}
-                <tr class="devices-column">
-                <td> {{ row[0] }}</td>
-                <td> {{ row[1] }}</td>
-                <td> {{ row[2] }}</td>
-                <td> {{ row[3] }}</td>
-                <td> {{ row[4] }}</td>
-                <td> {{ row[5] }}</td>
-                </tr> 
-                {% endfor %}
+                <thead>
+                    <tr>
+                        <th>Serial Number</th>
+                        <th>Make</th>
+                        <th>Model</th>
+                        <th>Purchase Date</th>
+                        <th>Phone Number</th>
+                        <th>Main User</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in phones %}
+                    <tr class="devices-column">
+                        <td> {{ row[0] }}</td>
+                        <td> {{ row[1] }}</td>
+                        <td> {{ row[2] }}</td>
+                        <td> {{ row[3] }}</td>
+                        <td> {{ row[4] }}</td>
+                        <td> {{ row[5] }}</td>
+                    </tr> 
+                    {% endfor %}
+                </tbody>
             </table>
             <p1 class="device-Jfo1" >{{html}}</p1>
         </div>
@@ -99,22 +129,26 @@
         <div class="table-block">
             <p class="table-title">Screens</p>
             <table class="devices-table">
-                <tr>
-                    <th>Serial Number</th>
-                    <th>Make</th>
-                    <th>Model</th>
-                    <th>Purchase Date</th>
-                    <th>Main User</th>
-                </tr>
-                {% for row in screens %}
-                <tr class="devices-column">
-                    <td> {{ row[0] }}</td>
-                    <td> {{ row[1] }}</td>
-                    <td> {{ row[2] }}</td>
-                    <td> {{ row[3] }}</td>
-                    <td> {{ row[4] }}</td>
-                </tr> 
-                {% endfor %}
+                <thead>
+                    <tr>
+                        <th>Serial Number</th>
+                        <th>Make</th>
+                        <th>Model</th>
+                        <th>Purchase Date</th>
+                        <th>Main User</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in screens %}
+                    <tr class="devices-column">
+                        <td> {{ row[0] }}</td>
+                        <td> {{ row[1] }}</td>
+                        <td> {{ row[2] }}</td>
+                        <td> {{ row[3] }}</td>
+                        <td> {{ row[4] }}</td>
+                    </tr> 
+                    {% endfor %}
+                </tbody>
             </table>
             <p1 class="device-Jfo1" >{{html}}</p1>
         </div>
@@ -122,18 +156,22 @@
         <div class="table-block">
             <p class="table-title">Admins</p>
             <table class="devices-table">
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Password</th>
-                </tr>
-                {% for row in admins %}
-                <tr class="devices-column">
-                    <td> {{ row[0] }}</td>
-                    <td> {{ row[1] }}</td>
-                    <td> {{ row[2] }}</td>
-                </tr> 
-                {% endfor %}
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in admins %}
+                    <tr class="devices-column">
+                        <td> {{ row[0] }}</td>
+                        <td> {{ row[1] }}</td>
+                        <td> {{ row[2] }}</td>
+                    </tr> 
+                    {% endfor %}
+                </tbody>
             </table>
             <p1 class="device-Jfo1" >{{html}}</p1>
         </div>
