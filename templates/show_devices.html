@@ -11,14 +11,25 @@
 
     <!-- DataTables scripts -->
     <link href="{{url_for('static', filename='datatables.min.css')}}" rel="stylesheet"> 
-    <script
-  src="https://code.jquery.com/jquery-3.7.1.js"
-  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-  crossorigin="anonymous"></script>
+    <script src="{{url_for('static', filename='jquery-3.7.1.min.js')}}"></script>
     <script src="{{url_for('static', filename='datatables.min.js')}}"></script>
 
 </head>
 <body>
+
+    <script>
+
+        $.extend( $.fn.dataTable.defaults, { // Default options for all tables
+            searching: false, // Don't show the search button
+            paging: false, // Disable multiple pages
+            stateSave: true, // Save the table state on page reload, soit loads faster
+            "language": {
+                "info": "" // Remove the "Showing X to Y of Z entries" at the end of the table
+            }
+        } );
+        
+    </script>
+
     <div class="device-page">
         <div class="barre">
             <div class="barre-left">
@@ -28,7 +39,7 @@
             </div>
         </div>
         <p class="device-Jfo" id="2:10">Device information</p>
-        <div class="table-block">
+        <div class="table-block" style="width: 50%;">
             <p class="table-title">Computers</p>
             <table class="devices-table" id="ComputersTable">
                 <thead>
@@ -63,7 +74,7 @@
         </script>
 
 
-        <div class="table-block">
+        <div class="table-block" style="width: 50%;">
             <p class="table-title">Employees</p>
             <table class="devices-table" id="EmployeesTable">
                 <thead>
@@ -102,7 +113,7 @@
             });
         </script>
 
-        <div class="table-block">
+        <div class="table-block" style="width: 50%;">
             <p class="table-title">Phones</p>
             <table class="devices-table" id="PhonesTable">
                 <thead>
@@ -137,7 +148,7 @@
             });
         </script>
 
-        <div class="table-block">
+        <div class="table-block" style="width: 50%;">
             <p class="table-title">Screens</p>
             <table class="devices-table" id="ScreensTable">
                 <thead>
@@ -170,7 +181,7 @@
             });
         </script>
 
-        <div class="table-block">
+        <div class="table-block" style="width: 50%;">
             <p class="table-title">Admins</p>
             <table class="devices-table", id="AdminsTable">
                 <thead>
@@ -205,10 +216,8 @@
 </html>
 
 <style>
-
 .table-block {
     text-align: center;
-    
 }
 
 table.devices-table { 
