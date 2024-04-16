@@ -332,5 +332,5 @@ def login_form():
             return render_template('home.html', utilisateur_connecte = username_bdd[0][0])
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')
-    # app.run(host='0.0.0.0', port=5000, debug=True)
+    # app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')
+    app.run(host='0.0.0.0', port=5000, debug=True)

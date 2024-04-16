@@ -187,7 +187,7 @@
                         <td> {{ row[2] }}</td>
                         <td> {{ row[3] }}</td>
                         <td> {{ row[4] }}</td>
-                        <td>qr link</td>
+                        <td>Download QR Code</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -198,6 +198,13 @@
         <script> // Documentation ->  https://datatables.net/manual/index
             let table_screens = new DataTable('#ScreensTable', {
                 // options
+                "columnDefs": [{
+                    "targets": -1,
+                    "render": function (data, type, row, meta) {
+                        console.log(window.location.host)
+                        return "<a href='" + "{{url_for('generate_qrcode') }}" + "?table=Screens&device=" + row[0] + "' download>"  + data + '</a>'; // Generates QR Code and downloads it on the client device
+                    }
+                }]
             });
         </script>
 
