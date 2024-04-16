@@ -25,7 +25,7 @@
             stateSave: true, // Save the table state on page reload, soit loads faster
             "language": {
                 "info": "" // Remove the "Showing X to Y of Z entries" at the end of the table
-            }
+            },
         } );
         
     </script>
@@ -38,7 +38,7 @@
                 </a>
             </div>
         </div>
-        <p class="device-Jfo" id="2:10">Device information</p>
+        <p class="device-Jfo" id="2:10">Devices list</p>
         <div class="table-block" style="width: 50%;">
             <p class="table-title">Computers</p>
             <table class="devices-table" id="ComputersTable">
@@ -49,6 +49,7 @@
                         <th>Main User</th>
                         <th>Purchase Date</th>
                         <th>Software</th>
+                        <th>QR Code</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,6 +60,7 @@
                         <td> {{ row[2] }}</td>
                         <td> {{ row[3] }}</td>
                         <td> {{ row[4] }}</td>
+                        <td>Download QR Code</td>
                     </tr> 
                     {% endfor %}
                 </tbody>
@@ -70,6 +72,13 @@
         <script> // Documentation ->  https://datatables.net/manual/index
             let table_computers = new DataTable('#ComputersTable', {
                 // options
+                "columnDefs": [{
+                    "targets": -1,
+                    "render": function (data, type, row, meta) {
+                        console.log(window.location.host)
+                        return "<a href='" + "{{url_for('generate_qrcode') }}" + "?table=Computer&device=" + row[0] + "' download>"  + data + '</a>';
+                    }
+                }]
             });
         </script>
 
@@ -124,6 +133,7 @@
                         <th>Purchase Date</th>
                         <th>Phone Number</th>
                         <th>Main User</th>
+                        <th>QR Code</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -135,6 +145,7 @@
                         <td> {{ row[3] }}</td>
                         <td> {{ row[4] }}</td>
                         <td> {{ row[5] }}</td>
+                        <td>Download QR Code</td>
                     </tr> 
                     {% endfor %}
                 </tbody>
@@ -145,6 +156,13 @@
         <script> // Documentation ->  https://datatables.net/manual/index
             let table_phones = new DataTable('#PhonesTable', {
                 // options
+                "columnDefs": [{
+                    "targets": -1,
+                    "render": function (data, type, row, meta) {
+                        console.log(window.location.host)
+                        return "<a href='" + "{{url_for('generate_qrcode') }}" + "?table=Phones&device=" + row[0] + "' download>"  + data + '</a>'; // Generates QR Code and downloads it on the client device
+                    }
+                }]
             });
         </script>
 
@@ -158,6 +176,7 @@
                         <th>Model</th>
                         <th>Purchase Date</th>
                         <th>Main User</th>
+                        <th>QR Code</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -168,7 +187,8 @@
                         <td> {{ row[2] }}</td>
                         <td> {{ row[3] }}</td>
                         <td> {{ row[4] }}</td>
-                    </tr> 
+                        <td>qr link</td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -304,4 +324,9 @@ body {
         margin: 1rem 0.1rem 4.7rem 0rem;
         white-space: nowrap;
     }
+
+a:link, a:visited, a:hover, a:active { 
+    text-decoration: none; 
+    color: #ffffff;
+} 
 </style>

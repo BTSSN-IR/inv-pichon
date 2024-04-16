@@ -20,36 +20,26 @@
     </div>
     <div id="device-page">
         <p id="title">Device information</p>
-        <form action="" method="get">
             <div id="info-box">
+                <div id="label-input">
+                    <label id="secondary-text">Device Type : </label>
+                </div>
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
+                {% for row in headers %}
                 <div id="label-input">
-                    <label for="Hostname_entry" id="secondary-text"> Nom de l'appareil </label>
-                    <input id="Hostname_entry" type="text">
+                    <label id="secondary-text">{{ row }}</label>
                 </div>
-                <div id="label-input">
-                    <label for="IP_Adress_entry" id="secondary-text"> Adresse IP </label>
-                    <input id="IP_Adress_entry" type="text">
-                </div>
-                <div id="label-input">
-                    <label for="Serial_Number_entry" id="secondary-text"> Numéro de serie </label>
-                    <input id="Serial_Number_entry" type="text">
-                </div>
-                <div id="label-input">
-                    <label for="Assigned_User_entry" id="secondary-text"> Utilisateur </label>
-                    <input id="Assigned_User_entry" type="text">  
-                </div>
+                {% endfor %}
             </div>
-        </form>
-
-        <a href="">
-            <button id="valider_bouton"> Valider <img id="image_validaion" src="/static/checked-mark-svgrepo-com.svg" style="margin: 0 7px;"></button> 
-        </a>
     </div>
 
 </body>
 
 <style>
+
+#label-input {
+    padding: 15px 15px;
+}
 body {
     background-color: #282828;
 }
@@ -73,26 +63,6 @@ body {
     left: 0px;
     padding: 20px 20px;
     vertical-align: top;    
-}
-
-#label-input {
-    text-align: right;
-}
-
-    input[type=text] {
-        text-align: right;
-        background-color: #404040;
-        color: #ffffff;
-        border-radius: 2.55rem;
-        box-shadow: inset 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.25), 0.5rem 0.5rem 0.4rem rgba(0, 0, 0, 0.25);
-        box-sizing: border-box;
-        font-family: "Inter", 'Source Sans Pro';
-        font-size: 1.2rem;
-        font-weight: 800;
-        line-height: 1.2125;
-        margin: 0rem 0 3.3rem 0;
-        padding: 1.1rem 2.7rem 1rem 2.7rem;
-        border: 0;
 }
     #logo_entreprise {
         display: flex;
@@ -123,25 +93,6 @@ body {
         font-weight: 800;
         line-height: 1.2125;
         white-space: nowrap;
-    }
-
-    #valider_bouton {
-        align-items: center;
-        background-color: #1b855d;
-        border-radius: 5.2rem;
-        box-shadow: inset 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.25), 0.5rem 0.5rem 0.4rem rgba(0, 0, 0, 0.25);
-        color: #ffffff;
-        display: flex;
-        flex-shrink: 0;
-        font-family: Inter, 'Source Sans Pro';
-        font-size: 1.5rem;
-        font-weight: 700;
-        height: 3rem;
-        justify-content: center;
-        line-height: 1.2125;
-        text-align: center;
-        white-space: nowrap;
-        width: 9rem;
     }
     #device-page {
     align-items: center;

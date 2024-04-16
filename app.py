@@ -4,6 +4,7 @@ import mysql.connector
 import sqlite3
 import qrcode
 import qrcode.constants
+import time
 
 global loggedin
 loggedin = False
@@ -32,9 +33,9 @@ def decode_password(password):
     print('mdp decodé :', password_decoded)
     return password_decoded
 
-
+@app.route("/generate_qrcode")
 def generate_qrcode():
-    data = request.form.get('serialnumber-input')
+    data = request.args.get('table') + ',' + request.args.get('device')
     qr = qrcode.QRCode(version = 1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size = 10, border = 4)
     qr.add_data(data)
     qr.make(fit = True)
@@ -43,8 +44,8 @@ def generate_qrcode():
     # uploaded_file = request.files[image]
     # uploaded_file_path = os.path.join('upload', uploaded_file.filename)
     # uploaded_file.save(uploaded_file_path)
-    image.save("test.png")
-    return send_file("test.png", as_attachment=True)
+    image.save(f"qrcodes/{data}.png")
+    return send_file(f"qrcodes/{data}.png")
 
 @app.route("/")
 def home():
@@ -60,6 +61,7 @@ def login():
 def show_devices():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
+    print(cur.execute("SELECT * from Computers").fetchall())
     computers_table = cur.execute("SELECT * from Computers").fetchall()
     screens_table = cur.execute("SELECT * from Screens").fetchall()
     admins_table = cur.execute("SELECT * from Admins").fetchall()
@@ -117,7 +119,14 @@ def scan():
 
 @app.route("/device_information")
 def device_information():
-    return render_template('device_information_search.html')
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    list_headers = cur.execute("PRAGMA table_info(Computers);").fetchall()
+    for i in range(len(list_headers)):
+        list_headers[i] = list_headers[i][1] # Remplacement des champs par seulement le nom des champs
+
+    print(list_headers)
+    return render_template('device_information_search.html', headers=list_headers)
 
 @app.route("/user_information", methods=['GET','POST'])
 def user_information():
@@ -323,5 +332,5 @@ def login_form():
             return render_template('home.html', utilisateur_connecte = username_bdd[0][0])
 
 if __name__ == '__main__':
-    # app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')
+    # app.run(host='0.0.0.0', port=5000, debug=True)
