@@ -23,6 +23,7 @@
                 {% if utilisateur_connecte %}
                 <p class="welcome-text"> Welcome {{utilisateur_connecte}} </p>
                 {% else %}
+                <p></p>
                 {% endif %}
                 <div id="rechercher">
                     <input type="text" class="barre-recherche-Guj" placeholder="Search">
@@ -120,7 +121,6 @@ body {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    margin: 16rem 8.3rem 0rem 0rem;
     /* overflow: hidden; */
     position: relative;
     row-gap: 2rem;
@@ -197,4 +197,47 @@ body {
 a:link, a:visited, a:hover, a:active { 
     text-decoration: none; 
 } 
+@media screen and (max-width: 768px) {
+    .barre {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .barre-left, .barre-right {
+        width: auto;
+    }
+
+    .samson-logo {
+        height: 1.7rem;
+        width: 6.4rem;
+    }
+
+    .login-button{
+        font-size: 0.6rem;
+        font-weight: 300;
+        height: 1.4rem;
+        width: 4.4rem;
+    }
+
+    .boutons-menu-QhB {
+        margin: 0rem 1.5rem 10rem 1rem;
+    }
+
+    .welcome-text {
+        font-size: 1rem;
+    }
+
+    .home-iJZ {
+        font-size: 3rem;
+    }
+
+    .barre-recherche-Guj {
+        font-size: 0.6rem;
+        font-weight: 300;
+        height: 1.4rem;
+        width: 4.4rem;
+        display: none;
+    }
+}
+
 </style>

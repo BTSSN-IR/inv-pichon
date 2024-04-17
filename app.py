@@ -7,6 +7,8 @@ import qrcode.constants
 import time
 from redis import Redis
 
+import hashlib, base64
+
 global loggedin
 loggedin = False
 global utilisateur_connecte
@@ -26,19 +28,25 @@ import PIL.Image
 
 from werkzeug.utils import secure_filename
 
-import base64
+def generate_hash_key(key):
+    hash_object = hashlib.sha256()
+    hash_object.update(key.encode('utf-8'))
+    hash_key = hash_object.digest()
+    return hash_key
 
-def encode_password(password):
-    password = password.encode('ascii')
-    password_encoded = base64.b64encode(password).decode('ascii')
-    print('mdp b64 :', password_encoded)
-    return password_encoded
+SECRET_KEY = 'bts_sn'
 
-def decode_password(password):
-    password = password.encode('ascii')
-    password_decoded = base64.b64decode(password).decode('ascii')
-    print('mdp decodé :', password_decoded)
-    return password_decoded
+def encrypt_password(password, key=SECRET_KEY):
+    hash_key = generate_hash_key(key)
+    combined = password + hash_key.hex()
+    encrypted_password = base64.b64encode(combined.encode('utf-8')).decode('utf-8')
+    return encrypted_password
+
+def decrypt_password(encrypted_password, key=SECRET_KEY):
+    hash_key = generate_hash_key(key)
+    decoded = base64.b64decode(encrypted_password.encode('utf-8')).decode('utf-8')
+    password = decoded.replace(hash_key.hex(), '')
+    return password
 
 @app.route("/logout")
 def logout():
@@ -71,7 +79,7 @@ def home():
         try:
             return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=True)
         except:
-            return render_template('home.html', utilisateur_connecte=None, logged_in=False)
+            return render_template('home.html', logged_in=False)
     else:
         return render_template('login.html', logged_in=False)
 
@@ -118,18 +126,20 @@ def add_user_form():
             confirm_password =  request.form.get('confirm_password')
             print(userid, password, confirm_password)
             if password == confirm_password:
-                escaped_username = userid.replace("'", "''") #evite injection sql
-                cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(escaped_username))
+                print("SELECT username FROM Admins WHERE username = '{}'".format(userid))
+                cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(userid))
                 username_bdd = cur.fetchall()
-                escaped_mdp = password.replace("'", "''") #evite injection sql
-                cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(escaped_mdp))
+                
+                pass_encoded = encrypt_password(password, SECRET_KEY) # Cryptage du mot de passe avec une clé secrète
+                print(pass_encoded)
+                print(decrypt_password(pass_encoded))
+                print("SELECT password FROM Admins WHERE password = '{}'".format(pass_encoded))
+                cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(pass_encoded))
                 mdp_bdd = cur.fetchall()
                 if (username_bdd, mdp_bdd) == ([], []):
                     # print("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\"").format(escaped_username,escaped_mdp)
-                    cur.execute("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\")".format(escaped_username,escaped_mdp))
+                    cur.execute("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\")".format(userid,pass_encoded))
                     conn.commit()
-                    pass_encoded = encode_password(escaped_mdp)
-                    decode_password(pass_encoded)
                     return render_template('home.html')
                 return render_template('add_user.html',user_error="Le compte existe deja")
             return render_template('add_user.html',user_error="Les mots de passe ne correspondent pas")
@@ -340,7 +350,7 @@ def login_form():
             print("Mauvais MDP")
             conn.close()
             return render_template('login.html',mot_retour_connexion="Utilisateur ou Mot de passe invalide")
-        if (userid, password) == (username_bdd[0][0], mdp_bdd[0][0]):
+        if (userid, password) == (username_bdd[0][0], mdp_bdd[0][0]): # Décryptage du mdp a revoir -------------------------------------------------------------
             loggedin = True
             conn.close()
             print('logged in')
