@@ -42,7 +42,8 @@ def decode_password(password):
 
 @app.route("/logout")
 def logout():
-    session.pop('user_id', None)
+    session.pop('utilisateur_connecte', None)
+    loggedin = False
     return render_template('login.html')
 
 def allowed_file(filename):
@@ -65,9 +66,12 @@ def generate_qrcode():
 
 @app.route("/")
 def home():
+    print(session.keys())
     if 'loggedin' in session and session['loggedin']:
-        print('Logged in')
-        return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=False)
+        try:
+            return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=True)
+        except:
+            return render_template('home.html', utilisateur_connecte=None, logged_in=False)
     else:
         return render_template('login.html', logged_in=False)
 
@@ -342,7 +346,7 @@ def login_form():
             print('logged in')
             session['loggedin'] = True
             session['utilisateur_connecte'] = request.form['userid']
-            return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=True)
+            return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin)
 
 if __name__ == '__main__':
     # app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')

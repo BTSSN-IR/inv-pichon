@@ -20,7 +20,10 @@
                 
             </div>
             <div class="barre-right">
+                {% if utilisateur_connecte %}
                 <p class="welcome-text"> Welcome {{utilisateur_connecte}} </p>
+                {% else %}
+                {% endif %}
                 <div id="rechercher">
                     <input type="text" class="barre-recherche-Guj" placeholder="Search">
                 </div>
