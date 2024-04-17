@@ -1,10 +1,11 @@
-from flask import Flask, request, url_for, redirect, render_template, flash, send_file
+from flask import Flask, request, url_for, redirect, render_template, flash, send_file, session
 import os
 import mysql.connector
 import sqlite3
 import qrcode
 import qrcode.constants
 import time
+from redis import Redis
 
 global loggedin
 loggedin = False
@@ -13,6 +14,12 @@ utilisateur_connecte = 'invité'
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.urandom(24)
+
+app.config['SESSION_TYPE'] = 'redis'  # Backend de session
+app.config['SESSION_REDIS'] = Redis(host='localhost', port=5000)  # Configuration de Redis
+
+app.config['UPLOAD_FOLDER'] = 'upload/'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 import pyzbar.pyzbar
 import PIL.Image
@@ -33,6 +40,15 @@ def decode_password(password):
     print('mdp decodé :', password_decoded)
     return password_decoded
 
+@app.route("/logout")
+def logout():
+    session.pop('user_id', None)
+    return render_template('login.html')
+
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route("/generate_qrcode")
 def generate_qrcode():
     data = request.args.get('table') + ',' + request.args.get('device')
@@ -40,7 +56,7 @@ def generate_qrcode():
     qr.add_data(data)
     qr.make(fit = True)
 
-    image = qr.make_image(fill_color = "black", back_color = "white")
+    image = qr.make_image(fill_color = "red", back_color = "white")
     # uploaded_file = request.files[image]
     # uploaded_file_path = os.path.join('upload', uploaded_file.filename)
     # uploaded_file.save(uploaded_file_path)
@@ -49,9 +65,11 @@ def generate_qrcode():
 
 @app.route("/")
 def home():
-    if loggedin == True:
+    if 'loggedin' in session and session['loggedin']:
         print('Logged in')
-    return render_template('home.html')
+        return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=False)
+    else:
+        return render_template('login.html', logged_in=False)
 
 @app.route("/login")
 def login():
@@ -59,15 +77,19 @@ def login():
 
 @app.route("/show_devices")
 def show_devices():
-    conn = sqlite3.connect('inv_pichon.db')
-    cur = conn.cursor()
-    print(cur.execute("SELECT * from Computers").fetchall())
-    computers_table = cur.execute("SELECT * from Computers").fetchall()
-    screens_table = cur.execute("SELECT * from Screens").fetchall()
-    admins_table = cur.execute("SELECT * from Admins").fetchall()
-    phones_table = cur.execute("SELECT * from Phones").fetchall()
-    employees_table = cur.execute("SELECT * from Users").fetchall()
-    return render_template('show_devices.html',computers=computers_table, screens=screens_table, admins=admins_table, phones=phones_table, employees=employees_table)
+    if 'loggedin' in session and session['loggedin']:
+        print('Logged in')
+        conn = sqlite3.connect('inv_pichon.db')
+        cur = conn.cursor()
+        print(cur.execute("SELECT * from Computers").fetchall())
+        computers_table = cur.execute("SELECT * from Computers").fetchall()
+        screens_table = cur.execute("SELECT * from Screens").fetchall()
+        admins_table = cur.execute("SELECT * from Admins").fetchall()
+        phones_table = cur.execute("SELECT * from Phones").fetchall()
+        employees_table = cur.execute("SELECT * from Users").fetchall()
+        return render_template('show_devices.html',computers=computers_table, screens=screens_table, admins=admins_table, phones=phones_table, employees=employees_table)
+    else:
+        return render_template('login.html')
 
 @app.route("/add_equipment")
 def add_equipment():
@@ -273,16 +295,6 @@ def add_equipment_software_form():
         conn.commit()
     return render_template('equipment_types/software.html')
 
-
-app.config['UPLOAD_FOLDER'] = 'upload/'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-
-
-def allowed_file(filename):
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 @app.route('/upload', methods = ['GET', 'POST'])
 def upload():
     if request.method == 'POST':
@@ -303,7 +315,6 @@ def upload():
         codes = pyzbar.pyzbar.decode(image)
         redirection = codes[0].data.decode()
         return redirect(redirection)
-
 
 @app.route('/login_form', methods = ['GET', 'POST'])
 def login_form():
@@ -329,7 +340,9 @@ def login_form():
             loggedin = True
             conn.close()
             print('logged in')
-            return render_template('home.html', utilisateur_connecte = username_bdd[0][0])
+            session['loggedin'] = True
+            session['utilisateur_connecte'] = request.form['userid']
+            return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=True)
 
 if __name__ == '__main__':
     # app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')

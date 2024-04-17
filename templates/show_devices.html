@@ -75,7 +75,7 @@
                     "targets": -1,
                     "render": function (data, type, row, meta) {
                         console.log(window.location.host)
-                        return "<a href='" + "{{url_for('generate_qrcode') }}" + "?table=Computer&device=" + row[0] + "' download>"  + data + '</a>';
+                        return "<a href='" + "{{url_for('generate_qrcode') }}" + "?table=Computer&device=" + row[0] + "' download>" + data + '</a>';
                     }
                 }]
             });

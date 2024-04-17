@@ -24,7 +24,13 @@
                 <div id="rechercher">
                     <input type="text" class="barre-recherche-Guj" placeholder="Search">
                 </div>
+
+                {% if logged_in %}
+                <a href="{{ url_for('logout') }}"><input type="button" class="login-button" value="Log out"></a>
+                {% else %}
                 <a href="{{ url_for('login') }}"><input type="button" class="login-button" value="Log in"></a>
+                {% endif %}
+
             </div>
         </div>
 
