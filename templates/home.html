@@ -21,7 +21,7 @@
             </div>
             <div class="barre-right">
                 {% if utilisateur_connecte %}
-                <p class="welcome-text"> Welcome {{utilisateur_connecte}} </p>
+                <p class="welcome-text"> Welcome : {{utilisateur_connecte}} </p>
                 {% else %}
                 <p></p>
                 {% endif %}
@@ -75,11 +75,11 @@
 .barre-left {
     display: flex;
     flex-direction: row;
-    width: 1000px;
+    width: 200px;
 }
 
 .barre-left a {
-    width: 200px;
+    width: 400px;
 }
 
 body {
@@ -102,7 +102,7 @@ body {
 .welcome-text {
     color: #ffffff;
     font-family: Inter, 'Source Sans Pro';
-    font-size: 3rem;
+    font-size: 2.6rem;
     /* font-weight: 800; */
     /* margin: 10%; */
     padding: 0px 50px;
@@ -177,7 +177,7 @@ body {
     display: flex;
     flex-shrink: 0;
     font-family: Inter, 'Source Sans Pro';
-    font-size: 1.6rem;
+    font-size: 2.6rem;
     font-weight: 800;
     height: 3.4rem;
     justify-content: center;

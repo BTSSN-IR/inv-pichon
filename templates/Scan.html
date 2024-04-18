@@ -62,11 +62,23 @@
         function onScanSuccess(decodeText, decodeResult) {
             alert("You Qr is : " + decodeText);
             console.log(decodeText);
+
+            fetch('/device_information', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            body: JSON.stringify({qr_code: decodeText})
+            })
+            .then(response => response.json())
+            .then(data => {
+            console.log('Success:', data);
+        })
         }
     
         let htmlscanner = new Html5QrcodeScanner(
             "my-qr-reader",
-            { fps: 10, qrbos: 0 }
+            { fps: 10, qrbox: 200, aspectRatio: 1, torchFeature: true  }
         );
         htmlscanner.render(onScanSuccess);
     });
@@ -82,6 +94,10 @@
     margin: 5px;
 }
 
+
+#html5-qrcode-anchor-scan-type-change {
+    display: none;
+}
 .section {
     background-color: #303030;
     padding: 50px 30px;

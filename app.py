@@ -65,7 +65,7 @@ def generate_qrcode():
     qr.add_data(data)
     qr.make(fit = True)
 
-    image = qr.make_image(fill_color = "red", back_color = "white")
+    image = qr.make_image(fill_color = "black", back_color = "white")
     image.save(f"qrcodes/{data}.png")
     return send_file(f"qrcodes/{data}.png")
 
@@ -125,7 +125,6 @@ def add_user_form():
                 print("SELECT username FROM Admins WHERE username = '{}'".format(userid))
                 cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(userid))
                 username_bdd = cur.fetchall()
-                
                 pass_encoded = encrypt_password(password, SECRET_KEY) # Cryptage du mot de passe avec une clé secrète
                 print(pass_encoded)
                 print(decrypt_password(pass_encoded))
@@ -133,7 +132,6 @@ def add_user_form():
                 cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(pass_encoded))
                 mdp_bdd = cur.fetchall()
                 if (username_bdd, mdp_bdd) == ([], []):
-                    # print("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\"").format(escaped_username,escaped_mdp)
                     cur.execute("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\")".format(userid,pass_encoded))
                     conn.commit()
                     return render_template('home.html')
@@ -149,8 +147,10 @@ def scan():
         return render_template('scan.html')
     return render_template('login.html')
 
-@app.route("/device_information")
+@app.route("/device_information", methods=['POST'])
 def device_information():
+
+    print(request.json.get('qr_code'))
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     device_data = [request.args.get('table'), request.args.get('device')]
@@ -158,10 +158,12 @@ def device_information():
     for i in range(len(list_headers)):
         list_headers[i] = list_headers[i][1] # Remplacement des champs par seulement le nom des champs
 
-    
-    data_list = cur.execute(f"SELECT * FROM {device_data[0]} WHERE {list_headers[0]} == \'{device_data[1]}\'").fetchall()
-    data_list = [str(i) for i in list(data_list[0])]
-    payload = zip(data_list, list_headers)
+    try:
+        data_list = cur.execute(f"SELECT * FROM {device_data[0]} WHERE {list_headers[0]} == \'{device_data[1]}\'").fetchall()
+        data_list = [str(i) for i in list(data_list[0])]
+        payload = zip(data_list, list_headers)
+    except:
+        print('error')
     return render_template('device_information_search.html', payload=payload, device_type=device_data[0])
 
 @app.route("/user_information", methods=['GET','POST'])
@@ -184,8 +186,7 @@ def add_equipment_computer_form():
         print(f"INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{hostname}\",\"{serialnumber}\",\"{assigneduser}\")")
         cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
         conn.commit()
-        generate_qrcode()
-    return render_template('equipment_types/computer.html')
+    return render_template('equipment_types/computer.html',validation_code = "L'équipement a bien été ajouté")
     
 @app.route("/equipment_types/screen", methods=['GET','POST'])
 def add_screen():
@@ -203,7 +204,7 @@ def add_equipment_screen_form():
         assigneduser = request.form.get('assigneduser-input')
         cur.execute("INSERT INTO Screens(make, model, serialnumber, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make, model, serialnumber, purchasedate, assigneduser))
         conn.commit()
-    return render_template('equipment_types/screen.html')
+    return render_template('equipment_types/screen.html',validation_code = "L'équipement a bien été ajouté")
 
 @app.route("/equipment_types/phone", methods=['GET','POST'])
 def add_phone():
@@ -222,7 +223,7 @@ def add_equipment_phone_form():
         assigneduser = request.form.get('assigneduser-input')
         cur.execute("INSERT INTO Phones(make, model, serialnumber, purchasedate, phonenumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make,model, serialnumber, purchase, phonenumber, assigneduser))
         conn.commit()
-    return render_template('equipment_types/phone.html')
+    return render_template('equipment_types/phone.html',validation_code = "L'équipement a bien été ajouté")
 
 @app.route("/equipment_types/employee", methods=['GET','POST'])
 def add_employee():
@@ -243,7 +244,7 @@ def add_equipment_employee_form():
         print("INSERT INTO Users(firstname, lastname, department, email, computer, phone, mouse) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(firstname, lastname, department, email, computer, phone, mouse))
         cur.execute("INSERT INTO Users(firstname, lastname, department, email, computer, phone, mouse) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(firstname, lastname, department, email, computer, phone, mouse))
         conn.commit()
-    return render_template('equipment_types/employee.html')
+    return render_template('equipment_types/employee.html',validation_code = "L'utilisateur a bien été ajouté")
 
 @app.route("/equipment_types/mouse", methods=['GET','POST'])
 def add_mouse():
@@ -259,7 +260,7 @@ def add_equipment_mouse_form():
         mainuser = request.form.get('mainuser-input')
         cur.execute("INSERT INTO Mouse(make, model, user) VALUES (\"{}\",\"{}\",\"{}\")".format(make, model, mainuser))
         conn.commit()
-    return render_template('equipment_types/mouse.html')
+    return render_template('equipment_types/mouse.html',validation_code = "L'équipement a bien été ajouté")
 
 @app.route("/equipment_types/keyboard", methods=['GET','POST'])
 def add_keyboard():
@@ -274,7 +275,7 @@ def add_equipment_keyboard_form():
         serialnumber = request.form.get('serialnumber')
         assigneduser = request.form.get('assigned-user')
         cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
-    return render_template('equipment_types/keyboard.html')
+    return render_template('equipment_types/keyboard.html',validation_code = "L'équipement a bien été ajouté")
 
 @app.route("/equipment_types/printer", methods=['GET','POST'])
 def add_printer():
@@ -292,7 +293,7 @@ def add_equipment_printer_form():
         serialnumber = request.form.get('serialnumber-input')
         cur.execute("INSERT INTO Printers(hostname, make, model, serialnumber, purchasedate) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname,make,model,serialnumber,purchasedate))
         conn.commit()
-    return render_template('equipment_types/printer.html')
+    return render_template('equipment_types/printer.html',validation_code = "L'équipement a bien été ajouté")
 
 @app.route("/equipment_types/software", methods=['GET','POST'])
 def add_software():
@@ -307,7 +308,7 @@ def add_equipment_software_form():
         description = request.form.get('description-input')
         cur.execute("INSERT INTO Software(name, description) VALUES (\"{}\",\"{}\")".format(name,description))
         conn.commit()
-    return render_template('equipment_types/software.html')
+    return render_template('equipment_types/software.html',validation_code = "Le logiciel a bien été ajouté")
 
 @app.route('/upload', methods = ['GET', 'POST'])
 def upload():
@@ -359,5 +360,5 @@ def login_form():
             return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin)
 
 if __name__ == '__main__':
-    # app.run(host='0.0.0.0', port=5000, ssl_context='adhoc', debug=True)
+    # app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')
     app.run(host='0.0.0.0', port=5000, debug=True)

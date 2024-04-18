@@ -20,6 +20,7 @@
     </div>
     <div id="device-page">
         <p id="title">Add Equipment - Screen</p>
+        <p id="validation">{{validation_code}}</p>
         <form action="{{ url_for('add_equipment_screen_form') }}" method="POST">
             <div id="info-box">
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
@@ -55,6 +56,17 @@
 </body>
 
 <style>
+#validation {
+    color: #ffffff;
+    font-family: Inter, 'Source Sans Pro';
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.2125;
+    margin: 7rem 0.1rem 4.7rem 0rem;
+    white-space: nowrap;
+    color: #17da8f;
+}
+
 body {
     background-color: #282828;
 }
@@ -113,6 +125,16 @@ body {
         color: #ffffff;
         font-family: Inter, 'Source Sans Pro';
         font-size: 4rem;
+        font-weight: 800;
+        line-height: 1.2125;
+        margin: 7rem 0.1rem 4.7rem 0rem;
+        white-space: nowrap;
+    }
+
+    #validation {
+        color: #1eff00;
+        font-family: Inter, 'Source Sans Pro';
+        font-size: 3rem;
         font-weight: 800;
         line-height: 1.2125;
         margin: 7rem 0.1rem 4.7rem 0rem;
