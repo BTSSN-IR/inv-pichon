@@ -60,21 +60,17 @@ def allowed_file(filename):
 
 @app.route("/generate_qrcode")
 def generate_qrcode():
-    data = request.args.get('table') + ',' + request.args.get('device')
+    data = request.args.get('table') + ',' + request.args.get('device') 
     qr = qrcode.QRCode(version = 1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size = 10, border = 4)
     qr.add_data(data)
     qr.make(fit = True)
 
     image = qr.make_image(fill_color = "red", back_color = "white")
-    # uploaded_file = request.files[image]
-    # uploaded_file_path = os.path.join('upload', uploaded_file.filename)
-    # uploaded_file.save(uploaded_file_path)
     image.save(f"qrcodes/{data}.png")
     return send_file(f"qrcodes/{data}.png")
 
 @app.route("/")
 def home():
-    print(session.keys())
     if 'loggedin' in session and session['loggedin']:
         try:
             return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=True)
@@ -157,12 +153,16 @@ def scan():
 def device_information():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
-    list_headers = cur.execute("PRAGMA table_info(Computers);").fetchall()
+    device_data = [request.args.get('table'), request.args.get('device')]
+    list_headers = cur.execute(f"PRAGMA table_info({device_data[0]});").fetchall()
     for i in range(len(list_headers)):
         list_headers[i] = list_headers[i][1] # Remplacement des champs par seulement le nom des champs
 
-    print(list_headers)
-    return render_template('device_information_search.html', headers=list_headers)
+    
+    data_list = cur.execute(f"SELECT * FROM {device_data[0]} WHERE {list_headers[0]} == \'{device_data[1]}\'").fetchall()
+    data_list = [str(i) for i in list(data_list[0])]
+    payload = zip(data_list, list_headers)
+    return render_template('device_information_search.html', payload=payload, device_type=device_data[0])
 
 @app.route("/user_information", methods=['GET','POST'])
 def user_information():
@@ -359,5 +359,5 @@ def login_form():
             return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')
-    # app.run(host='0.0.0.0', port=5000, debug=True)
+    # app.run(host='0.0.0.0', port=5000, ssl_context='adhoc', debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

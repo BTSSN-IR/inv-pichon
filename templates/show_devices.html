@@ -50,6 +50,7 @@
                         <th>Purchase Date</th>
                         <th>Software</th>
                         <th>QR Code</th>
+                        <th>Details</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,6 +62,7 @@
                         <td> {{ row[3] }}</td>
                         <td> {{ row[4] }}</td>
                         <td>Download QR Code</td>
+                        <td>Show Details</td>
                     </tr> 
                     {% endfor %}
                 </tbody>
@@ -71,13 +73,18 @@
         <script> // Documentation ->  https://datatables.net/manual/index
             let table_computers = new DataTable('#ComputersTable', {
                 // options
-                "columnDefs": [{
-                    "targets": -1,
+                "columnDefs": [
+                    {"targets": -2,
                     "render": function (data, type, row, meta) {
                         console.log(window.location.host)
-                        return "<a href='" + "{{url_for('generate_qrcode') }}" + "?table=Computer&device=" + row[0] + "' download>" + data + '</a>';
-                    }
-                }]
+                        return "<a href='" + "{{url_for('generate_qrcode') }}" + "?table=Computers&device=" + row[0] + "' download>" + data + '</a>';
+                    }},
+                    {"targets": -1,
+                    "render": function (data, type, row, meta) {
+                        console.log(window.location.host)
+                        return "<a href='" + "{{url_for('device_information') }}" + "?table=Computers&device=" + row[0] + "'>" + data + '</a>';
+                    }}
+                ]
             });
         </script>
 
@@ -94,6 +101,7 @@
                         <th>Computer</th>
                         <th>Phone number</th>
                         <th>Mouse</th>
+                        <th>Details</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -107,6 +115,7 @@
                         <td> {{ row[5] }}</td>
                         <td> {{ row[6] }}</td>
                         <td> {{ row[7] }}</td>
+                        <td>Show Details</td>
                     </tr> 
                     {% endfor %}
                 </tbody>
@@ -117,6 +126,13 @@
         <script> // Documentation ->  https://datatables.net/manual/index
             let table_employees = new DataTable('#EmployeesTable', {
                 // options
+                "columnDefs": [
+                    {"targets": -1,
+                    "render": function (data, type, row, meta) {
+                        console.log(window.location.host)
+                        return "<a href='" + "{{url_for('device_information') }}" + "?table=Users&device=" + row[0] + "'>" + data + '</a>';
+                    }}
+                ]
             });
         </script>
 
@@ -132,6 +148,7 @@
                         <th>Phone Number</th>
                         <th>Main User</th>
                         <th>QR Code</th>
+                        <th>Details</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -144,6 +161,7 @@
                         <td> {{ row[4] }}</td>
                         <td> {{ row[5] }}</td>
                         <td>Download QR Code</td>
+                        <td>Show Details</td>
                     </tr> 
                     {% endfor %}
                 </tbody>
@@ -155,12 +173,17 @@
             let table_phones = new DataTable('#PhonesTable', {
                 // options
                 "columnDefs": [{
-                    "targets": -1,
+                    "targets": -2,
                     "render": function (data, type, row, meta) {
                         console.log(window.location.host)
                         return "<a href='" + "{{url_for('generate_qrcode') }}" + "?table=Phones&device=" + row[0] + "' download>"  + data + '</a>'; // Generates QR Code and downloads it on the client device
-                    }
-                }]
+                    }},
+                    {"targets": -1,
+                    "render": function (data, type, row, meta) {
+                        console.log(window.location.host)
+                        return "<a href='" + "{{url_for('device_information') }}" + "?table=Phones&device=" + row[0] + "'>" + data + '</a>';
+                    }}
+                ]
             });
         </script>
 
@@ -175,6 +198,7 @@
                         <th>Purchase Date</th>
                         <th>Main User</th>
                         <th>QR Code</th>
+                        <th>Details</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -186,6 +210,7 @@
                         <td> {{ row[3] }}</td>
                         <td> {{ row[4] }}</td>
                         <td>Download QR Code</td>
+                        <td>Show Details</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -197,12 +222,17 @@
             let table_screens = new DataTable('#ScreensTable', {
                 // options
                 "columnDefs": [{
-                    "targets": -1,
+                    "targets": -2,
                     "render": function (data, type, row, meta) {
                         console.log(window.location.host)
                         return "<a href='" + "{{url_for('generate_qrcode') }}" + "?table=Screens&device=" + row[0] + "' download>"  + data + '</a>'; // Generates QR Code and downloads it on the client device
-                    }
-                }]
+                    }},
+                    {"targets": -1,
+                    "render": function (data, type, row, meta) {
+                        console.log(window.location.host)
+                        return "<a href='" + "{{url_for('device_information') }}" + "?table=Screens&device=" + row[0] + "'>" + data + '</a>';
+                    }}
+                ]
             });
         </script>
 
@@ -214,6 +244,7 @@
                         <th>ID</th>
                         <th>Username</th>
                         <th>Password</th>
+                        <th>Details</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -222,6 +253,8 @@
                         <td> {{ row[0] }}</td>
                         <td> {{ row[1] }}</td>
                         <td> {{ row[2] }}</td>
+                        <td>Show Details</td>
+
                     </tr> 
                     {% endfor %}
                 </tbody>
@@ -232,13 +265,19 @@
         <script> // Documentation ->  https://datatables.net/manual/index
             let table_admins = new DataTable('#AdminsTable', {
                 // options
+                "columnDefs": [
+                    {"targets": -1,
+                    "render": function (data, type, row, meta) {
+                        console.log(window.location.host)
+                        return "<a href='" + "{{url_for('device_information') }}" + "?table=Admins&device=" + row[0] + "'>" + data + '</a>';
+                    }}
+                ]
             });
         </script>
 
     </div>
 
 </body>
-</html>
 
 <style>
 .table-block {
@@ -313,28 +352,30 @@ body {
     vertical-align: top;    
 }
 
-    .device-Jfo {
-        color: #ffffff;
-        font-family: Inter, 'Source Sans Pro';
-        font-size: 4rem;
-        font-weight: 800;
-        line-height: 1.2125;
-        margin: 15rem 0.1rem 4.7rem 0rem;
-        white-space: nowrap;
-    }
+.device-Jfo {
+    color: #ffffff;
+    font-family: Inter, 'Source Sans Pro';
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1.2125;
+    margin: 15rem 0.1rem 4.7rem 0rem;
+    white-space: nowrap;
+}
 
-    .device-Jfo1 {
-        color: #ff0000;
-        font-family: Inter, 'Source Sans Pro';
-        font-size: 3rem;
-        font-weight: 800;
-        line-height: 1.2125;
-        margin: 1rem 0.1rem 4.7rem 0rem;
-        white-space: nowrap;
-    }
+.device-Jfo1 {
+    color: #ff0000;
+    font-family: Inter, 'Source Sans Pro';
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.2125;
+    margin: 1rem 0.1rem 4.7rem 0rem;
+    white-space: nowrap;
+}
 
 a:link, a:visited, a:hover, a:active { 
     text-decoration: none; 
     color: #ffffff;
-} 
+}
+
 </style>
+</html>
