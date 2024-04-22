@@ -91,11 +91,12 @@ def show_devices():
         cur = conn.cursor()
         print(cur.execute("SELECT * from Computers").fetchall())
         computers_table = cur.execute("SELECT * from Computers").fetchall()
+        printers_table = cur.execute("SELECT * from Printers").fetchall()
         screens_table = cur.execute("SELECT * from Screens").fetchall()
         admins_table = cur.execute("SELECT * from Admins").fetchall()
         phones_table = cur.execute("SELECT * from Phones").fetchall()
         employees_table = cur.execute("SELECT * from Users").fetchall()
-        return render_template('show_devices.html',computers=computers_table, screens=screens_table, admins=admins_table, phones=phones_table, employees=employees_table)
+        return render_template('show_devices.html',computers=computers_table, printers=printers_table, screens=screens_table, admins=admins_table, phones=phones_table, employees=employees_table)
     else:
         return render_template('login.html')
 
@@ -147,7 +148,7 @@ def scan():
         return render_template('scan.html')
     return render_template('login.html')
 
-@app.route("/device_information", methods=['POST'])
+@app.route("/device_information", methods=['GET','POST'])
 def device_information():
 
     print(request.json.get('qr_code'))
@@ -194,17 +195,20 @@ def add_screen():
 
 @app.route("/add_equipment_form_screen_appliquer", methods = ['GET','POST'])
 def add_equipment_screen_form():
-    conn = sqlite3.connect('inv_pichon.db')
+    conn = sqlite3.connect('inv_pichon.db') # Connexion à la base de données avec le module SQLite3
     cur = conn.cursor()
     if request.method == 'POST':
-        make = request.form.get('make-input')
+        make = request.form.get('make-input') # Récupération des champs tapés par l'utilisateur
         model = request.form.get('model-input')
         serialnumber = request.form.get('serialnumber-input')
         purchasedate = request.form.get('purchase-input')
         assigneduser = request.form.get('assigneduser-input')
+
+        # Insertion dans la base de données de l'équipement avec les informations récupérées dans le formulaire
         cur.execute("INSERT INTO Screens(make, model, serialnumber, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make, model, serialnumber, purchasedate, assigneduser))
+        # Validation des changements
         conn.commit()
-    return render_template('equipment_types/screen.html',validation_code = "L'équipement a bien été ajouté")
+    return render_template('equipment_types/screen.html',validation_code = "L'équipement a bien été ajouté") # Affichage de la page avec un message de validation ajouté
 
 @app.route("/equipment_types/phone", methods=['GET','POST'])
 def add_phone():
@@ -335,29 +339,29 @@ def upload():
 def login_form():
     global loggedin
     loggedin = False
-    conn = sqlite3.connect('inv_pichon.db')
+    conn = sqlite3.connect('inv_pichon.db') # Connexion à la base de données
     cur = conn.cursor()
     if request.method == 'POST':
-        userid = request.form.get('userid')
+        userid = request.form.get('userid') # Récuprération des informations entrées par l'utilisateur
         password = request.form.get('password')
-        escaped_username = userid.replace("'", "''") #evite injection sql
-        cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(escaped_username))
+        escaped_username = userid.replace("'", "''") #Evite injection SQL
+        cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(escaped_username)) # Récupération de l'utilisateur depuis la base de données
         username_bdd = cur.fetchall()
-        escaped_mdp = password.replace("'", "''") #evite injection sql
-        cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(escaped_mdp))
+        escaped_mdp = password.replace("'", "''") #Evite injection SQL
+        cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(escaped_mdp)) # Récupération du mot de passe depuis la base de données
         mdp_bdd = cur.fetchall()
-        if username_bdd == [] or mdp_bdd == []:
+        if username_bdd == [] or mdp_bdd == []: # Cas ou l'utilisateur n'existe pas dans la base de données
             loggedin = False
             print("Mauvais MDP")
             conn.close()
-            return render_template('login.html',mot_retour_connexion="Utilisateur ou Mot de passe invalide")
-        if (userid, password) == (username_bdd[0][0], mdp_bdd[0][0]): # Décryptage du mdp a revoir -------------------------------------------------------------
+            return render_template('login.html',mot_retour_connexion="Utilisateur ou Mot de passe invalide") # Affichage du message d'erreur
+        if (userid, password) == (username_bdd[0][0], mdp_bdd[0][0]): # Cas ou le mot de passe et le nom d'utilisateur sont corrects ----------- Décryptage MDP à revoir -----------
             loggedin = True
             conn.close()
             print('logged in')
             session['loggedin'] = True
             session['utilisateur_connecte'] = request.form['userid']
-            return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin)
+            return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin) # Redirection vers l'accueil
 
 if __name__ == '__main__':
     # app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')

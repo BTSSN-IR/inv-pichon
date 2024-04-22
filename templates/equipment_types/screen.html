@@ -21,9 +21,9 @@
     <div id="device-page">
         <p id="title">Add Equipment - Screen</p>
         <p id="validation">{{validation_code}}</p>
-        <form action="{{ url_for('add_equipment_screen_form') }}" method="POST">
+        <form action="{{ url_for('add_equipment_screen_form') }}" method="POST"> 
             <div id="info-box">
-                <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
+                <!-- L'utilisateur entre les valeurs souhaitées dans le formulaire -->
                 <div id="label-input">
                     <label for="Make_entry" id="secondary-text"> Fabricant </label>
                     <input id="Make_entry" type="text" name="make-input">
@@ -46,6 +46,7 @@
                 </div>
             </div>
             <a href="">
+                <!-- Bouton pour valider l'insertion, lancement de la fonction "add_equipment_screen_form" dans le fichier Python -->
                 <button id="valider_bouton"> Valider <img id="image_validaion" src="/static/checked-mark-svgrepo-com.svg" style="margin: 0 7px;"></button> 
             </a>
         </form>

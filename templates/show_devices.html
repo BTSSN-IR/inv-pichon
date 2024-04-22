@@ -188,6 +188,57 @@
         </script>
 
         <div class="table-block" style="width: 50%;">
+            <p class="table-title">Printers</p>
+            <table class="devices-table" id="PrintersTable">
+                <thead>
+                    <tr>
+                        <th>Serial Number</th>
+                        <th>Make</th>
+                        <th>Model</th>
+                        <th>hostname</th>
+                        <th>purchasedate</th>
+                        <th>ip</th>
+                        <th>QR Code</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in printers %}
+                    <tr class="devices-column">
+                        <td> {{ row[0] }}</td>
+                        <td> {{ row[1] }}</td>
+                        <td> {{ row[2] }}</td>
+                        <td> {{ row[3] }}</td>
+                        <td> {{ row[4] }}</td>
+                        <td> {{ row[5] }}</td>
+                        <td>Download QR Code</td>
+                        <td>Show Details</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p1 class="device-Jfo1" >{{html}}</p1>
+        </div>
+
+        <script> // Documentation ->  https://datatables.net/manual/index
+            let table_printers = new DataTable('#PrintersTable', {
+                // options
+                "columnDefs": [{
+                    "targets": -2,
+                    "render": function (data, type, row, meta) {
+                        console.log(window.location.host)
+                        return "<a href='" + "{{url_for('generate_qrcode') }}" + "?table=Printers&device=" + row[0] + "' download>"  + data + '</a>'; // Generates QR Code and downloads it on the client device
+                    }},
+                    {"targets": -1,
+                    "render": function (data, type, row, meta) {
+                        console.log(window.location.host)
+                        return "<a href='" + "{{url_for('device_information') }}" + "?table=Printers&device=" + row[0] + "'>" + data + '</a>';
+                    }}
+                ]
+            });
+        </script>
+
+        <div class="table-block" style="width: 50%;">
             <p class="table-title">Screens</p>
             <table class="devices-table" id="ScreensTable">
                 <thead>
@@ -254,7 +305,6 @@
                         <td> {{ row[1] }}</td>
                         <td> {{ row[2] }}</td>
                         <td>Show Details</td>
-
                     </tr> 
                     {% endfor %}
                 </tbody>
