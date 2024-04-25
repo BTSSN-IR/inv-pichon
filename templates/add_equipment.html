@@ -31,6 +31,7 @@
                     <option value="mouse">Mouse</option>
                     <option value="printer">Printer</option>
                     <option value="software">Software</option>
+                    <option value="externaldrive">External Drive</option>
                 </select>
 
             <script>
@@ -55,6 +56,9 @@
                     }
                     if (sel.options[sel.selectedIndex].text == "Software") {
                         window.location.href = "/equipment_types/software";
+                    }
+                    if (sel.options[sel.selectedIndex].text == "External Drive") {
+                        window.location.href = "/equipment_types/externaldrive";
                     }
                 }
             </script>            

@@ -96,7 +96,8 @@ def show_devices():
         admins_table = cur.execute("SELECT * from Admins").fetchall()
         phones_table = cur.execute("SELECT * from Phones").fetchall()
         employees_table = cur.execute("SELECT * from Users").fetchall()
-        return render_template('show_devices.html',computers=computers_table, printers=printers_table, screens=screens_table, admins=admins_table, phones=phones_table, employees=employees_table)
+        externaldrives_table = cur.execute("SELECT * from ExternalDrives").fetchall()
+        return render_template('show_devices.html',computers=computers_table, printers=printers_table, screens=screens_table, admins=admins_table, phones=phones_table,externaldrives=externaldrives_table, employees=employees_table)
     else:
         return render_template('login.html')
 
@@ -187,7 +188,7 @@ def add_equipment_computer_form():
         print(f"INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{hostname}\",\"{serialnumber}\",\"{assigneduser}\")")
         cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
         conn.commit()
-    return render_template('equipment_types/computer.html',validation_code = "L'équipement a bien été ajouté")
+    return render_template('equipment_types/computer.html',validation_code = "The computer was successfully added")
     
 @app.route("/equipment_types/screen", methods=['GET','POST'])
 def add_screen():
@@ -208,7 +209,7 @@ def add_equipment_screen_form():
         cur.execute("INSERT INTO Screens(make, model, serialnumber, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make, model, serialnumber, purchasedate, assigneduser))
         # Validation des changements
         conn.commit()
-    return render_template('equipment_types/screen.html',validation_code = "L'équipement a bien été ajouté") # Affichage de la page avec un message de validation ajouté
+    return render_template('equipment_types/screen.html',validation_code = "The screen was successfully added") # Affichage de la page avec un message de validation ajouté
 
 @app.route("/equipment_types/phone", methods=['GET','POST'])
 def add_phone():
@@ -227,7 +228,7 @@ def add_equipment_phone_form():
         assigneduser = request.form.get('assigneduser-input')
         cur.execute("INSERT INTO Phones(make, model, serialnumber, purchasedate, phonenumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make,model, serialnumber, purchase, phonenumber, assigneduser))
         conn.commit()
-    return render_template('equipment_types/phone.html',validation_code = "L'équipement a bien été ajouté")
+    return render_template('equipment_types/phone.html',validation_code = "The phone was successfully added")
 
 @app.route("/equipment_types/employee", methods=['GET','POST'])
 def add_employee():
@@ -248,7 +249,7 @@ def add_equipment_employee_form():
         print("INSERT INTO Users(firstname, lastname, department, email, computer, phone, mouse) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(firstname, lastname, department, email, computer, phone, mouse))
         cur.execute("INSERT INTO Users(firstname, lastname, department, email, computer, phone, mouse) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(firstname, lastname, department, email, computer, phone, mouse))
         conn.commit()
-    return render_template('equipment_types/employee.html',validation_code = "L'utilisateur a bien été ajouté")
+    return render_template('equipment_types/employee.html',validation_code = "The employee was successfully added")
 
 @app.route("/equipment_types/mouse", methods=['GET','POST'])
 def add_mouse():
@@ -264,7 +265,7 @@ def add_equipment_mouse_form():
         mainuser = request.form.get('mainuser-input')
         cur.execute("INSERT INTO Mouse(make, model, user) VALUES (\"{}\",\"{}\",\"{}\")".format(make, model, mainuser))
         conn.commit()
-    return render_template('equipment_types/mouse.html',validation_code = "L'équipement a bien été ajouté")
+    return render_template('equipment_types/mouse.html',validation_code = "The mouse was successfully added")
 
 @app.route("/equipment_types/keyboard", methods=['GET','POST'])
 def add_keyboard():
@@ -279,7 +280,7 @@ def add_equipment_keyboard_form():
         serialnumber = request.form.get('serialnumber')
         assigneduser = request.form.get('assigned-user')
         cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
-    return render_template('equipment_types/keyboard.html',validation_code = "L'équipement a bien été ajouté")
+    return render_template('equipment_types/keyboard.html',validation_code = "The keyboard was successfully added")
 
 @app.route("/equipment_types/printer", methods=['GET','POST'])
 def add_printer():
@@ -297,7 +298,7 @@ def add_equipment_printer_form():
         serialnumber = request.form.get('serialnumber-input')
         cur.execute("INSERT INTO Printers(hostname, make, model, serialnumber, purchasedate) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname,make,model,serialnumber,purchasedate))
         conn.commit()
-    return render_template('equipment_types/printer.html',validation_code = "L'équipement a bien été ajouté")
+    return render_template('equipment_types/printer.html',validation_code = "The printer was successfully added")
 
 @app.route("/equipment_types/software", methods=['GET','POST'])
 def add_software():
@@ -312,7 +313,27 @@ def add_equipment_software_form():
         description = request.form.get('description-input')
         cur.execute("INSERT INTO Software(name, description) VALUES (\"{}\",\"{}\")".format(name,description))
         conn.commit()
-    return render_template('equipment_types/software.html',validation_code = "Le logiciel a bien été ajouté")
+    return render_template('equipment_types/software.html',validation_code = "The software was successfully added")
+
+@app.route("/equipment_types/externaldrive", methods=['GET','POST'])
+def add_externaldrive():
+    return render_template('equipment_types/externaldrive.html')
+
+@app.route("/add_equipment_form_externaldrive_appliquer", methods = ['GET','POST'])
+def add_equipment_externaldrive_form():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        serialnumber = request.form.get('serialnumber-input')
+        make = request.form.get('make-input')
+        model = request.form.get('model-input')
+        type = request.form.get('type-input')
+        capacity = request.form.get('capacity-input')
+        purchasedate = request.form.get('purchasedate-input')
+        cur.execute("INSERT INTO ExternalDrives(serialnumber, make, model, type, capacity, purchasedate) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(serialnumber, make, model, type, capacity, purchasedate))
+        conn.commit()
+    return render_template('equipment_types/externaldrive.html',validation_code = "The drive was successfully added")
+
 
 @app.route('/upload', methods = ['GET', 'POST'])
 def upload():
