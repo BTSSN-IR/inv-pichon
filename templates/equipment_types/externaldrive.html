@@ -19,39 +19,40 @@
         </div>
     </div>
     <div id="device-page">
-        <p id="title">Add Equipment - Screen</p>
+        <p id="title">Add Equipment - External Drive</p>
         <p id="validation">{{validation_code}}</p>
-        <form action="{{ url_for('add_equipment_screen_form') }}" method="POST"> 
+        <form action="{{ url_for('add_equipment_externaldrive_form') }}" method="POST">
             <div id="info-box">
-                <!-- L'utilisateur entre les valeurs souhaitées dans le formulaire -->
+                <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
                 <div id="label-input">
-                    <label for="Make_entry" id="secondary-text"> Fabricant </label>
-                    <input id="Make_entry" type="text" name="make-input">
-                </div>
-                <div id="label-input">
-                    <label for="Model_entry" id="secondary-text"> Modèle </label>
-                    <input id="Model_entry" type="text" name="model-input">
-                </div>
-                <div id="label-input">
-                    <label for="Serial_Number_entry" id="secondary-text"> Numéro de serie </label>
+                    <label for="Serial_Number_entry" id="secondary-text"> Serial Number </label>
                     <input id="Serial_Number_entry" type="text" name="serialnumber-input">
                 </div>
                 <div id="label-input">
-                    <label for="Purchasedate_entry" id="secondary-text"> Date d'achat </label>
-                    <input id="Purchasedate_entry" type="text" name="purchase-input">
+                    <label for="Make_entry" id="secondary-text"> Make </label>
+                    <input id="Make_entry" type="text" name="make-input">
                 </div>
                 <div id="label-input">
-                    <label for="Assigned_User_entry" id="secondary-text"> Utilisateur </label>
-                    <input id="Assigned_User_entry" type="text" name="assigneduser-input">
+                    <label for="Model_entry" id="secondary-text"> Model </label>
+                    <input id="Model_entry" type="text" name="model-input">
+                </div>
+                <div id="label-input">
+                    <label for="Type_entry" id="secondary-text"> Type </label>
+                    <input id="Type_entry" type="text" name="type-input">
+                </div>
+                <div id="label-input">
+                    <label for="Capacity_entry" id="secondary-text"> Capacity (Go) </label>
+                    <input id="Capacity_entry" type="text" name="capacity-input">
+                </div>
+                <div id="label-input">
+                    <label for="Purchasedate_entry" id="secondary-text"> Purchase Date </label>
+                    <input id="Purchasedate_entry" type="text" name="purchasedate-input">
                 </div>
             </div>
             <a href="">
-                <!-- Bouton pour valider l'insertion, lancement de la fonction "add_equipment_screen_form" dans le fichier Python -->
                 <button id="valider_bouton"> Submit <img id="image_validaion" src="/static/checked-mark-svgrepo-com.svg" style="margin: 0 7px;"></button> 
             </a>
         </form>
-
-
     </div>
 
 </body>

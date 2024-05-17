@@ -91,11 +91,13 @@ def show_devices():
         cur = conn.cursor()
         print(cur.execute("SELECT * from Computers").fetchall())
         computers_table = cur.execute("SELECT * from Computers").fetchall()
+        printers_table = cur.execute("SELECT * from Printers").fetchall()
         screens_table = cur.execute("SELECT * from Screens").fetchall()
         admins_table = cur.execute("SELECT * from Admins").fetchall()
         phones_table = cur.execute("SELECT * from Phones").fetchall()
         employees_table = cur.execute("SELECT * from Users").fetchall()
-        return render_template('show_devices.html',computers=computers_table, screens=screens_table, admins=admins_table, phones=phones_table, employees=employees_table)
+        externaldrives_table = cur.execute("SELECT * from ExternalDrives").fetchall()
+        return render_template('show_devices.html',computers=computers_table, printers=printers_table, screens=screens_table, admins=admins_table, phones=phones_table,externaldrives=externaldrives_table, employees=employees_table)
     else:
         return render_template('login.html')
 
@@ -147,7 +149,7 @@ def scan():
         return render_template('scan.html')
     return render_template('login.html')
 
-@app.route("/device_information")
+@app.route("/device_information", methods=['POST'])
 def device_information():
 
     print(request.json.get('qr_code'))
@@ -186,7 +188,7 @@ def add_equipment_computer_form():
         print(f"INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{hostname}\",\"{serialnumber}\",\"{assigneduser}\")")
         cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
         conn.commit()
-    return render_template('equipment_types/computer.html',validation_code = "L'équipement a bien été ajouté")
+    return render_template('equipment_types/computer.html',validation_code = "The computer was successfully added")
     
 @app.route("/equipment_types/screen", methods=['GET','POST'])
 def add_screen():
@@ -194,17 +196,20 @@ def add_screen():
 
 @app.route("/add_equipment_form_screen_appliquer", methods = ['GET','POST'])
 def add_equipment_screen_form():
-    conn = sqlite3.connect('inv_pichon.db')
+    conn = sqlite3.connect('inv_pichon.db') # Connexion à la base de données avec le module SQLite3
     cur = conn.cursor()
     if request.method == 'POST':
-        make = request.form.get('make-input')
+        make = request.form.get('make-input') # Récupération des champs tapés par l'utilisateur
         model = request.form.get('model-input')
         serialnumber = request.form.get('serialnumber-input')
         purchasedate = request.form.get('purchase-input')
         assigneduser = request.form.get('assigneduser-input')
+
+        # Insertion dans la base de données de l'équipement avec les informations récupérées dans le formulaire
         cur.execute("INSERT INTO Screens(make, model, serialnumber, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make, model, serialnumber, purchasedate, assigneduser))
+        # Validation des changements
         conn.commit()
-    return render_template('equipment_types/screen.html',validation_code = "L'équipement a bien été ajouté")
+    return render_template('equipment_types/screen.html',validation_code = "The screen was successfully added") # Affichage de la page avec un message de validation ajouté
 
 @app.route("/equipment_types/phone", methods=['GET','POST'])
 def add_phone():
@@ -223,7 +228,7 @@ def add_equipment_phone_form():
         assigneduser = request.form.get('assigneduser-input')
         cur.execute("INSERT INTO Phones(make, model, serialnumber, purchasedate, phonenumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make,model, serialnumber, purchase, phonenumber, assigneduser))
         conn.commit()
-    return render_template('equipment_types/phone.html',validation_code = "L'équipement a bien été ajouté")
+    return render_template('equipment_types/phone.html',validation_code = "The phone was successfully added")
 
 @app.route("/equipment_types/employee", methods=['GET','POST'])
 def add_employee():
@@ -244,7 +249,7 @@ def add_equipment_employee_form():
         print("INSERT INTO Users(firstname, lastname, department, email, computer, phone, mouse) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(firstname, lastname, department, email, computer, phone, mouse))
         cur.execute("INSERT INTO Users(firstname, lastname, department, email, computer, phone, mouse) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(firstname, lastname, department, email, computer, phone, mouse))
         conn.commit()
-    return render_template('equipment_types/employee.html',validation_code = "L'utilisateur a bien été ajouté")
+    return render_template('equipment_types/employee.html',validation_code = "The employee was successfully added")
 
 @app.route("/equipment_types/mouse", methods=['GET','POST'])
 def add_mouse():
@@ -260,7 +265,7 @@ def add_equipment_mouse_form():
         mainuser = request.form.get('mainuser-input')
         cur.execute("INSERT INTO Mouse(make, model, user) VALUES (\"{}\",\"{}\",\"{}\")".format(make, model, mainuser))
         conn.commit()
-    return render_template('equipment_types/mouse.html',validation_code = "L'équipement a bien été ajouté")
+    return render_template('equipment_types/mouse.html',validation_code = "The mouse was successfully added")
 
 @app.route("/equipment_types/keyboard", methods=['GET','POST'])
 def add_keyboard():
@@ -275,7 +280,7 @@ def add_equipment_keyboard_form():
         serialnumber = request.form.get('serialnumber')
         assigneduser = request.form.get('assigned-user')
         cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
-    return render_template('equipment_types/keyboard.html',validation_code = "L'équipement a bien été ajouté")
+    return render_template('equipment_types/keyboard.html',validation_code = "The keyboard was successfully added")
 
 @app.route("/equipment_types/printer", methods=['GET','POST'])
 def add_printer():
@@ -293,7 +298,7 @@ def add_equipment_printer_form():
         serialnumber = request.form.get('serialnumber-input')
         cur.execute("INSERT INTO Printers(hostname, make, model, serialnumber, purchasedate) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname,make,model,serialnumber,purchasedate))
         conn.commit()
-    return render_template('equipment_types/printer.html',validation_code = "L'équipement a bien été ajouté")
+    return render_template('equipment_types/printer.html',validation_code = "The printer was successfully added")
 
 @app.route("/equipment_types/software", methods=['GET','POST'])
 def add_software():
@@ -308,7 +313,27 @@ def add_equipment_software_form():
         description = request.form.get('description-input')
         cur.execute("INSERT INTO Software(name, description) VALUES (\"{}\",\"{}\")".format(name,description))
         conn.commit()
-    return render_template('equipment_types/software.html',validation_code = "Le logiciel a bien été ajouté")
+    return render_template('equipment_types/software.html',validation_code = "The software was successfully added")
+
+@app.route("/equipment_types/externaldrive", methods=['GET','POST'])
+def add_externaldrive():
+    return render_template('equipment_types/externaldrive.html')
+
+@app.route("/add_equipment_form_externaldrive_appliquer", methods = ['GET','POST'])
+def add_equipment_externaldrive_form():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        serialnumber = request.form.get('serialnumber-input')
+        make = request.form.get('make-input')
+        model = request.form.get('model-input')
+        type = request.form.get('type-input')
+        capacity = request.form.get('capacity-input')
+        purchasedate = request.form.get('purchasedate-input')
+        cur.execute("INSERT INTO ExternalDrives(serialnumber, make, model, type, capacity, purchasedate) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(serialnumber, make, model, type, capacity, purchasedate))
+        conn.commit()
+    return render_template('equipment_types/externaldrive.html',validation_code = "The drive was successfully added")
+
 
 @app.route('/upload', methods = ['GET', 'POST'])
 def upload():
@@ -335,29 +360,29 @@ def upload():
 def login_form():
     global loggedin
     loggedin = False
-    conn = sqlite3.connect('inv_pichon.db')
+    conn = sqlite3.connect('inv_pichon.db') # Connexion à la base de données
     cur = conn.cursor()
     if request.method == 'POST':
-        userid = request.form.get('userid')
+        userid = request.form.get('userid') # Récuprération des informations entrées par l'utilisateur
         password = request.form.get('password')
-        escaped_username = userid.replace("'", "''") #evite injection sql
-        cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(escaped_username))
+        escaped_username = userid.replace("'", "''") #Evite injection SQL
+        cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(escaped_username)) # Récupération de l'utilisateur depuis la base de données
         username_bdd = cur.fetchall()
-        escaped_mdp = password.replace("'", "''") #evite injection sql
-        cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(escaped_mdp))
+        escaped_mdp = password.replace("'", "''") #Evite injection SQL
+        cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(escaped_mdp)) # Récupération du mot de passe depuis la base de données
         mdp_bdd = cur.fetchall()
-        if username_bdd == [] or mdp_bdd == []:
+        if username_bdd == [] or mdp_bdd == []: # Cas ou l'utilisateur n'existe pas dans la base de données
             loggedin = False
             print("Mauvais MDP")
             conn.close()
-            return render_template('login.html',mot_retour_connexion="Utilisateur ou Mot de passe invalide")
-        if (userid, password) == (username_bdd[0][0], mdp_bdd[0][0]): # Décryptage du mdp a revoir -------------------------------------------------------------
+            return render_template('login.html',mot_retour_connexion="Utilisateur ou Mot de passe invalide") # Affichage du message d'erreur
+        if (userid, password) == (username_bdd[0][0], mdp_bdd[0][0]): # Cas ou le mot de passe et le nom d'utilisateur sont corrects ----------- Décryptage MDP à revoir -----------
             loggedin = True
             conn.close()
             print('logged in')
             session['loggedin'] = True
             session['utilisateur_connecte'] = request.form['userid']
-            return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin)
+            return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin) # Redirection vers l'accueil
 
 if __name__ == '__main__':
     # app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')

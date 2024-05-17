@@ -25,9 +25,9 @@
                 {% else %}
                 <p></p>
                 {% endif %}
-                <div id="rechercher">
-                    <input type="text" class="barre-recherche-Guj" placeholder="Search">
-                </div>
+                <!-- <div id="rechercher">
+                    <input type="text" class="barre-recherche-Guj" placeholder="Search">        Search bar useless for now, will be added back later
+                </div> -->
 
                 {% if logged_in %}
                 <a href="{{ url_for('logout') }}"><input type="button" class="login-button" value="Log out"></a>
@@ -177,7 +177,7 @@ body {
     display: flex;
     flex-shrink: 0;
     font-family: Inter, 'Source Sans Pro';
-    font-size: 2.6rem;
+    font-size: 1.8rem;
     font-weight: 800;
     height: 3.4rem;
     justify-content: center;
