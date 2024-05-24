@@ -152,14 +152,14 @@ def scan():
 @app.route("/device_information", methods=['POST'])
 def device_information():
 
-    print(request.json.get('qr_code'))
+    # print(request.json.get('qr_code'))
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     device_data = [request.args.get('table'), request.args.get('device')]
     list_headers = cur.execute(f"PRAGMA table_info({device_data[0]});").fetchall()
+    print(list_headers)
     for i in range(len(list_headers)):
         list_headers[i] = list_headers[i][1] # Remplacement des champs par seulement le nom des champs
-
     try:
         data_list = cur.execute(f"SELECT * FROM {device_data[0]} WHERE {list_headers[0]} == \'{device_data[1]}\'").fetchall()
         data_list = [str(i) for i in list(data_list[0])]
