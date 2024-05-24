@@ -51,7 +51,9 @@ def decrypt_password(encrypted_password, key=SECRET_KEY):
 @app.route("/logout")
 def logout():
     session.pop('utilisateur_connecte', None)
+    session.pop('loggedin')
     loggedin = False
+    print('user disconnect')
     return render_template('login.html')
 
 def allowed_file(filename):
@@ -103,7 +105,7 @@ def show_devices():
 
 @app.route("/add_equipment")
 def add_equipment():
-    if loggedin == True:
+    if 'loggedin' in session and session['loggedin']:
         return render_template('add_equipment.html')
     return render_template('login.html')
 
@@ -146,7 +148,7 @@ def add_user_form():
 @app.route("/scan")
 def scan():
     if loggedin ==True:
-        return render_template('Scan.html')
+        return render_template('scan.html')
     return render_template('login.html')
 
 @app.route("/device_information", methods=['POST'])
@@ -192,7 +194,10 @@ def add_equipment_computer_form():
     
 @app.route("/equipment_types/screen", methods=['GET','POST'])
 def add_screen():
-    return render_template('equipment_types/screen.html')
+    if 'loggedin' in session and session['loggedin']:
+        return render_template('equipment_types/screen.html')
+    else:
+        return render_template('login.html')
 
 @app.route("/add_equipment_form_screen_appliquer", methods = ['GET','POST'])
 def add_equipment_screen_form():
@@ -213,7 +218,10 @@ def add_equipment_screen_form():
 
 @app.route("/equipment_types/phone", methods=['GET','POST'])
 def add_phone():
-    return render_template('equipment_types/phone.html')
+    if 'loggedin' in session and session['loggedin']:
+        return render_template('equipment_types/phone.html')
+    else:
+        return render_template('login.html')
 
 @app.route("/add_equipment_form_phone_appliquer", methods = ['GET','POST'])
 def add_equipment_phone_form():
@@ -232,7 +240,10 @@ def add_equipment_phone_form():
 
 @app.route("/equipment_types/employee", methods=['GET','POST'])
 def add_employee():
-    return render_template('equipment_types/employee.html')
+    if 'loggedin' in session and session['loggedin']:
+        return render_template('equipment_types/employee.html')
+    else:
+        return render_template('login.html')
 
 @app.route("/add_equipment_form_employee_appliquer", methods = ['GET','POST'])
 def add_equipment_employee_form():
@@ -253,7 +264,10 @@ def add_equipment_employee_form():
 
 @app.route("/equipment_types/mouse", methods=['GET','POST'])
 def add_mouse():
-    return render_template('equipment_types/mouse.html')
+    if 'loggedin' in session and session['loggedin']:
+        return render_template('equipment_types/mouse.html')
+    else:
+        return render_template('login.html')
 
 @app.route("/add_equipment_form_mouse_appliquer", methods = ['GET','POST'])
 def add_equipment_mouse_form():
@@ -269,7 +283,10 @@ def add_equipment_mouse_form():
 
 @app.route("/equipment_types/keyboard", methods=['GET','POST'])
 def add_keyboard():
-    return render_template('equipment_types/keyboard.html')
+    if 'loggedin' in session and session['loggedin']:
+        return render_template('equipment_types/keyboard.html')
+    else:
+        return render_template('login.html')
 
 @app.route("/add_equipment_form_keyboard_appliquer", methods = ['GET','POST'])
 def add_equipment_keyboard_form():
@@ -284,7 +301,10 @@ def add_equipment_keyboard_form():
 
 @app.route("/equipment_types/printer", methods=['GET','POST'])
 def add_printer():
-    return render_template('equipment_types/printer.html')
+    if 'loggedin' in session and session['loggedin']:
+        return render_template('equipment_types/printer.html')
+    else:
+        return render_template('login.html')
 
 @app.route("/add_equipment_form_printer_appliquer", methods = ['GET','POST'])
 def add_equipment_printer_form():
@@ -302,7 +322,10 @@ def add_equipment_printer_form():
 
 @app.route("/equipment_types/software", methods=['GET','POST'])
 def add_software():
-    return render_template('equipment_types/software.html')
+    if 'loggedin' in session and session['loggedin']:
+        return render_template('equipment_types/software.html')
+    else:
+        return render_template('login.html')
 
 @app.route("/add_equipment_form_software_appliquer", methods = ['GET','POST'])
 def add_equipment_software_form():
@@ -317,7 +340,10 @@ def add_equipment_software_form():
 
 @app.route("/equipment_types/externaldrive", methods=['GET','POST'])
 def add_externaldrive():
-    return render_template('equipment_types/externaldrive.html')
+    if 'loggedin' in session and session['loggedin']:
+        return render_template('equipment_types/externaldrive.html')
+    else:
+        return render_template('login.html')
 
 @app.route("/add_equipment_form_externaldrive_appliquer", methods = ['GET','POST'])
 def add_equipment_externaldrive_form():
@@ -382,6 +408,8 @@ def login_form():
             print('logged in')
             session['loggedin'] = True
             session['utilisateur_connecte'] = request.form['userid']
+            print('connexion utilisateur')
+            print(session['loggedin'])
             return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin) # Redirection vers l'accueil
 
 if __name__ == '__main__':
