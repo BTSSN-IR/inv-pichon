@@ -146,7 +146,7 @@ def add_user_form():
 @app.route("/scan")
 def scan():
     if loggedin ==True:
-        return render_template('scan.html')
+        return render_template('Scan.html')
     return render_template('login.html')
 
 @app.route("/device_information", methods=['POST'])
