@@ -21,8 +21,8 @@
     </div>
 
     <div id="scan-page">
-        <p id="title">Scan QRCode</p>
-
+        <p id="title">Scan QR Code</p>
+        <p id="message_erreur">{{message_erreur}}</p>
         <div class="container">
             <div class="section">
                 <div id="my-qr-reader">
@@ -42,7 +42,7 @@
     </div>
 </body>
 
-<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="static/qr_scan.js"></script>
 
 <script>
     function domReady(fn) {
@@ -57,25 +57,37 @@
     }
     
     domReady(function () {
-    
         // If found you qr code
         function onScanSuccess(decodeText, decodeResult) {
-            alert("You Qr is : " + decodeText);
+            let form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{{ url_for('redirection_scan_api') }}";
+
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'qr_data';
+            input.value = decodeText;
+
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+
+            document.forms['export_qr'].submit();
+
             console.log(decodeText);
 
-            fetch('/device_information', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            body: JSON.stringify({qr_code: decodeText})
-            })
-            .then(response => response.json())
-            .then(data => {
-            console.log('Success:', data);
-        })
+            // fetch('/device_information', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            // body: JSON.stringify({qr_code: decodeText})
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            // console.log('Success:', data);
+        // })
         }
-    
         let htmlscanner = new Html5QrcodeScanner(
             "my-qr-reader",
             { fps: 10, qrbox: 200, aspectRatio: 1, torchFeature: true  }
@@ -86,6 +98,16 @@
 
 <style>
 
+#message_erreur {
+    color: #ffffff;
+    font-family: Inter, 'Source Sans Pro';
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.2125;
+    margin: 0rem 0.1rem 2.7rem 0rem;
+    white-space: nowrap;
+}
+    
 .container {
     width: 100%;
     max-width: 500px;
@@ -257,6 +279,10 @@ body {
         max-height: 400px;
         margin: 5px;
     }
+
+    #message_erreur {
+        font-size: 1.6rem;
+    }  
 }
 
 </style>

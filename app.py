@@ -21,7 +21,6 @@ app.config['SESSION_TYPE'] = 'redis'  # Backend de session
 app.config['SESSION_REDIS'] = Redis(host='localhost', port=5000)  # Configuration de Redis
 
 app.config['UPLOAD_FOLDER'] = 'upload/'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 import pyzbar.pyzbar
 import PIL.Image
@@ -53,7 +52,6 @@ def logout():
     session.pop('utilisateur_connecte', None)
     session.pop('loggedin')
     loggedin = False
-    print('user disconnect')
     return render_template('login.html')
 
 def allowed_file(filename):
@@ -66,7 +64,6 @@ def generate_qrcode():
     qr = qrcode.QRCode(version = 1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size = 10, border = 4)
     qr.add_data(data)
     qr.make(fit = True)
-
     image = qr.make_image(fill_color = "black", back_color = "white")
     image.save(f"qrcodes/{data}.png")
     return send_file(f"qrcodes/{data}.png")
@@ -111,7 +108,7 @@ def add_equipment():
 
 @app.route("/add_user")
 def add_user():
-    if loggedin == True:
+    if 'loggedin' in session and session['loggedin']:
         return render_template('add_user.html')
     return render_template('login.html')
 
@@ -119,7 +116,7 @@ def add_user():
 def add_user_form():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
-    if loggedin == True:
+    if 'loggedin' in session and session['loggedin']:
         if request.method == 'POST':
             userid = request.form.get('userid')
             password = request.form.get('password')
@@ -147,19 +144,17 @@ def add_user_form():
 
 @app.route("/scan")
 def scan():
-    if loggedin ==True:
+    if 'loggedin' in session and session['loggedin']:
         return render_template('scan.html')
     return render_template('login.html')
 
 @app.route("/device_information", methods=['POST'])
 def device_information():
-
-    # print(request.json.get('qr_code'))
+    print(request.json.get('qr_code'))
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     device_data = [request.args.get('table'), request.args.get('device')]
     list_headers = cur.execute(f"PRAGMA table_info({device_data[0]});").fetchall()
-    print(list_headers)
     for i in range(len(list_headers)):
         list_headers[i] = list_headers[i][1] # Remplacement des champs par seulement le nom des champs
     try:
@@ -186,18 +181,29 @@ def add_equipment_computer_form():
         hostname = request.form.get('hostname-input')
         serialnumber = request.form.get('serialnumber-input')
         assigneduser = request.form.get('assigneduser-input')
-        print(f'hostname : {hostname}; serialnumber : {serialnumber}; user : {assigneduser}')
-        print(f"INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{hostname}\",\"{serialnumber}\",\"{assigneduser}\")")
-        cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
+        purchase = request.form.get('purchasedate-input')
+        licenses = request.form.get('licenses-input')
+        cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser, purchasedate, licenses) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser, purchase, licenses))
         conn.commit()
     return render_template('equipment_types/computer.html',validation_code = "The computer was successfully added")
     
+@app.route("/update_equipement_computer", methods = ['GET','POST'])
+def update_equipement_computer():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        hostname = request.form.get('hostname-input')
+        serialnumber = request.form.get('serialnumber-input')
+        assigneduser = request.form.get('assigneduser-input')
+        purchase = request.form.get('purchasedate-input')
+        licenses = request.form.get('licenses-input')
+        cur.execute("UPDATE Computers SET serialnumber = '{}', hostname = '{}', mainuser = '{}', purchasedate = '{}', licenses = '{}' WHERE serialnumber = '{}'".format(serialnumber, hostname, assigneduser, purchase, licenses, serialnumber))
+        conn.commit()
+    return render_template('scan.html',message_erreur = "The equipment has been updated")    
+
 @app.route("/equipment_types/screen", methods=['GET','POST'])
 def add_screen():
-    if 'loggedin' in session and session['loggedin']:
-        return render_template('equipment_types/screen.html')
-    else:
-        return render_template('login.html')
+    return render_template('equipment_types/screen.html')
 
 @app.route("/add_equipment_form_screen_appliquer", methods = ['GET','POST'])
 def add_equipment_screen_form():
@@ -209,19 +215,29 @@ def add_equipment_screen_form():
         serialnumber = request.form.get('serialnumber-input')
         purchasedate = request.form.get('purchase-input')
         assigneduser = request.form.get('assigneduser-input')
-
         # Insertion dans la base de données de l'équipement avec les informations récupérées dans le formulaire
         cur.execute("INSERT INTO Screens(make, model, serialnumber, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make, model, serialnumber, purchasedate, assigneduser))
         # Validation des changements
         conn.commit()
     return render_template('equipment_types/screen.html',validation_code = "The screen was successfully added") # Affichage de la page avec un message de validation ajouté
 
+@app.route("/update_equipement_screen", methods = ['GET','POST'])
+def update_equipement_screen():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        make = request.form.get('make-input') # Récupération des champs tapés par l'utilisateur
+        model = request.form.get('model-input')
+        serialnumber = request.form.get('serialnumber-input')
+        purchasedate = request.form.get('purchase-input')
+        assigneduser = request.form.get('assigneduser-input')
+        cur.execute("UPDATE Screens SET serialnumber = '{}', make = '{}', model = '{}', purchasedate = '{}', mainuser = '{}' WHERE serialnumber = '{}'".format(serialnumber, make, model, purchasedate, assigneduser, serialnumber))
+        conn.commit()
+    return render_template('scan.html',message_erreur = "The equipment has been updated")
+
 @app.route("/equipment_types/phone", methods=['GET','POST'])
 def add_phone():
-    if 'loggedin' in session and session['loggedin']:
-        return render_template('equipment_types/phone.html')
-    else:
-        return render_template('login.html')
+    return render_template('equipment_types/phone.html')
 
 @app.route("/add_equipment_form_phone_appliquer", methods = ['GET','POST'])
 def add_equipment_phone_form():
@@ -238,12 +254,24 @@ def add_equipment_phone_form():
         conn.commit()
     return render_template('equipment_types/phone.html',validation_code = "The phone was successfully added")
 
+@app.route("/update_equipement_phone", methods = ['GET','POST'])
+def update_equipement_phone():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        model = request.form.get('model-input')
+        serialnumber = request.form.get('serialnumber-input')
+        phonenumber = request.form.get('phonenumber-input')
+        purchase = request.form.get('purchase-input')
+        make = request.form.get('make-input')
+        assigneduser = request.form.get('assigneduser-input')
+        cur.execute("UPDATE Phones SET make = '{}', model = '{}', serialnumber = '{}', purchasedate = '{}', phonenumber = '{}', mainuser = '{}' WHERE serialnumber = '{}'".format(make, model, serialnumber, purchase, phonenumber, assigneduser, serialnumber))
+        conn.commit()
+    return render_template('scan.html',message_erreur = "The equipment has been updated")
+
 @app.route("/equipment_types/employee", methods=['GET','POST'])
 def add_employee():
-    if 'loggedin' in session and session['loggedin']:
-        return render_template('equipment_types/employee.html')
-    else:
-        return render_template('login.html')
+    return render_template('equipment_types/employee.html')
 
 @app.route("/add_equipment_form_employee_appliquer", methods = ['GET','POST'])
 def add_equipment_employee_form():
@@ -264,10 +292,7 @@ def add_equipment_employee_form():
 
 @app.route("/equipment_types/mouse", methods=['GET','POST'])
 def add_mouse():
-    if 'loggedin' in session and session['loggedin']:
-        return render_template('equipment_types/mouse.html')
-    else:
-        return render_template('login.html')
+    return render_template('equipment_types/mouse.html')
 
 @app.route("/add_equipment_form_mouse_appliquer", methods = ['GET','POST'])
 def add_equipment_mouse_form():
@@ -283,10 +308,7 @@ def add_equipment_mouse_form():
 
 @app.route("/equipment_types/keyboard", methods=['GET','POST'])
 def add_keyboard():
-    if 'loggedin' in session and session['loggedin']:
-        return render_template('equipment_types/keyboard.html')
-    else:
-        return render_template('login.html')
+    return render_template('equipment_types/keyboard.html')
 
 @app.route("/add_equipment_form_keyboard_appliquer", methods = ['GET','POST'])
 def add_equipment_keyboard_form():
@@ -301,10 +323,7 @@ def add_equipment_keyboard_form():
 
 @app.route("/equipment_types/printer", methods=['GET','POST'])
 def add_printer():
-    if 'loggedin' in session and session['loggedin']:
-        return render_template('equipment_types/printer.html')
-    else:
-        return render_template('login.html')
+    return render_template('equipment_types/printer.html')
 
 @app.route("/add_equipment_form_printer_appliquer", methods = ['GET','POST'])
 def add_equipment_printer_form():
@@ -316,16 +335,29 @@ def add_equipment_printer_form():
         model = request.form.get('model-input')
         purchasedate = request.form.get('purchasedate-input')
         serialnumber = request.form.get('serialnumber-input')
-        cur.execute("INSERT INTO Printers(hostname, make, model, serialnumber, purchasedate) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname,make,model,serialnumber,purchasedate))
+        ip = request.form.get('ip-input')
+        cur.execute("INSERT INTO Printers(hostname, make, model, serialnumber, purchasedate, ip) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname,make,model,serialnumber,purchasedate, ip))
         conn.commit()
     return render_template('equipment_types/printer.html',validation_code = "The printer was successfully added")
 
+@app.route("/update_equipement_printer", methods = ['GET','POST'])
+def update_equipement_printer():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        hostname = request.form.get('hostname-input')
+        make = request.form.get('make-input')
+        model = request.form.get('model-input')
+        purchasedate = request.form.get('purchasedate-input')
+        serialnumber = request.form.get('serialnumber-input')
+        ip = request.form.get('ip-input')
+        cur.execute("UPDATE Printers SET serialnumber = '{}', make = '{}', model = '{}', hostname = '{}', purchasedate = '{}', ip = '{}' WHERE serialnumber = '{}'".format(serialnumber, make, model, hostname, purchasedate, ip, serialnumber))
+        conn.commit()
+    return render_template('scan.html',message_erreur = "The equipment has been updated")
+
 @app.route("/equipment_types/software", methods=['GET','POST'])
 def add_software():
-    if 'loggedin' in session and session['loggedin']:
-        return render_template('equipment_types/software.html')
-    else:
-        return render_template('login.html')
+    return render_template('equipment_types/software.html')
 
 @app.route("/add_equipment_form_software_appliquer", methods = ['GET','POST'])
 def add_equipment_software_form():
@@ -340,10 +372,7 @@ def add_equipment_software_form():
 
 @app.route("/equipment_types/externaldrive", methods=['GET','POST'])
 def add_externaldrive():
-    if 'loggedin' in session and session['loggedin']:
-        return render_template('equipment_types/externaldrive.html')
-    else:
-        return render_template('login.html')
+    return render_template('equipment_types/externaldrive.html')
 
 @app.route("/add_equipment_form_externaldrive_appliquer", methods = ['GET','POST'])
 def add_equipment_externaldrive_form():
@@ -360,6 +389,24 @@ def add_equipment_externaldrive_form():
         conn.commit()
     return render_template('equipment_types/externaldrive.html',validation_code = "The drive was successfully added")
 
+@app.route("/update_equipement_externaldrive", methods = ['GET','POST'])
+def update_equipement_externaldrive():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        serialnumber = request.form.get('serialnumber-input')
+        make = request.form.get('make-input')
+        model = request.form.get('model-input')
+        type = request.form.get('type-input')
+        capacity = request.form.get('capacity-input')
+        purchasedate = request.form.get('purchasedate-input')
+        cur.execute("UPDATE ExternalDrives SET serialnumber = '{}', make = '{}', model = '{}', type = '{}', capacity = '{}', purchasedate = '{}' WHERE serialnumber = '{}'".format(serialnumber, make, model, type, capacity, purchasedate, serialnumber))
+        conn.commit()
+    return render_template('scan.html', message_erreur = "The equipment has been updated")
+
+def allowed_file(filename):
+    valid_extensions = ('.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp','.pdf')
+    return filename.lower().endswith(valid_extensions)
 
 @app.route('/upload', methods = ['GET', 'POST'])
 def upload():
@@ -377,10 +424,65 @@ def upload():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        else :
+            return render_template("scan.html", message_erreur = "The file is not an image")
         image = PIL.Image.open(file)
         codes = pyzbar.pyzbar.decode(image)
+        if codes == []:
+            return render_template("scan.html", message_erreur = "The image is not a QR Code")
         redirection = codes[0].data.decode()
-        return redirect(redirection)
+        conn = sqlite3.connect('inv_pichon.db') # Connexion à la base de données
+        cur = conn.cursor()
+        if ',' in redirection:
+            liste_redirection = redirection.split(",")
+            if liste_redirection[0] in ["Computers","ExternalDrives","Phones","Printers","Screens"]:
+                    query = "SELECT * FROM \"{}\" WHERE serialnumber = ?".format(liste_redirection[0])
+                    cur.execute(query, (liste_redirection[1],))
+                    contenue_entree = cur.fetchall()
+                    conn.close()
+                    if liste_redirection == []:
+                        return render_template("scan.html",message_erreur = "The equipment is not referenced")
+                    if liste_redirection[0] == "Computers":
+                        return render_template("Device_information_scan/computer.html",contenue_entree = contenue_entree)
+                    if liste_redirection[0] == "ExternalDrives":
+                        return render_template("Device_information_scan/externaldrive.html",contenue_entree = contenue_entree)
+                    if liste_redirection[0] == "Phones":
+                        return render_template("Device_information_scan/phone.html",contenue_entree = contenue_entree)
+                    if liste_redirection[0] == "Printers":
+                        return render_template("Device_information_scan/printer.html",contenue_entree = contenue_entree)
+                    if liste_redirection[0] == "Screens":
+                        return render_template("Device_information_scan/screen.html",contenue_entree = contenue_entree)
+            return render_template("scan.html", message_erreur = "The QR Code is not valid")
+        return render_template("scan.html", message_erreur = "The QR Code is not valid")
+    
+    
+@app.route('/redirection_scan_api', methods = ['POST'])
+def redirection_scan_api():
+    conn = sqlite3.connect('inv_pichon.db') # Connexion à la base de données
+    cur = conn.cursor()
+    redirection = request.form.get('qr_data')
+    print(redirection)
+    if ',' in redirection:
+        liste_redirection = redirection.split(",")
+        if liste_redirection[0] in ["Computers","ExternalDrives","Phones","Printers","Screens"]:
+                query = "SELECT * FROM \"{}\" WHERE serialnumber = ?".format(liste_redirection[0])
+                cur.execute(query, (liste_redirection[1],))
+                contenue_entree = cur.fetchall()
+                conn.close()
+                if liste_redirection == []:
+                    return render_template("scan.html",message_erreur = "The equipment is not referenced")
+                if liste_redirection[0] == "Computers":
+                    return render_template("Device_information_scan/computer.html",contenue_entree = contenue_entree)
+                if liste_redirection[0] == "ExternalDrives":
+                    return render_template("Device_information_scan/externaldrive.html",contenue_entree = contenue_entree)
+                if liste_redirection[0] == "Phones":
+                    return render_template("Device_information_scan/phone.html",contenue_entree = contenue_entree)
+                if liste_redirection[0] == "Printers":
+                    return render_template("Device_information_scan/printer.html",contenue_entree = contenue_entree)
+                if liste_redirection[0] == "Screens":
+                    return render_template("Device_information_scan/screen.html",contenue_entree = contenue_entree)
+        return render_template("scan.html", message_erreur = "The QR Code is not valid")
+    return render_template("scan.html", message_erreur = "The QR Code is not valid")
 
 @app.route('/login_form', methods = ['GET', 'POST'])
 def login_form():
@@ -408,8 +510,6 @@ def login_form():
             print('logged in')
             session['loggedin'] = True
             session['utilisateur_connecte'] = request.form['userid']
-            print('connexion utilisateur')
-            print(session['loggedin'])
             return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin) # Redirection vers l'accueil
 
 if __name__ == '__main__':

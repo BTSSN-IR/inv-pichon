@@ -1,0 +1,20 @@
+Mettre les entrées des formulaires a jour par rapport aux entrées de la base de données :
+
+- Printers
+- Computers OK
+
+Ajout de la modification pour a la suite d'un scan :
+
+- Phones OK
+- Computers OK
+- ExternalDrives 
+- Mouse
+- Printers
+- Screens OK
+- Software
+
+Redirection a la suite du scan par fichier et camera :
+
+- Toutes les tables sauf Mouse et software
+
+Redirection page equipement depuis la page d'affichege de l'ensemble des equipements
