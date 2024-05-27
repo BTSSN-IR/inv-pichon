@@ -148,7 +148,7 @@ def scan():
         return render_template('scan.html')
     return render_template('login.html')
 
-@app.route("/device_information", methods=['POST'])
+@app.route("/device_information", methods=['GET'])
 def device_information():
     print(request.json.get('qr_code'))
     conn = sqlite3.connect('inv_pichon.db')
