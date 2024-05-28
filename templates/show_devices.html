@@ -18,6 +18,7 @@
 <body>
 
     <script>
+
         $.extend( $.fn.dataTable.defaults, { // Default options for all tables
             searching: false, // Don't show the search button
             paging: false, // Disable multiple pages
@@ -27,6 +28,22 @@
             },
         } );
         
+        function RedirectToDevicePage(table, primarykey) {
+            let form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{{ url_for('redirection_scan_api') }}";
+
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'qr_data';
+            input.value = table + ',' + primarykey ;
+
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+
+            document.forms['export_qr'].submit();
+            }
     </script>
 
     <div class="device-page">
@@ -81,7 +98,7 @@
                     {"targets": -1,
                     "render": function (data, type, row, meta) {
                         console.log(window.location.host)
-                        return "<a href='" + "{{url_for('device_information') }}" + "?table=Computers&device=" + row[0] + "'>" + data + '</a>';
+                        return "<a href='javascript:;' onclick='" + "RedirectToDevicePage(" + "\"Computers," + row[0] + "\")'>" + data + '</a>';
                     }}
                 ]
             });
@@ -129,7 +146,7 @@
                     {"targets": -1,
                     "render": function (data, type, row, meta) {
                         console.log(window.location.host)
-                        return "<a href='" + "{{url_for('device_information') }}" + "?table=Users&device=" + row[0] + "'>" + data + '</a>';
+                        return "<a href='javascript:;' onclick='" + "RedirectToDevicePage(" + "\"Employees," + row[0] + "\")'>" + data + '</a>';
                     }}
                 ]
             });
@@ -180,7 +197,7 @@
                     {"targets": -1,
                     "render": function (data, type, row, meta) {
                         console.log(window.location.host)
-                        return "<a href='" + "{{url_for('device_information') }}" + "?table=Phones&device=" + row[0] + "'>" + data + '</a>';
+                        return "<a href='javascript:;' onclick='" + "RedirectToDevicePage(" + "\"Phones," + row[0] + "\")'>" + data + '</a>';
                     }}
                 ]
             });
@@ -231,7 +248,7 @@
                     {"targets": -1,
                     "render": function (data, type, row, meta) {
                         console.log(window.location.host)
-                        return "<a href='" + "{{url_for('device_information') }}" + "?table=Printers&device=" + row[0] + "'>" + data + '</a>';
+                        return "<a href='javascript:;' onclick='" + "RedirectToDevicePage(" + "\"Printers," + row[0] + "\")'>" + data + '</a>';
                     }}
                 ]
             });
@@ -280,7 +297,7 @@
                     {"targets": -1,
                     "render": function (data, type, row, meta) {
                         console.log(window.location.host)
-                        return "<a href='" + "{{url_for('device_information') }}" + "?table=Screens&device=" + row[0] + "'>" + data + '</a>';
+                        return "<a href='javascript:;' onclick='" + "RedirectToDevicePage(" + "\"Screens," + row[0] + "\")'>" + data + '</a>';
                     }}
                 ]
             });
@@ -331,7 +348,7 @@
                     {"targets": -1,
                     "render": function (data, type, row, meta) {
                         console.log(window.location.host)
-                        return "<a href='" + "{{url_for('device_information') }}" + "?table=ExternalDrives&device=" + row[0] + "'>" + data + '</a>';
+                        return "<a href='javascript:;' onclick='" + "RedirectToDevicePage(" + "\"ExternalDrives," + row[0] + "\")'>" + data + '</a>';
                     }}
                 ]
             });
@@ -369,7 +386,7 @@
                     {"targets": -1,
                     "render": function (data, type, row, meta) {
                         console.log(window.location.host)
-                        return "<a href='" + "{{url_for('device_information') }}" + "?table=Admins&device=" + row[0] + "'>" + data + '</a>';
+                        return "<a href='javascript:;' onclick='" + "RedirectToDevicePage(" + "\"Admins," + row[0] + "\")'>" + data + '</a>';
                     }}
                 ]
             });

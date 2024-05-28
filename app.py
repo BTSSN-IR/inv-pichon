@@ -148,7 +148,7 @@ def scan():
         return render_template('scan.html')
     return render_template('login.html')
 
-@app.route("/device_information", methods=['GET'])
+@app.route("/device_information", methods=['POST'])
 def device_information():
     print(request.json.get('qr_code'))
     conn = sqlite3.connect('inv_pichon.db')
@@ -235,6 +235,17 @@ def update_equipement_screen():
         conn.commit()
     return render_template('scan.html',message_erreur = "The equipment has been updated")
 
+@app.route("/delete_equipement_screen", methods = ['GET','POST'])
+def delete_equipement_screen():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        serialnumber = request.form.get('serialnumber-input')
+        print(serialnumber)
+        cur.execute("DELETE FROM Screens WHERE serialnumber = ?", (serialnumber,))
+        conn.commit()
+    return render_template('scan.html', message_erreur = "The equipment has been removed")
+
 @app.route("/equipment_types/phone", methods=['GET','POST'])
 def add_phone():
     return render_template('equipment_types/phone.html')
@@ -269,6 +280,17 @@ def update_equipement_phone():
         conn.commit()
     return render_template('scan.html',message_erreur = "The equipment has been updated")
 
+@app.route("/delete_equipement_phone", methods = ['GET','POST'])
+def delete_equipement_phone():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        serialnumber = request.form.get('serialnumber-input')
+        print(serialnumber)
+        cur.execute("DELETE FROM Phones WHERE serialnumber = ?", (serialnumber,))
+        conn.commit()
+    return render_template('scan.html', message_erreur = "The equipment has been removed")
+    
 @app.route("/equipment_types/employee", methods=['GET','POST'])
 def add_employee():
     return render_template('equipment_types/employee.html')
@@ -454,7 +476,6 @@ def upload():
                         return render_template("Device_information_scan/screen.html",contenue_entree = contenue_entree)
             return render_template("scan.html", message_erreur = "The QR Code is not valid")
         return render_template("scan.html", message_erreur = "The QR Code is not valid")
-    
     
 @app.route('/redirection_scan_api', methods = ['POST'])
 def redirection_scan_api():
