@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&display=swap" rel="stylesheet">
+    <title>Pichon Inventory - Device Information</title>
+    <link rel="icon" type="image/png" href="/static/favicon-pichon.png">
+</head>
+
+<body>
+    <div class="barre">
+        <div class="barre-left">
+            <a href="{{ url_for('home')}}">
+                <img class="samson-logo" src="/static/samson-agro-logo.svg" id="6:4"/>
+            </a>
+        </div>
+    </div>
+    <div id="device-page">
+        <p id="title">Equipment attached to {{user_name}}</p>
+            <div id="info-box">
+                <!-- <div id="label-input">
+                    <label id="secondary-text">Device Type : {{ device_type }}</label>
+                </div>
+                <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
+                <div id="label-input">
+                    <label id="secondary-title">Computer</label><br>
+                    <label id="secondary-text">Serial number : {{ user_computer[0][0] }}</label><br>
+                    <label id="secondary-text">Hostname : {{ user_computer[0][1] }}</label><br>
+                    <label id="secondary-text">Main user : {{ user_computer[0][2] }}</label><br>
+                    <label id="secondary-text">Purchase date : {{ user_computer[0][3] }}</label><br>      
+                </div>
+
+                <div id="label-input">
+                    <label id="secondary-title">Screen</label><br>
+                    <label id="secondary-text">Serial number : {{ user_screen[0][0] }}</label><br>
+                    <label id="secondary-text">Manufacturer : {{ user_screen[0][1] }}</label><br>
+                    <label id="secondary-text">Model : {{ user_screen[0][2] }}</label><br>
+                    <label id="secondary-text">Purchase date : {{ user_screen[0][3] }}</label><br>
+                    <label id="secondary-text">Main user : {{ user_screen[0][4] }}</label><br>
+                                        
+                </div>
+
+                <div id="label-input">
+                    <label id="secondary-title">Mouse</label><br>
+                    <label id="secondary-text">Manufacturer : {{ user_mouse[0][1] }}</label><br>
+                    <label id="secondary-text">Model : {{ user_mouse[0][2] }}</label><br>
+                    <label id="secondary-text">Main user : {{ user_mouse[0][3] }}</label><br>
+                </div>
+
+                <div id="label-input">
+                    <label id="secondary-title">Phone</label><br>
+                    <label id="secondary-text">Serial number : {{ user_phone[0][0] }}</label><br>
+                    <label id="secondary-text">Manufacturer : {{ user_phone[0][1] }}</label><br>
+                    <label id="secondary-text">Model : {{ user_phone[0][2] }}</label><br>
+                    <label id="secondary-text">Purchase date : {{ user_phone[0][3] }}</label><br>
+                    <label id="secondary-text">Phone number : {{ user_phone[0][4] }}</label><br>
+                    <label id="secondary-text">Main user : {{ user_phone[0][5] }}</label><br>
+                </div>
+            </div>
+    </div>
+
+</body>
+
+<style>
+
+#label-input {
+    padding: 15px 15px;
+}
+
+body {
+    background-color: #282828;
+}
+
+.barre {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.barre-left {
+    display: flex;
+}
+
+.samson-logo {
+    display: flex;
+    height: 4.7rem;
+    width: 16.4rem;
+    position: absolute;
+    left: 0px;
+    padding: 20px 20px;
+    vertical-align: top;    
+}
+
+#logo_entreprise {
+    display: flex;
+    height: 4.7rem;
+    width: 16.4rem;
+    position: absolute;
+    left: 0px;
+    padding: 20px 20px;
+    vertical-align: top;
+}
+    
+#title {
+    color: #ffffff;
+    font-family: Inter, 'Source Sans Pro';
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1.2125;
+    margin: 7rem 0.1rem 4.7rem 0rem;
+    white-space: nowrap;
+}
+
+#secondary-text {
+    padding: 10px 20px;
+    text-align: left;
+    color: #ffffff;
+    font-family: Inter, 'Source Sans Pro';
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.2125;
+    white-space: nowrap;
+}
+
+#secondary-title {
+    padding: 10px 20px;
+    text-align: left;
+    color: #ffffff;
+    font-family: Inter, 'Source Sans Pro';
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 2;
+    white-space: nowrap;
+}
+
+#device-page {
+    align-items: center;
+    background-color: #282828;
+
+    display: flex;
+    flex-direction: column;
+}
+
+#image_validaion {
+    width: 1rem;
+}
+
+a:link, a:visited, a:hover, a:active { 
+    text-decoration: none; 
+}
+</style>

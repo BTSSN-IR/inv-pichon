@@ -533,6 +533,22 @@ def login_form():
             session['utilisateur_connecte'] = request.form['userid']
             return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin) # Redirection vers l'accueil
 
+@app.route('/details_equipment_user', methods = ['POST'])
+def details_equipment_user():
+    conn = sqlite3.connect('inv_pichon.db') # Connexion à la base de données
+    cur = conn.cursor()
+
+    id_user = request.form.get('userid')
+    user_name = cur.execute(f'SELECT firstname, lastname FROM Users WHERE id={id_user}').fetchall()[0]
+    user_name = str(user_name[0] + ' ' + user_name[1])
+
+    user_mouse = cur.execute(f'SELECT * FROM Mouse WHERE user={id_user}').fetchall()
+    user_computer = cur.execute(f'SELECT * FROM Computers WHERE mainuser={id_user}').fetchall()
+    user_screen = cur.execute(f'SELECT * FROM Screens WHERE mainuser=\"{id_user}\"').fetchall()
+    user_phone = cur.execute(f'SELECT * FROM Phones WHERE mainuser=\"{id_user}\"').fetchall()
+    user_externaldrive = cur.execute(f'SELECT * FROM Phones WHERE mainuser=\"{id_user}\"').fetchall()
+    return render_template('user_equipment.html', id_user = id_user, user_name = user_name, user_mouse = user_mouse, user_computer = user_computer, user_screen = user_screen, user_phone = user_phone, user_externaldrive = user_externaldrive)
+
 if __name__ == '__main__':
     # app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')
     app.run(host='0.0.0.0', port=5000, debug=True)
