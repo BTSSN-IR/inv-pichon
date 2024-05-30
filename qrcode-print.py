@@ -4,6 +4,8 @@ from docx import Document
 from docx.shared import Inches, Cm
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 
+from docx2pdf import convert
+
 def generate_qr_code(data, filename):
     qr = qrcode.QRCode(
         version=1,
@@ -66,8 +68,10 @@ rows = 13  # Nombre de rangées d'étiquettes
 cols = 5  # Nombre de colonnes d'étiquettes
 label_width = 4  # Largeur des étiquettes en centimètres
 label_height = 1  # Hauteur des étiquettes en centimètres
-cube_image_path = 'pichon-logo.png'  # Chemin de l'image du cube
+cube_image_path = 'static/favicon-pichon.png'  # Chemin de l'image du cube
 
 create_labels_with_qr_codes(data_list, rows, cols, 'labels_with_pichon.docx', label_width, label_height, cube_image_path)
+
+convert('labels_with_pichon.docx', 'labels-pdf.pdf')
 
 # os.startfile('labels_with_pichon.docx', "print") # Lancement de l'impression sur l'imprimante par défaut
