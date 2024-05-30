@@ -4,7 +4,13 @@ from docx import Document
 from docx.shared import Inches, Cm
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 
-from docx2pdf import convert
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import Paragraph, Spacer
 
 def generate_qr_code(data, filename):
     qr = qrcode.QRCode(
@@ -72,6 +78,51 @@ cube_image_path = 'static/favicon-pichon.png'  # Chemin de l'image du cube
 
 create_labels_with_qr_codes(data_list, rows, cols, 'labels_with_pichon.docx', label_width, label_height, cube_image_path)
 
-convert('labels_with_pichon.docx', 'labels-pdf.pdf')
+def convert_docx_to_pdf(docx_path, pdf_path):
+    # Lire le fichier DOCX
+    doc = Document(docx_path)
+    
+    # Créer un document PDF
+    pdf = SimpleDocTemplate(pdf_path, pagesize=letter)
+    elements = []
+    
+    styles = getSampleStyleSheet()
+    normal_style = styles['Normal']
+    
+    # Lire le contenu du DOCX et écrire dans le PDF
+    for element in doc.element.body:
+        if element.tag.endswith('p'):
+            para = Paragraph(element.text, normal_style)
+            elements.append(para)
+            elements.append(Spacer(1, 12))
+        elif element.tag.endswith('tbl'):
+            table_data = []
+            table = element
+            for row in table.rows:
+                row_data = []
+                for cell in row.cells:
+                    cell_text = ' '.join(paragraph.text for paragraph in cell.paragraphs)
+                    row_data.append(cell_text)
+                table_data.append(row_data)
+            
+            # Créer le tableau ReportLab
+            t = Table(table_data)
+            t.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ]))
+            elements.append(t)
+            elements.append(Spacer(1, 12))
+    
+    # Sauvegarder le PDF
+    pdf.build(elements)
+
+# Exemple d'utilisation :
+convert_docx_to_pdf("labels_with_pichon.docx", "output.pdf")
 
 # os.startfile('labels_with_pichon.docx', "print") # Lancement de l'impression sur l'imprimante par défaut
