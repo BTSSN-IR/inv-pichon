@@ -66,7 +66,7 @@ rows = 13  # Nombre de rangées d'étiquettes
 cols = 5  # Nombre de colonnes d'étiquettes
 label_width = 4  # Largeur des étiquettes en centimètres
 label_height = 1  # Hauteur des étiquettes en centimètres
-cube_image_path = 'pichon-logo.png'  # Chemin de l'image du cube
+cube_image_path = 'static/favicon-pichon.png'  # Chemin de l'image du cube
 
 create_labels_with_qr_codes(data_list, rows, cols, 'labels_with_pichon.docx', label_width, label_height, cube_image_path)
 
