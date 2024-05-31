@@ -38,7 +38,7 @@
                 </div>
                 <div id="label-input">
                     <label for="Purchasedate_entry" id="secondary-text"> Date d'achat </label>
-                    <input id="Purchasedate_entry" type="text" name="purchase-input">
+                    <input id="Purchasedate_entry" type="date" name="purchase-input">
                 </div>
                 <div id="label-input">
                     <label for="Assigned_User_entry" id="secondary-text"> Utilisateur </label>
@@ -57,47 +57,47 @@
 </body>
 
 <style>
-#validation {
-    color: #ffffff;
-    font-family: Inter, 'Source Sans Pro';
-    font-size: 2rem;
-    font-weight: 800;
-    line-height: 1.2125;
-    margin: 7rem 0.1rem 4.7rem 0rem;
-    white-space: nowrap;
-    color: #17da8f;
-}
+    #validation {
+        color: #ffffff;
+        font-family: Inter, 'Source Sans Pro';
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1.2125;
+        margin: 7rem 0.1rem 4.7rem 0rem;
+        white-space: nowrap;
+        color: #17da8f;
+    }
 
-body {
-    background-color: #282828;
-}
+    body {
+        background-color: #282828;
+    }
 
-.barre {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-}
+    .barre {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+    }
 
-.barre-left {
-    display: flex;
-}
+    .barre-left {
+        display: flex;
+    }
 
-.samson-logo {
-    display: flex;
-    height: 4.7rem;
-    width: 16.4rem;
-    position: absolute;
-    left: 0px;
-    padding: 20px 20px;
-    vertical-align: top;    
-}
+    .samson-logo {
+        display: flex;
+        height: 4.7rem;
+        width: 16.4rem;
+        position: absolute;
+        left: 0px;
+        padding: 20px 20px;
+        vertical-align: top;    
+    }
 
-#label-input {
-    text-align: right;
-}
+    #label-input {
+        text-align: right;
+    }
 
-    input[type=text] {
+    input {
         text-align: right;
         background-color: #404040;
         color: #ffffff;
@@ -111,7 +111,25 @@ body {
         margin: 0rem 0 3.3rem 0;
         padding: 1.1rem 2.7rem 1rem 2.7rem;
         border: 0;
-}
+    }
+
+    input[type=date] {
+        text-align: right;
+        background-color: #404040;
+        color: #ffffff;
+        border-radius: 2.55rem;
+        box-shadow: inset 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.25), 0.5rem 0.5rem 0.4rem rgba(0, 0, 0, 0.25);
+        box-sizing: border-box;
+        font-family: "Inter", 'Source Sans Pro';
+        font-size: 1.2rem;
+        font-weight: 800;
+        line-height: 1.2125;
+        width: 360px;
+        margin: 0rem 0 3.3rem 0;
+        padding: 1.1rem 2.7rem 1rem 2.7rem;
+        border: 0;
+    }
+
     #logo_entreprise {
         display: flex;
         height: 4.7rem;
