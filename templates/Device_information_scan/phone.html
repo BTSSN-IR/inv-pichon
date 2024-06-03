@@ -20,6 +20,7 @@
     </div>
     <div id="device-page">
         <p id="title">Information - Phone</p>
+        <p id="message_erreur">{{message_erreur}}</p>
         <form action="{{ url_for('update_equipement_phone') }}" method="POST">
             <div id="info-box">
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
@@ -40,7 +41,7 @@
                     <input id="Phone_Number_entry" type="text" name="phonenumber-input">
                 </div>
                 <div id="label-input">
-                    <label for="Purchasedate_entry" id="secondary-text"> Purchase Date </label>
+                    <label for="Purchasedate_entry" id="secondary-text"> Purchase date (DD/MM/YYYY) </label>
                     <input id="Purchasedate_entry" type="text" name="purchase-input">
                 </div>
                 <div id="label-input">
@@ -74,6 +75,16 @@
 </body>
 
 <style>
+    
+#message_erreur {
+    color: #ff0000;
+    font-family: Inter, 'Source Sans Pro';
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.2125;
+    margin: 0rem 0.1rem 2.7rem 0rem;
+    white-space: nowrap;
+}
 #validation {
     color: #ffffff;
     font-family: Inter, 'Source Sans Pro';
@@ -249,5 +260,55 @@ body {
     } 
     a:active { 
         text-decoration: none; 
+    }
+    @media screen and (max-width: 767px) {
+        #title {
+            font-size: 1.5rem;
+            margin: 5rem 0.1rem 3rem 0rem;
+        }
+    
+        #secondary-text {
+            font-size: 1.2rem;
+        }
+    
+        #valider_bouton {
+            font-size: 1rem;
+            width: 14rem;
+            height: 2.5rem;
+            margin: 0rem 5rem;
+        }
+    
+        .retour_buton {
+            font-size: 1rem;
+            width: 7rem;
+            height: 2.5rem;
+            margin: 1rem;
+        }
+    
+        .delete_button {
+            font-size: 1rem;
+            width: 14rem;
+            height: 2.5rem;
+        }
+    
+        input[type=text] {
+            font-size: 1rem;
+            padding: 0.9rem 2rem;
+            margin: 0rem 0 2.5rem 0;
+            text-align: center;
+        }
+    
+        #label-input {
+            text-align: center;
+        }
+    
+        .samson-logo {
+            height: 3rem;
+            width: 12rem;
+            padding: 10px 10px;
+        }
+        #message_erreur {
+            font-size: 1.0rem;
+        }  
     }
 </style>
