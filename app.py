@@ -197,9 +197,31 @@ def update_equipement_computer():
         assigneduser = request.form.get('assigneduser-input')
         purchase = request.form.get('purchasedate-input')
         licenses = request.form.get('licenses-input')
-        cur.execute("UPDATE Computers SET serialnumber = '{}', hostname = '{}', mainuser = '{}', purchasedate = '{}', licenses = '{}' WHERE serialnumber = '{}'".format(serialnumber, hostname, assigneduser, purchase, licenses, serialnumber))
+        cur.execute("SELECT * FROM Computers WHERE serialnumber = ?", (serialnumber,))
+        contenue_entree = cur.fetchall()
+        if " " in assigneduser :
+            utilisateur = assigneduser.split()
+            cur.execute("SELECT firstname FROM Users WHERE firstname = '{}'".format(utilisateur[0]))
+            Prenom_bdd = cur.fetchall()
+            cur.execute("SELECT lastname FROM Users WHERE lastname = '{}'".format(utilisateur[1]))
+            Nom_bdd = cur.fetchall()
+            if Prenom_bdd == [] or Nom_bdd == []:
+                return render_template('Device_information_scan/computer.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)   
+            cur.execute("UPDATE Computers SET serialnumber = '{}', hostname = '{}', mainuser = '{}', purchasedate = '{}', licenses = '{}' WHERE serialnumber = '{}'".format(serialnumber, hostname, assigneduser, purchase, licenses, serialnumber))
+            conn.commit()
+            return render_template('scan.html',message_erreur = "The equipment has been updated")    
+        return render_template('Device_information_scan/computer.html', message_erreur = "space between first name and last name.", contenue_entree = contenue_entree)
+
+@app.route("/delete_equipement_computer", methods = ['GET','POST'])
+def delete_equipement_computer():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        serialnumber = request.form.get('serialnumber-input')
+        print(serialnumber)
+        cur.execute("DELETE FROM Computers WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
-    return render_template('scan.html',message_erreur = "The equipment has been updated")    
+    return render_template('scan.html', message_erreur = "The equipment has been removed")
 
 @app.route("/equipment_types/screen", methods=['GET','POST'])
 def add_screen():
@@ -231,9 +253,21 @@ def update_equipement_screen():
         serialnumber = request.form.get('serialnumber-input')
         purchasedate = request.form.get('purchase-input')
         assigneduser = request.form.get('assigneduser-input')
-        cur.execute("UPDATE Screens SET serialnumber = '{}', make = '{}', model = '{}', purchasedate = '{}', mainuser = '{}' WHERE serialnumber = '{}'".format(serialnumber, make, model, purchasedate, assigneduser, serialnumber))
-        conn.commit()
-    return render_template('scan.html',message_erreur = "The equipment has been updated")
+        cur.execute("SELECT * FROM Screens WHERE serialnumber = ?", (serialnumber,))
+        contenue_entree = cur.fetchall()
+        if " " in assigneduser :
+            utilisateur = assigneduser.split()
+            cur.execute("SELECT firstname FROM Users WHERE firstname = '{}'".format(utilisateur[0]))
+            Prenom_bdd = cur.fetchall()
+            cur.execute("SELECT lastname FROM Users WHERE lastname = '{}'".format(utilisateur[1]))
+            Nom_bdd = cur.fetchall()
+            if Prenom_bdd == [] or Nom_bdd == []:
+                return render_template('Device_information_scan/screen.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)   
+            cur.execute("UPDATE Screens SET serialnumber = '{}', make = '{}', model = '{}', purchasedate = '{}', mainuser = '{}' WHERE serialnumber = '{}'".format(serialnumber, make, model, purchasedate, assigneduser, serialnumber))
+            conn.commit()
+            return render_template('scan.html',message_erreur = "The equipment has been updated")
+        return render_template('Device_information_scan/screen.html', message_erreur = "space between first name and last name.", contenue_entree = contenue_entree)
+
 
 @app.route("/delete_equipement_screen", methods = ['GET','POST'])
 def delete_equipement_screen():
@@ -276,9 +310,20 @@ def update_equipement_phone():
         purchase = request.form.get('purchase-input')
         make = request.form.get('make-input')
         assigneduser = request.form.get('assigneduser-input')
-        cur.execute("UPDATE Phones SET make = '{}', model = '{}', serialnumber = '{}', purchasedate = '{}', phonenumber = '{}', mainuser = '{}' WHERE serialnumber = '{}'".format(make, model, serialnumber, purchase, phonenumber, assigneduser, serialnumber))
-        conn.commit()
-    return render_template('scan.html',message_erreur = "The equipment has been updated")
+        cur.execute("SELECT * FROM Phones WHERE serialnumber = ?", (serialnumber,))
+        contenue_entree = cur.fetchall()
+        if " " in assigneduser :
+            utilisateur = assigneduser.split()
+            cur.execute("SELECT firstname FROM Users WHERE firstname = '{}'".format(utilisateur[0]))
+            Prenom_bdd = cur.fetchall()
+            cur.execute("SELECT lastname FROM Users WHERE lastname = '{}'".format(utilisateur[1]))
+            Nom_bdd = cur.fetchall()
+            if Prenom_bdd == [] or Nom_bdd == []:
+                return render_template('Device_information_scan/phone.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)   
+            cur.execute("UPDATE Phones SET make = '{}', model = '{}', serialnumber = '{}', purchasedate = '{}', phonenumber = '{}', mainuser = '{}' WHERE serialnumber = '{}'".format(make, model, serialnumber, purchase, phonenumber, assigneduser, serialnumber))
+            conn.commit()
+            return render_template('scan.html',message_erreur = "The equipment has been updated")
+        return render_template('Device_information_scan/phone.html', message_erreur = "space between first name and last name.", contenue_entree = contenue_entree)
 
 @app.route("/delete_equipement_phone", methods = ['GET','POST'])
 def delete_equipement_phone():
@@ -377,6 +422,17 @@ def update_equipement_printer():
         conn.commit()
     return render_template('scan.html',message_erreur = "The equipment has been updated")
 
+@app.route("/delete_equipement_printer", methods = ['GET','POST'])
+def delete_equipement_printer():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        serialnumber = request.form.get('serialnumber-input')
+        print(serialnumber)
+        cur.execute("DELETE FROM Printers WHERE serialnumber = ?", (serialnumber,))
+        conn.commit()
+    return render_template('scan.html', message_erreur = "The equipment has been removed")
+
 @app.route("/equipment_types/software", methods=['GET','POST'])
 def add_software():
     return render_template('equipment_types/software.html')
@@ -426,8 +482,19 @@ def update_equipement_externaldrive():
         conn.commit()
     return render_template('scan.html', message_erreur = "The equipment has been updated")
 
+@app.route("/delete_equipement_externaldrive", methods = ['GET','POST'])
+def delete_equipement_externaldrive():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        serialnumber = request.form.get('serialnumber-input')
+        print(serialnumber)
+        cur.execute("DELETE FROM ExternalDrives WHERE serialnumber = ?", (serialnumber,))
+        conn.commit()
+    return render_template('scan.html', message_erreur = "The equipment has been removed")
+
 def allowed_file(filename):
-    valid_extensions = ('.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp','.pdf')
+    valid_extensions = ('.jpg', '.jpeg', '.png')
     return filename.lower().endswith(valid_extensions)
 
 @app.route('/upload', methods = ['GET', 'POST'])
@@ -450,6 +517,7 @@ def upload():
             return render_template("scan.html", message_erreur = "The file is not an image")
         image = PIL.Image.open(file)
         codes = pyzbar.pyzbar.decode(image)
+        print(codes)
         if codes == []:
             return render_template("scan.html", message_erreur = "The image is not a QR Code")
         redirection = codes[0].data.decode()
@@ -462,8 +530,8 @@ def upload():
                     cur.execute(query, (liste_redirection[1],))
                     contenue_entree = cur.fetchall()
                     conn.close()
-                    if liste_redirection == []:
-                        return render_template("scan.html",message_erreur = "The equipment is not referenced")
+                    if contenue_entree == []:
+                        return render_template("scan.html",message_erreur = "The equipment is not referenced in the database")
                     if liste_redirection[0] == "Computers":
                         return render_template("Device_information_scan/computer.html",contenue_entree = contenue_entree)
                     if liste_redirection[0] == "ExternalDrives":
@@ -490,8 +558,8 @@ def redirection_scan_api():
                 cur.execute(query, (liste_redirection[1],))
                 contenue_entree = cur.fetchall()
                 conn.close()
-                if liste_redirection == []:
-                    return render_template("scan.html",message_erreur = "The equipment is not referenced")
+                if contenue_entree == []:
+                    return render_template("scan.html",message_erreur = "The equipment is not referenced in the database")
                 if liste_redirection[0] == "Computers":
                     return render_template("Device_information_scan/computer.html",contenue_entree = contenue_entree)
                 if liste_redirection[0] == "ExternalDrives":
@@ -518,6 +586,7 @@ def login_form():
         cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(escaped_username)) # Récupération de l'utilisateur depuis la base de données
         username_bdd = cur.fetchall()
         escaped_mdp = password.replace("'", "''") #Evite injection SQL
+        # escaped_mdp = encrypt_password(password) # test pour la connexion avec des comptes qui ont des mots de passe cryptés
         cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(escaped_mdp)) # Récupération du mot de passe depuis la base de données
         mdp_bdd = cur.fetchall()
         if username_bdd == [] or mdp_bdd == []: # Cas ou l'utilisateur n'existe pas dans la base de données
@@ -537,11 +606,9 @@ def login_form():
 def details_equipment_user():
     conn = sqlite3.connect('inv_pichon.db') # Connexion à la base de données
     cur = conn.cursor()
-
     id_user = request.form.get('userid')
     user_name = cur.execute(f'SELECT firstname, lastname FROM Users WHERE id={id_user}').fetchall()[0]
     user_name = str(user_name[0] + ' ' + user_name[1])
-
     user_mouse = cur.execute(f'SELECT * FROM Mouse WHERE user={id_user}').fetchall()
     user_computer = cur.execute(f'SELECT * FROM Computers WHERE mainuser={id_user}').fetchall()
     user_screen = cur.execute(f'SELECT * FROM Screens WHERE mainuser=\"{id_user}\"').fetchall()
