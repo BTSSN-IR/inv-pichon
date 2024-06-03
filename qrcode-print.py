@@ -4,8 +4,6 @@ from docx import Document
 from docx.shared import Inches, Cm
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 
-from docx2pdf import convert
-
 def generate_qr_code(data, filename):
     qr = qrcode.QRCode(
         version=1,
@@ -50,10 +48,10 @@ def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_wi
                 run = paragraph.add_run()
                 
                 # Ajouter le QR code
-                run.add_picture(filename, width=Cm(label_width * 0.3))
+                run.add_picture(filename, width=Cm(label_width * 0.5))
                 
                 # Ajouter l'image du cube
-                run.add_picture(cube_image_path, width=Cm(label_width * 0.3))
+                run.add_picture(cube_image_path, width=Cm(label_width * 0.1))
                 
                 # Ajouter le texte
                 run.add_text(str(data_list[data_index]))
@@ -63,17 +61,16 @@ def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_wi
     document.save(output_filename)
 
 # Exemple d'utilisation
-data_list = [f'qrcode-{i}' for i in range(1, 66)]
-rows = 13  # Nombre de rangées d'étiquettes
-cols = 5  # Nombre de colonnes d'étiquettes
-label_width = 4  # Largeur des étiquettes en centimètres
-label_height = 1  # Hauteur des étiquettes en centimètres
+data_list = ['Screens,1210425300950', 'Screens,1210425301041', 'Computers,NBPS500']
+rows = 8  # Nombre de rangées d'étiquettes
+cols = 3  # Nombre de colonnes d'étiquettes
+label_width = 6  # Largeur des étiquettes en centimètres
+label_height = 2  # Hauteur des étiquettes en centimètres
 cube_image_path = 'static/favicon-pichon.png'  # Chemin de l'image du cube
 
 create_labels_with_qr_codes(data_list, rows, cols, 'printing/labels_with_pichon.docx', label_width, label_height, cube_image_path)
 
 
 # Exemple d'utilisation :
-convert("printing/labels_with_pichon.docx", "printing/output.pdf")
 
-# os.startfile('labels_with_pichon.docx', "print") # Lancement de l'impression sur l'imprimante par défaut
+os.startfile('labels_with_pichon.docx', "print") # Lancement de l'impression sur l'imprimante par défaut
