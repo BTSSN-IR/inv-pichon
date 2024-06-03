@@ -19,24 +19,25 @@
         </div>
     </div>
     <div id="device-page">
-        <p id="title">Add Equipment - Computer</p>
+        <p id="title">Information - Computer</p>
+        <p id="message_erreur">{{message_erreur}}</p>
         <form action="{{ url_for('update_equipement_computer') }}" method="POST">
             <div id="info-box">
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
                 <div id="label-input">
-                    <label for="Hostname_entry" id="secondary-text"> Nom de l'appareil </label>
+                    <label for="Hostname_entry" id="secondary-text"> Name of the device </label>
                     <input id="Hostname_entry" type="text" name="hostname-input">
                 </div>
                 <div id="label-input">
-                    <label for="Serial_Number_entry" id="secondary-text"> Numéro de serie </label>
+                    <label for="Serial_Number_entry" id="secondary-text"> Serial number </label>
                     <input id="Serial_Number_entry" type="text" name="serialnumber-input">
                 </div>
                 <div id="label-input">
-                    <label for="Assigned_User_entry" id="secondary-text"> Utilisateur </label>
+                    <label for="Assigned_User_entry" id="secondary-text"> User </label>
                     <input id="Assigned_User_entry" type="text" name="assigneduser-input">
                 </div>
                 <div id="label-input">
-                    <label for="Purchase_Date_entry" id="secondary-text"> Date achat </label>
+                    <label for="Purchase_Date_entry" id="secondary-text"> Purchase date (DD/MM/YYYY)</label>
                     <input id="Purchase_Date_entry" type="text" name="purchasedate-input">
                 </div>
                 <div id="label-input">
@@ -51,6 +52,10 @@
         <a href="{{ url_for('scan') }}">
             <input type="button" class="retour_buton" value="Retour">
         </a>
+        <form action="{{ url_for('delete_equipement_computer') }}" method="POST" style="display:inline;">
+            <input type="hidden" name="serialnumber-input" value="{{contenue_entree[0][0]}}">
+            <input type="submit" class="delete_button" value="Remove Equipment">
+        </form>
         <script>
             document.getElementById('Hostname_entry').value = "{{contenue_entree[0][1]}}";
             document.getElementById('Serial_Number_entry').value = "{{contenue_entree[0][0]}}";
@@ -63,6 +68,17 @@
 </body>
 
 <style>
+
+#message_erreur {
+        color: #ff0000;
+        font-family: Inter, 'Source Sans Pro';
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1.2125;
+        margin: 0rem 0.1rem 2.7rem 0rem;
+        white-space: nowrap;
+    }
+
 #validation {
     color: #ffffff;
     font-family: Inter, 'Source Sans Pro';
@@ -197,6 +213,24 @@ body {
         width: 9rem;
         margin: 2rem;
     }
+    .delete_button{
+        align-items: center;
+        background-color: #ff0000;
+        border-radius: 5.2rem;
+        box-shadow: inset 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.25), 0.5rem 0.5rem 0.4rem rgba(0, 0, 0, 0.25);
+        color: #ffffff;
+        display: flex;
+        flex-shrink: 0;
+        font-family: Inter, 'Source Sans Pro';
+        font-size: 1.5rem;
+        font-weight: 700;
+        height: 3rem;
+        justify-content: center;
+        line-height: 1.2125;
+        text-align: center;
+        white-space: nowrap;
+        width: 18rem;
+    }
     #device-page {
     align-items: center;
     background-color: #282828;
@@ -212,4 +246,56 @@ body {
     a:link, a:visited, a:hover, a:active { 
         text-decoration: none; 
     }
+
+@media screen and (max-width: 767px) {
+    #title {
+        font-size: 1.5rem;
+        margin: 5rem 0.1rem 3rem 0rem;
+    }
+
+    #secondary-text {
+        font-size: 1.2rem;
+    }
+
+    #valider_bouton {
+        font-size: 1rem;
+        width: 14rem;
+        height: 2.5rem;
+        margin: 0rem 5rem;
+    }
+
+    .retour_buton {
+        font-size: 1rem;
+        width: 7rem;
+        height: 2.5rem;
+        margin: 1rem;
+    }
+
+    .delete_button {
+        font-size: 1rem;
+        width: 14rem;
+        height: 2.5rem;
+    }
+
+    input[type=text] {
+        font-size: 1rem;
+        padding: 0.9rem 2rem;
+        margin: 0rem 0 2.5rem 0;
+        text-align: center;
+    }
+
+    #label-input {
+        text-align: center;
+    }
+
+    .samson-logo {
+        height: 3rem;
+        width: 12rem;
+        padding: 10px 10px;
+    }
+    #message_erreur {
+        font-size: 1.0rem;
+    }  
+}
+
 </style>
