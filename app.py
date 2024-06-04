@@ -27,7 +27,7 @@ import PIL.Image
 
 from werkzeug.utils import secure_filename
 
-def generate_hash_key(key):
+def generate_hash_key(key): # Génération d'une clé de hashage pour crypter le mot de passe
     hash_object = hashlib.sha256()
     hash_object.update(key.encode('utf-8'))
     hash_key = hash_object.digest()
@@ -49,7 +49,7 @@ def decrypt_password(encrypted_password, key=SECRET_KEY):
 
 @app.route("/logout")
 def logout():
-    session.pop('utilisateur_connecte', None)
+    session.pop('utilisateur_connecte', None) # Supression de l'utilisateur connecté dans la liste
     session.pop('loggedin')
     loggedin = False
     return render_template('login.html')
@@ -59,7 +59,7 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/generate_qrcode")
-def generate_qrcode():
+def generate_qrcode(): # Utilisation de la biliothèque qrcode pour générer un QR Code avec les données demandées
     data = request.args.get('table') + ',' + request.args.get('device') 
     qr = qrcode.QRCode(version = 1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size = 10, border = 4)
     qr.add_data(data)
@@ -89,7 +89,7 @@ def show_devices():
         conn = sqlite3.connect('inv_pichon.db')
         cur = conn.cursor()
         print(cur.execute("SELECT * from Computers").fetchall())
-        computers_table = cur.execute("SELECT * from Computers").fetchall()
+        computers_table = cur.execute("SELECT * from Computers").fetchall() # Récupération des données des tables depuis la base de données
         printers_table = cur.execute("SELECT * from Printers").fetchall()
         screens_table = cur.execute("SELECT * from Screens").fetchall()
         admins_table = cur.execute("SELECT * from Admins").fetchall()
@@ -122,7 +122,7 @@ def add_user_form():
             password = request.form.get('password')
             confirm_password =  request.form.get('confirm_password')
             print(userid, password, confirm_password)
-            if password == confirm_password:
+            if password == confirm_password: # Test si les deux mots de passe fournis sont les mêmes
                 print("SELECT username FROM Admins WHERE username = '{}'".format(userid))
                 cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(userid))
                 username_bdd = cur.fetchall()
@@ -132,7 +132,7 @@ def add_user_form():
                 print("SELECT password FROM Admins WHERE password = '{}'".format(pass_encoded))
                 cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(pass_encoded))
                 mdp_bdd = cur.fetchall()
-                if (username_bdd, mdp_bdd) == ([], []):
+                if (username_bdd, mdp_bdd) == ([], []): # Test si l'utilisateur n'est pas déjà dans la base de données
                     cur.execute("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\")".format(userid,pass_encoded))
                     conn.commit()
                     return render_template('home.html')
@@ -153,7 +153,7 @@ def device_information():
     print(request.json.get('qr_code'))
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
-    device_data = [request.args.get('table'), request.args.get('device')]
+    device_data = [request.args.get('table'), request.args.get('device')] # Récupération des données depuis le formulaire HTML
     list_headers = cur.execute(f"PRAGMA table_info({device_data[0]});").fetchall()
     for i in range(len(list_headers)):
         list_headers[i] = list_headers[i][1] # Remplacement des champs par seulement le nom des champs
@@ -492,22 +492,21 @@ def upload():
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        if file.filename == '':
+        # Si l'utilisateur ne selectionne aucun fichier le navigateur va renvoyer un fichier sans nom
+        # Dans ce cas il va rentrer dans la condition et retourner une erreur 
+        if file.filename == '': 
             flash('No selected file')
             return redirect(request.url)
-        if file and allowed_file(file.filename):
+        if file and allowed_file(file.filename): # Verification de l'extension du fichier a l'aide de la fonction allowed_file
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         else :
             return render_template("scan.html", message_erreur = "The file is not an image")
         image = PIL.Image.open(file)
         codes = pyzbar.pyzbar.decode(image)
-        print(codes)
-        if codes == []:
+        if codes == []: # Cas où l'image ne contient pas de QR Code 
             return render_template("scan.html", message_erreur = "The image is not a QR Code")
-        redirection = codes[0].data.decode()
+        redirection = codes[0].data.decode() # Recuperation de la donnée crypté dans le QR Code dans la variable redirection
         conn = sqlite3.connect('inv_pichon.db') # Connexion à la base de données
         cur = conn.cursor()
         if ',' in redirection:
