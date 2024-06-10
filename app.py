@@ -603,5 +603,5 @@ def details_equipment_user():
     return render_template('user_equipment.html', id_user = id_user, user_name = user_name, user_mouse = user_mouse, user_computer = user_computer, user_screen = user_screen, user_phone = user_phone, user_externaldrive = user_externaldrive)
 
 if __name__ == '__main__':
-    # app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')
+    #app.run(host='0.0.0.0', port=5000, debug=True)
