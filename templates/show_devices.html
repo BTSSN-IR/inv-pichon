@@ -78,6 +78,7 @@
             <table class="devices-table" id="ComputersTable">
                 <thead>
                     <tr>
+                        <th>Device ID</th>
                         <th>Serial Number</th>
                         <th>Hostname</th>
                         <th>Main User</th>
@@ -95,6 +96,7 @@
                         <td> {{ row[2] }}</td>
                         <td> {{ row[3] }}</td>
                         <td> {{ row[4] }}</td>
+                        <td> {{ row[5] }}</td>
                         <td>Download QR Code</td>
                         <td>Show Details</td>
                     </tr> 
@@ -116,7 +118,7 @@
                     {"targets": -1,
                     "render": function (data, type, row, meta) {
                         console.log(window.location.host)
-                        return "<a href='javascript:;' onclick='" + "RedirectToDevicePage(" + "\"Computers," + row[0] + "\")'>" + data + '</a>';
+                        return "<a href='javascript:;' onclick='" + "RedirectToDevicePage(" + "\"Computers," + row[1] + "\")'>" + data + '</a>';
                     }}
                 ]
             });

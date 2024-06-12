@@ -10,9 +10,9 @@ def get_qrcodes_from_db(db_file, table):
     conn = sqlite3.connect(db_file)
     cur = conn.cursor()
     if table == 'Computers':
-        liste_qr = cur.execute("SELECT serialnumber FROM Computers").fetchall()
+        liste_qr = cur.execute("SELECT id FROM Computers").fetchall()
         liste_qr = [i[0] for i in liste_qr]
-        liste_qr = ['Computers,' + i for i in liste_qr]
+        liste_qr = ['Computers,' + str(i) for i in liste_qr]
 
     if table == 'Screens':
         liste_qr = cur.execute("SELECT serialnumber FROM Screens").fetchall()
@@ -99,8 +99,20 @@ def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_wi
 
     document.save(output_filename)
 
+def gen_qrcodes_bulk(table, starting_index):
+    if table == 'Computers':
+        return [ f'Computers,{i}' for i in range(starting_index,starting_index + 65) ]
+    elif table == 'Phones':
+        return [ f'Phones,{i}' for i in range(starting_index,starting_index + 65) ]
+    elif table == 'Screens':
+        return [ f'Screens,{i}' for i in range(starting_index,starting_index + 65) ]
+    elif table == 'Printers':
+        return [ f'Printers,{i}' for i in range(starting_index,starting_index + 65) ]
+    elif table == 'ExternalDrives':
+        return [ f'ExternalDrives,{i}' for i in range(starting_index,starting_index + 65) ]
+
 # Exemple d'utilisation
-data_list = get_qrcodes_from_db('inv_pichon.db', 'All')
+data_list = gen_qrcodes_bulk('Computers', 1)
 rows = 13  # Nombre de rangées d'étiquettes
 cols = 5  # Nombre de colonnes d'étiquettes
 label_width = 4.05  # Largeur des étiquettes en centimètres
@@ -112,3 +124,4 @@ create_labels_with_qr_codes(data_list, rows, cols, 'printing/labels_with_pichon.
 # Exemple d'utilisation :
 
 # os.startfile('labels_with_pichon.docx', "print") # Lancement de l'impression sur l'imprimante par défaut
+os.startfile('printing\\labels_with_pichon.docx')

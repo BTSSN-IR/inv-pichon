@@ -540,9 +540,13 @@ def redirection_scan_api():
     if ',' in redirection:
         liste_redirection = redirection.split(",")
         if liste_redirection[0] in ["Computers","ExternalDrives","Phones","Printers","Screens"]:
-                query = "SELECT * FROM \"{}\" WHERE serialnumber = ?".format(liste_redirection[0])
+                if liste_redirection[0] == 'Computers':
+                    query = "SELECT * FROM \"{}\" WHERE id = ?".format(liste_redirection[0])
+                else:
+                    query = "SELECT * FROM \"{}\" WHERE serialnumber = ?".format(liste_redirection[0])
                 cur.execute(query, (liste_redirection[1],))
                 contenue_entree = cur.fetchall()
+                print(contenue_entree)
                 conn.close()
                 if contenue_entree == []:
                     return render_template("scan.html",message_erreur = "The equipment is not referenced in the database")
@@ -603,5 +607,5 @@ def details_equipment_user():
     return render_template('user_equipment.html', id_user = id_user, user_name = user_name, user_mouse = user_mouse, user_computer = user_computer, user_screen = user_screen, user_phone = user_phone, user_externaldrive = user_externaldrive)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, ssl_context='adhoc')
+    app.run(host='0.0.0.0', port=5000, ssl_context='adhoc', debug=True)
     #app.run(host='0.0.0.0', port=5000, debug=True)
