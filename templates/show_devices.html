@@ -137,7 +137,6 @@
                         <th>Computer</th>
                         <th>Phone number</th>
                         <th>Mouse</th>
-                        <th>Details</th>
                         <th>All Equipment</th>
                     </tr>
                 </thead>
@@ -152,7 +151,6 @@
                         <td> {{ row[5] }}</td>
                         <td> {{ row[6] }}</td>
                         <td> {{ row[7] }}</td>
-                        <td>Show Details</td>
                         <td>Show All Equipment</td>
                     </tr> 
                     {% endfor %}
@@ -165,11 +163,6 @@
             let table_employees = new DataTable('#EmployeesTable', {
                 // options
                 "columnDefs": [
-                    {"targets": -2,
-                    "render": function (data, type, row, meta) {
-                        console.log(window.location.host)
-                        return "<a href='javascript:;' onclick='" + "RedirectToDevicePage(" + "\"Employees," + row[0] + "\")'>" + data + '</a>';
-                    }},
                     {"targets": -1,
                     "render": function (data, type, row, meta) {
                         console.log(window.location.host)
@@ -397,7 +390,6 @@
                         <th>ID</th>
                         <th>Username</th>
                         <th>Password</th>
-                        <th>Details</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -406,7 +398,6 @@
                         <td> {{ row[0] }}</td>
                         <td> {{ row[1] }}</td>
                         <td> {{ row[2] }}</td>
-                        <td>Show Details</td>
                     </tr> 
                     {% endfor %}
                 </tbody>
@@ -418,11 +409,6 @@
             let table_admins = new DataTable('#AdminsTable', {
                 // options
                 "columnDefs": [
-                    {"targets": -1,
-                    "render": function (data, type, row, meta) {
-                        console.log(window.location.host)
-                        return "<a href='javascript:;' onclick='" + "RedirectToDevicePage(" + "\"Admins," + row[0] + "\")'>" + data + '</a>';
-                    }}
                 ]
             });
         </script>
