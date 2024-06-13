@@ -93,7 +93,7 @@ def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_wi
                 run.add_picture(cube_image_path, width=Cm(label_width * 0.2))
                 
                 # Ajouter le texte
-                # run.add_text(str(data_list[data_index]))
+                run.add_text(str(data_list[data_index]))
                 
                 data_index += 1
 
@@ -112,7 +112,24 @@ def gen_qrcodes_bulk(table, starting_index):
         return [ f'ExternalDrives,{i}' for i in range(starting_index,starting_index + 65) ]
 
 # Exemple d'utilisation
-data_list = gen_qrcodes_bulk('Computers', 1)
+data_list = []
+while data_list == []:
+    print("Choose the type of labels to print :\n1 - Computers\n2 - Screens\n3 - Phones\n4 - Printers\n5 - External Drives")
+    table_input = input('Please choose an option : ')
+    match table_input:
+        case '1':
+            data_list = gen_qrcodes_bulk('Computers', 10000)
+        case '2':
+            data_list = gen_qrcodes_bulk('Screens', 20000)
+        case '3':
+            data_list = gen_qrcodes_bulk('Phones', 30000)
+        case '4':
+            data_list = gen_qrcodes_bulk('Printers', 40000)
+        case '5':
+            data_list = gen_qrcodes_bulk('ExternalDrives', 50000)
+        case _:
+            print("Invalid option")
+
 rows = 13  # Nombre de rangées d'étiquettes
 cols = 5  # Nombre de colonnes d'étiquettes
 label_width = 4.05  # Largeur des étiquettes en centimètres

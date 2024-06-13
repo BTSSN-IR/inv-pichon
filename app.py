@@ -60,7 +60,19 @@ def allowed_file(filename):
 
 @app.route("/generate_qrcode")
 def generate_qrcode(): # Utilisation de la biliothèque qrcode pour générer un QR Code avec les données demandées
-    data = request.args.get('table') + ',' + request.args.get('device') 
+    match request.args.get('table'):
+        case 'Computers':
+            pass
+        case 'Screens':
+            pass
+        case 'Phones':
+            pass
+        case 'Printers':
+            pass
+        case 'ExternalDrives':
+            pass
+        case _:
+            data = request.args.get('table') + ',' + request.args.get('device') 
     qr = qrcode.QRCode(version = 1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size = 10, border = 4)
     qr.add_data(data)
     qr.make(fit = True)
@@ -126,9 +138,10 @@ def add_user_form():
                 print("SELECT username FROM Admins WHERE username = '{}'".format(userid))
                 cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(userid))
                 username_bdd = cur.fetchall()
-                pass_encoded = encrypt_password(password, SECRET_KEY) # Cryptage du mot de passe avec une clé secrète
+                # pass_encoded = encrypt_password(password, SECRET_KEY) # Cryptage du mot de passe avec une clé secrète
+                pass_encoded = password
                 print(pass_encoded)
-                print(decrypt_password(pass_encoded))
+                # print(decrypt_password(pass_encoded))
                 print("SELECT password FROM Admins WHERE password = '{}'".format(pass_encoded))
                 cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(pass_encoded))
                 mdp_bdd = cur.fetchall()
@@ -170,11 +183,12 @@ def user_information():
     return render_template('user_infomation.html')
 
 @app.route("/equipment_types/computer", methods=['GET','POST'])
-def add_computer():
+def add_computer(device_id = None):
     return render_template('equipment_types/computer.html')
 
 @app.route("/add_equipment_form_computer_appliquer", methods = ['GET','POST'])
 def add_equipment_computer_form():
+    global device_id_forced
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
@@ -183,7 +197,11 @@ def add_equipment_computer_form():
         assigneduser = request.form.get('assigneduser-input')
         purchase = request.form.get('purchasedate-input')
         licenses = request.form.get('licenses-input')
-        cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser, purchasedate, licenses) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser, purchase, licenses))
+        if device_id_forced != 0:
+            cur.execute("INSERT INTO Computers(id, hostname, serialnumber, mainuser, purchasedate, licenses) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(10000+device_id_forced, hostname, serialnumber, assigneduser, purchase, licenses))
+            device_id_forced = 0
+        else:
+            cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser, purchasedate, licenses) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname, serialnumber, assigneduser, purchase, licenses))
         conn.commit()
     return render_template('equipment_types/computer.html',validation_code = "The computer was successfully added")
     
@@ -224,6 +242,7 @@ def add_screen():
 
 @app.route("/add_equipment_form_screen_appliquer", methods = ['GET','POST'])
 def add_equipment_screen_form():
+    global device_id_forced
     conn = sqlite3.connect('inv_pichon.db') # Connexion à la base de données avec le module SQLite3
     cur = conn.cursor()
     if request.method == 'POST':
@@ -232,8 +251,12 @@ def add_equipment_screen_form():
         serialnumber = request.form.get('serialnumber-input')
         purchasedate = request.form.get('purchase-input')
         assigneduser = request.form.get('assigneduser-input')
+        if device_id_forced != 0:
+            cur.execute("INSERT INTO Screens(id, make, model, serialnumber, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, make, model, serialnumber, purchasedate, assigneduser))
+            device_id_forced = 0
+        else:
         # Insertion dans la base de données de l'équipement avec les informations récupérées dans le formulaire
-        cur.execute("INSERT INTO Screens(make, model, serialnumber, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make, model, serialnumber, purchasedate, assigneduser))
+            cur.execute("INSERT INTO Screens(make, model, serialnumber, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make, model, serialnumber, purchasedate, assigneduser))
         # Validation des changements
         conn.commit()
     return render_template('equipment_types/screen.html',validation_code = "The screen was successfully added") # Affichage de la page avec un message de validation ajouté
@@ -276,6 +299,7 @@ def add_phone():
 
 @app.route("/add_equipment_form_phone_appliquer", methods = ['GET','POST'])
 def add_equipment_phone_form():
+    global device_id_forced
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
@@ -285,7 +309,11 @@ def add_equipment_phone_form():
         purchase = request.form.get('purchase-input')
         make = request.form.get('make-input')
         assigneduser = request.form.get('assigneduser-input')
-        cur.execute("INSERT INTO Phones(make, model, serialnumber, purchasedate, phonenumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make,model, serialnumber, purchase, phonenumber, assigneduser))
+        if device_id_forced != 0:
+            cur.execute("INSERT INTO Phones(id, make, model, serialnumber, purchasedate, phonenumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, make,model, serialnumber, purchase, phonenumber, assigneduser))
+            device_id_forced = 0
+        else:
+            cur.execute("INSERT INTO Phones(make, model, serialnumber, purchasedate, phonenumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make,model, serialnumber, purchase, phonenumber, assigneduser))
         conn.commit()
     return render_template('equipment_types/phone.html',validation_code = "The phone was successfully added")
 
@@ -381,6 +409,7 @@ def add_printer():
 
 @app.route("/add_equipment_form_printer_appliquer", methods = ['GET','POST'])
 def add_equipment_printer_form():
+    global device_id_forced
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
@@ -390,12 +419,17 @@ def add_equipment_printer_form():
         purchasedate = request.form.get('purchasedate-input')
         serialnumber = request.form.get('serialnumber-input')
         ip = request.form.get('ip-input')
-        cur.execute("INSERT INTO Printers(hostname, make, model, serialnumber, purchasedate, ip) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname,make,model,serialnumber,purchasedate, ip))
+        if device_id_forced != 0:
+            cur.execute("INSERT INTO Printers(id, hostname, make, model, serialnumber, purchasedate, ip) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced,hostname,make,model,serialnumber,purchasedate, ip))
+            device_id_forced = 0
+        else:
+            cur.execute("INSERT INTO Printers(hostname, make, model, serialnumber, purchasedate, ip) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname,make,model,serialnumber,purchasedate, ip))
         conn.commit()
     return render_template('equipment_types/printer.html',validation_code = "The printer was successfully added")
 
 @app.route("/update_equipement_printer", methods = ['GET','POST'])
 def update_equipement_printer():
+    global device_id_forced
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
@@ -441,6 +475,7 @@ def add_externaldrive():
 
 @app.route("/add_equipment_form_externaldrive_appliquer", methods = ['GET','POST'])
 def add_equipment_externaldrive_form():
+    global device_id_forced
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
@@ -450,7 +485,11 @@ def add_equipment_externaldrive_form():
         type = request.form.get('type-input')
         capacity = request.form.get('capacity-input')
         purchasedate = request.form.get('purchasedate-input')
-        cur.execute("INSERT INTO ExternalDrives(serialnumber, make, model, type, capacity, purchasedate) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(serialnumber, make, model, type, capacity, purchasedate))
+        if device_id_forced != 0:
+            cur.execute("INSERT INTO ExternalDrives(id, serialnumber, make, model, type, capacity, purchasedate) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced,serialnumber, make, model, type, capacity, purchasedate))
+            device_id_forced = 0
+        else:
+            cur.execute("INSERT INTO ExternalDrives(serialnumber, make, model, type, capacity, purchasedate) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(serialnumber, make, model, type, capacity, purchasedate))
         conn.commit()
     return render_template('equipment_types/externaldrive.html',validation_code = "The drive was successfully added")
 
@@ -531,8 +570,11 @@ def upload():
             return render_template("scan.html", message_erreur = "The QR Code is not valid")
         return render_template("scan.html", message_erreur = "The QR Code is not valid")
     
+device_id_forced = 0
+
 @app.route('/redirection_scan_api', methods = ['POST'])
 def redirection_scan_api():
+    global device_id_forced
     conn = sqlite3.connect('inv_pichon.db') # Connexion à la base de données
     cur = conn.cursor()
     redirection = request.form.get('qr_data')
@@ -540,7 +582,7 @@ def redirection_scan_api():
     if ',' in redirection:
         liste_redirection = redirection.split(",")
         if liste_redirection[0] in ["Computers","ExternalDrives","Phones","Printers","Screens"]:
-                if liste_redirection[0] == 'Computers':
+                if liste_redirection[0] in ['Computers', 'Screens', 'Phones', 'Printers', 'ExternalDrives']:
                     query = "SELECT * FROM \"{}\" WHERE id = ?".format(liste_redirection[0])
                 else:
                     query = "SELECT * FROM \"{}\" WHERE serialnumber = ?".format(liste_redirection[0])
@@ -549,6 +591,31 @@ def redirection_scan_api():
                 print(contenue_entree)
                 conn.close()
                 if contenue_entree == []:
+                    if liste_redirection[0] == 'Computers':
+                        # return render_template('equipment_types/computer.html',validation_code = "Device didn't exist")
+                        device_id_forced = int(liste_redirection[1])
+                        return redirect(url_for('add_computer'))
+                        
+                    elif liste_redirection[0] == 'Screens':
+                        # return render_template('equipment_types/screen.html',validation_code = "Device didn't exist")
+                        device_id_forced = int(liste_redirection[1])
+                        return redirect(url_for('add_screen'))
+                    
+                    elif liste_redirection[0] == 'Phones':
+                        # return render_template('equipment_types/screen.html',validation_code = "Device didn't exist")
+                        device_id_forced = int(liste_redirection[1])
+                        return redirect(url_for('add_phone'))
+                    
+                    elif liste_redirection[0] == 'Printers':
+                        # return render_template('equipment_types/screen.html',validation_code = "Device didn't exist")
+                        device_id_forced = int(liste_redirection[1])
+                        return redirect(url_for('add_printer'))
+                    
+                    elif liste_redirection[0] == 'ExternalDrives':
+                        # return render_template('equipment_types/screen.html',validation_code = "Device didn't exist")
+                        device_id_forced = int(liste_redirection[1])
+                        return redirect(url_for('add_computer'))
+
                     return render_template("scan.html",message_erreur = "The equipment is not referenced in the database")
                 if liste_redirection[0] == "Computers":
                     return render_template("Device_information_scan/computer.html",contenue_entree = contenue_entree)
