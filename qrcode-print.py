@@ -99,6 +99,7 @@ def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_wi
 
     document.save(output_filename)
 
+
 def gen_qrcodes_bulk(table, starting_index):
     if table == 'Computers':
         return [ f'Computers,{i}' for i in range(starting_index,starting_index + 65) ]
@@ -111,25 +112,41 @@ def gen_qrcodes_bulk(table, starting_index):
     elif table == 'ExternalDrives':
         return [ f'ExternalDrives,{i}' for i in range(starting_index,starting_index + 65) ]
 
+
 # Exemple d'utilisation
-data_list = []
-while data_list == []:
+def choose():
+    data_list = []
+
+    nb_pages = int(input('Number of pages to print (65 labels per page) : '))
     print("Choose the type of labels to print :\n1 - Computers\n2 - Screens\n3 - Phones\n4 - Printers\n5 - External Drives")
     table_input = input('Please choose an option : ')
-    number_input = int(input('From which ID the labels should start ? : '))
-    match table_input:
-        case '1':
-            data_list = gen_qrcodes_bulk('Computers', 10000+number_input)
-        case '2':
-            data_list = gen_qrcodes_bulk('Screens', 20000+number_input)
-        case '3':
-            data_list = gen_qrcodes_bulk('Phones', 30000+number_input)
-        case '4':
-            data_list = gen_qrcodes_bulk('Printers', 40000+number_input)
-        case '5':
-            data_list = gen_qrcodes_bulk('ExternalDrives', 50000+number_input)
-        case _:
-            print("Invalid option")
+    starting_id = int(input('From which ID the labels should start ? : '))
+    
+    for i in range(1,nb_pages+1):
+        while data_list == []:
+            match table_input:
+                case '1':
+                    data_list = gen_qrcodes_bulk('Computers', 10000+starting_id)
+                    starting_id += 65
+                case '2':
+                    data_list = gen_qrcodes_bulk('Screens', 20000+starting_id)
+                    starting_id += 65
+                case '3':
+                    data_list = gen_qrcodes_bulk('Phones', 30000+starting_id)
+                    starting_id += 65
+                case '4':
+                    data_list = gen_qrcodes_bulk('Printers', 40000+starting_id)
+                    starting_id += 65
+                case '5':
+                    data_list = gen_qrcodes_bulk('ExternalDrives', 50000+starting_id)
+                    starting_id += 65
+                case _:
+                    print("Invalid option")
+        
+        
+        create_labels_with_qr_codes(data_list, rows, cols, f'wordfiles\\labels_with_pichon{i}.docx', label_width, label_height, cube_image_path)
+        os.system(f'start wordfiles\\labels_with_pichon{i}.docx')
+
 
 from urllib.request import urlretrieve
 
@@ -142,16 +159,21 @@ label_width = 4.05  # Largeur des étiquettes en centimètres
 label_height = 2.12  # Hauteur des étiquettes en centimètres
 cube_image_path = 'favicon-pichon.png'  # Chemin de l'image du cube
 
+word_files = 'wordfiles/'
+if not os.path.exists(word_files):
+    os.makedirs(word_files)
+
 qr_path = 'qrcodes/'
 if not os.path.exists(qr_path):
     os.makedirs(qr_path)
 
-create_labels_with_qr_codes(data_list, rows, cols, 'labels_with_pichon.docx', label_width, label_height, cube_image_path)
+choose()
+
+# create_labels_with_qr_codes(data_list, rows, cols, 'labels_with_pichon.docx', label_width, label_height, cube_image_path)
 
 # Exemple d'utilisation :
 
 # os.startfile('labels_with_pichon.docx', "print") # Lancement de l'impression sur l'imprimante par défaut
-os.startfile('labels_with_pichon.docx')
 
 if os.path.exists('favicon-pichon.png'):
   os.remove('favicon-pichon.png')
