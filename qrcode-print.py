@@ -1,45 +1,8 @@
 import os
 import qrcode
 from docx import Document
-from docx.shared import Inches, Cm, Pt
+from docx.shared import Cm, Pt
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
-
-import sqlite3
-
-def get_qrcodes_from_db(db_file, table):
-    conn = sqlite3.connect(db_file)
-    cur = conn.cursor()
-    if table == 'Computers':
-        liste_qr = cur.execute("SELECT id FROM Computers").fetchall()
-        liste_qr = [i[0] for i in liste_qr]
-        liste_qr = ['Computers,' + str(i) for i in liste_qr]
-
-    if table == 'Screens':
-        liste_qr = cur.execute("SELECT serialnumber FROM Screens").fetchall()
-        liste_qr = [i[0] for i in liste_qr]
-        liste_qr = ['Screens,' + i for i in liste_qr]
-
-    if table == 'Phones':
-        liste_qr = cur.execute("SELECT serialnumber FROM Phones").fetchall()
-        liste_qr = [i[0] for i in liste_qr]
-        liste_qr = ['Phones,' + i for i in liste_qr]
-
-    if table == 'Printers':
-        liste_qr = cur.execute("SELECT serialnumber FROM Printers").fetchall()
-        liste_qr = [i[0] for i in liste_qr]
-        liste_qr = ['Printers,' + i for i in liste_qr]
-
-    if table == 'ExternalDrives':
-        liste_qr = cur.execute("SELECT serialnumber FROM ExternalDrives").fetchall()
-        liste_qr = [i[0] for i in liste_qr]
-        liste_qr = ['ExternalDrives,' + i for i in liste_qr]
-    
-    if table == 'All':
-        liste_qr = []
-        for i in ['Computers', 'Screens', 'Phones', 'Printers', 'ExternalDrives']:
-            liste_qr.extend(get_qrcodes_from_db(db_file, i))
-
-    return liste_qr
 
 
 def generate_qr_code(data, filename):
@@ -114,38 +77,32 @@ def gen_qrcodes_bulk(table, starting_index):
 
 
 # Exemple d'utilisation
-def choose():
+def choose(table_input,filename, starting_id = 0):
     data_list = []
-
-    nb_pages = int(input('Number of pages to print (65 labels per page) : '))
-    print("Choose the type of labels to print :\n1 - Computers\n2 - Screens\n3 - Phones\n4 - Printers\n5 - External Drives")
-    table_input = input('Please choose an option : ')
-    starting_id = int(input('From which ID the labels should start ? : '))
     
-    for i in range(1,nb_pages+1):
-        while data_list == []:
-            match table_input:
-                case '1':
-                    data_list = gen_qrcodes_bulk('Computers', 10000+starting_id)
-                    starting_id += 65
-                case '2':
-                    data_list = gen_qrcodes_bulk('Screens', 20000+starting_id)
-                    starting_id += 65
-                case '3':
-                    data_list = gen_qrcodes_bulk('Phones', 30000+starting_id)
-                    starting_id += 65
-                case '4':
-                    data_list = gen_qrcodes_bulk('Printers', 40000+starting_id)
-                    starting_id += 65
-                case '5':
-                    data_list = gen_qrcodes_bulk('ExternalDrives', 50000+starting_id)
-                    starting_id += 65
-                case _:
-                    print("Invalid option")
+    while data_list == []:
+        match table_input:
+            case '1':
+                data_list = gen_qrcodes_bulk('Computers', 10000+starting_id)
+                starting_id += 65
+            case '2':
+                data_list = gen_qrcodes_bulk('Screens', 20000+starting_id)
+                starting_id += 65
+            case '3':
+                data_list = gen_qrcodes_bulk('Phones', 30000+starting_id)
+                starting_id += 65
+            case '4':
+                data_list = gen_qrcodes_bulk('Printers', 40000+starting_id)
+                starting_id += 65
+            case '5':
+                data_list = gen_qrcodes_bulk('ExternalDrives', 50000+starting_id)
+                starting_id += 65
+            case _:
+                print("Invalid option")
         
         
-        create_labels_with_qr_codes(data_list, rows, cols, f'wordfiles\\labels_with_pichon{i}.docx', label_width, label_height, cube_image_path)
-        os.system(f'start wordfiles\\labels_with_pichon{i}.docx')
+    create_labels_with_qr_codes(data_list, rows, cols, f'wordfiles\\labels_with_pichon{filename}.docx', label_width, label_height, cube_image_path)
+    os.system(f'start wordfiles\\labels_with_pichon{filename}.docx')
 
 
 from urllib.request import urlretrieve
@@ -167,7 +124,16 @@ qr_path = 'qrcodes/'
 if not os.path.exists(qr_path):
     os.makedirs(qr_path)
 
-choose()
+print("Choose the type of labels to print :\n1 - Computers\n2 - Screens\n3 - Phones\n4 - Printers\n5 - External Drives")
+table_input = input('Please choose an option : ')
+starting_id = int(input('From which ID the labels should start ? : '))
+nb_pages = int(input('Number of pages to print (65 labels per page) : '))
+
+for i in range(1,nb_pages+1):
+
+    choose(table_input, i, starting_id)
+    if i >=1:
+        starting_id += 65
 
 # create_labels_with_qr_codes(data_list, rows, cols, 'labels_with_pichon.docx', label_width, label_height, cube_image_path)
 
