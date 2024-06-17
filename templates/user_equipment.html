@@ -23,23 +23,23 @@
             <div id="info-box">
                 <!-- <div id="label-input">
                     <label id="secondary-text">Device Type : {{ device_type }}</label>
-                </div>
+                </div> -->
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
                 <div id="label-input">
                     <label id="secondary-title">Computer</label><br>
-                    <label id="secondary-text" class="print-switch-black">Serial number : {{ user_computer[0][0] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Hostname : {{ user_computer[0][1] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Main user : {{ user_computer[0][2] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Purchase date : {{ user_computer[0][3] }}</label><br>      
+                    <label id="secondary-text" class="print-switch-black">Serial number : {{ user_computer[0][1] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Hostname : {{ user_computer[0][2] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Main user : {{ user_computer[0][3] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Purchase date : {{ user_computer[0][4] }}</label><br>      
                 </div>
 
                 <div id="label-input">
                     <label id="secondary-title">Screen</label><br>
-                    <label id="secondary-text" class="print-switch-black">Serial number : {{ user_screen[0][0] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Manufacturer : {{ user_screen[0][1] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Model : {{ user_screen[0][2] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Purchase date : {{ user_screen[0][3] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Main user : {{ user_screen[0][4] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Serial number : {{ user_screen[0][1] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Manufacturer : {{ user_screen[0][2] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Model : {{ user_screen[0][3] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Purchase date : {{ user_screen[0][4] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Main user : {{ user_screen[0][5] }}</label><br>
                                         
                 </div>
 
@@ -52,12 +52,22 @@
 
                 <div id="label-input">
                     <label id="secondary-title">Phone</label><br>
-                    <label id="secondary-text" class="print-switch-black">Serial number : {{ user_phone[0][0] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Manufacturer : {{ user_phone[0][1] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Model : {{ user_phone[0][2] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Purchase date : {{ user_phone[0][3] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Phone number : {{ user_phone[0][4] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Main user : {{ user_phone[0][5] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Serial number : {{ user_phone[0][1] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Manufacturer : {{ user_phone[0][2] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Model : {{ user_phone[0][3] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Purchase date : {{ user_phone[0][4] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Phone number : {{ user_phone[0][5] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Main user : {{ user_phone[0][6] }}</label><br>
+                </div>
+
+                <div id="label-input">
+                    <label id="secondary-title">External Drive</label><br>
+                    <label id="secondary-text" class="print-switch-black">Serial number : {{ user_externaldrive[0][1] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Manufacturer : {{ user_externaldrive[0][2] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Model : {{ user_externaldrive[0][3] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Type : {{ user_externaldrive[0][4] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Capacity : {{ user_externaldrive[0][5] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Main user : {{ user_externaldrive[0][6] }}</label><br>
                 </div>
             </div>
             <button onclick="window.print()" id="print-button">Print</button>

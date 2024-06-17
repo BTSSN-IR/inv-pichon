@@ -6,7 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&display=swap" rel="stylesheet">
-    <title>Pichon Inventory - Add Equipment</title>
+    <title>Pichon Inventory - Device Information</title>
     <link rel="icon" type="image/png" href="/static/favicon-pichon.png">
 </head>
 
@@ -19,7 +19,7 @@
         </div>
     </div>
     <div id="device-page">
-        <p id="title">Add Equipment - External Drive</p>
+        <p id="title">Information - External Drive</p>
         <form action="{{ url_for('update_equipement_externaldrive') }}" method="POST">
             <div id="info-box">
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
@@ -46,6 +46,10 @@
                 <div id="label-input">
                     <label for="Purchasedate_entry" id="secondary-text"> Purchase Date </label>
                     <input id="Purchasedate_entry" type="date" name="purchasedate-input">
+                </div>
+                <div id="label-input">
+                    <label for="Assigned_User_entry" id="secondary-text"> User </label>
+                    <input id="Assigned_User_entry" type="text" name="assigneduser-input">
                 </div>
             </div>
             <a href="">
@@ -205,6 +209,24 @@ body {
         white-space: nowrap;
         width: 9rem;
         margin: 2rem;
+    }
+    .delete_button{
+        align-items: center;
+        background-color: #ff0000;
+        border-radius: 5.2rem;
+        box-shadow: inset 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.25), 0.5rem 0.5rem 0.4rem rgba(0, 0, 0, 0.25);
+        color: #ffffff;
+        display: flex;
+        flex-shrink: 0;
+        font-family: Inter, 'Source Sans Pro';
+        font-size: 1.5rem;
+        font-weight: 700;
+        height: 3rem;
+        justify-content: center;
+        line-height: 1.2125;
+        text-align: center;
+        white-space: nowrap;
+        width: 18rem;
     }
     #device-page {
     align-items: center;

@@ -25,16 +25,20 @@
             <div id="info-box">
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
                 <div id="label-input">
-                    <label for="Hostname_entry" id="secondary-text"> Device name </label>
+                    <label for="Hostname_entry" id="secondary-text"> Device name * </label>
                     <input id="Hostname_entry" type="text" name="hostname-input">
                 </div>
                 <div id="label-input">
-                    <label for="Serial_Number_entry" id="secondary-text"> Serial number </label>
+                    <label for="Serial_Number_entry" id="secondary-text"> Serial number * </label>
                     <input id="Serial_Number_entry" type="text" name="serialnumber-input">
                 </div>
                 <div id="label-input">
                     <label for="Assigned_User_entry" id="secondary-text"> User </label>
-                    <input id="Assigned_User_entry" type="text" name="assigneduser-input">
+                    <select name="userlist-input" id="userlist">
+                        {% for i in userlist %}
+                        <option value="{{i}}">{{i}}</option>
+                        {% endfor %}
+                    </select>   
                 </div>
                 <div id="label-input">
                     <label for="Purchase_Date_entry" id="secondary-text"> Purchase date </label>
@@ -107,6 +111,23 @@ input {
     margin: 0rem 0 3.3rem 0;
     padding: 1.1rem 2.7rem 1rem 2.7rem;
     border: 0;
+}
+
+select {
+    text-align: right;
+    background-color: #404040;
+    color: #ffffff;
+    border-radius: 2.55rem;
+    box-shadow: inset 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.25), 0.5rem 0.5rem 0.4rem rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    font-family: "Inter", 'Source Sans Pro';
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 1.2125;
+    margin: 0rem 0 3.3rem 0;
+    padding: 1.1rem 2.7rem 1rem 2.7rem;
+    border: 0;
+    width: 360px;
 }
 
 input[type=date] {
