@@ -55,6 +55,10 @@
         <a href="{{ url_for('scan') }}">
             <input type="button" class="retour_buton" value="Retour">
         </a>
+        <form action="{{ url_for('delete_equipement_printer') }}" method="POST" style="display:inline;">
+            <input type="hidden" name="serialnumber-input" value="{{contenue_entree[0][1]}}">
+            <input type="submit" class="delete_button" value="Remove Equipment">
+        </form>
         <script>
             document.getElementById('Hostname_entry').value = "{{contenue_entree[0][4]}}";
             document.getElementById('Make_entry').value = "{{contenue_entree[0][2]}}";
