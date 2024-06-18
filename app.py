@@ -615,6 +615,10 @@ def redirection_scan_api():
                 cur.execute(query, (liste_redirection[1],))
                 contenue_entree = cur.fetchall()
                 print(contenue_entree)
+
+                userlist = cur.execute('SELECT id from Users').fetchall()
+                userlist = [ i[0] for i in userlist]
+
                 conn.close()
                 if contenue_entree == []:
                     if liste_redirection[0] == 'Computers':
@@ -644,15 +648,15 @@ def redirection_scan_api():
 
                     return render_template("scan.html",message_erreur = "The equipment is not referenced in the database")
                 if liste_redirection[0] == "Computers":
-                    return render_template("Device_information_scan/computer.html",contenue_entree = contenue_entree)
+                    return render_template("Device_information_scan/computer.html",contenue_entree = contenue_entree, userlist = userlist)
                 if liste_redirection[0] == "ExternalDrives":
-                    return render_template("Device_information_scan/externaldrive.html",contenue_entree = contenue_entree)
+                    return render_template("Device_information_scan/externaldrive.html",contenue_entree = contenue_entree, userlist = userlist)
                 if liste_redirection[0] == "Phones":
-                    return render_template("Device_information_scan/phone.html",contenue_entree = contenue_entree)
+                    return render_template("Device_information_scan/phone.html",contenue_entree = contenue_entree, userlist = userlist)
                 if liste_redirection[0] == "Printers":
-                    return render_template("Device_information_scan/printer.html",contenue_entree = contenue_entree)
+                    return render_template("Device_information_scan/printer.html",contenue_entree = contenue_entree, userlist = userlist)
                 if liste_redirection[0] == "Screens":
-                    return render_template("Device_information_scan/screen.html",contenue_entree = contenue_entree)
+                    return render_template("Device_information_scan/screen.html",contenue_entree = contenue_entree, userlist = userlist)
         return render_template("scan.html", message_erreur = "The QR Code is not valid")
     return render_template("scan.html", message_erreur = "The QR Code is not valid")
 
