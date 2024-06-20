@@ -34,7 +34,8 @@
                 </div>
                 <div id="label-input">
                     <label for="Assigned_User_entry" id="secondary-text"> User </label>
-                    <select name="userlist-input" id="userlist">
+                    <select name="userlist-input" id="Assigned_User_entry">
+                        <option disabled="disabled" selected="selected">Select user</option>
                         {% for i in userlist %}
                             {% if (i == contenue_entree[0][3]) : %}
                                 <option value="{{i}}" selected>{{i}}</option>

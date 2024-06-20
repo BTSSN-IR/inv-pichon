@@ -198,7 +198,7 @@ def add_equipment_computer_form():
     if request.method == 'POST':
         hostname = request.form.get('hostname-input')
         serialnumber = request.form.get('serialnumber-input')
-        assigneduser = request.form.get('assigneduser-input')
+        assigneduser = request.form.get('userlist-input')
         purchase = request.form.get('purchasedate-input')
         licenses = request.form.get('licenses-input')
         if device_id_forced != 0:
@@ -216,7 +216,7 @@ def update_equipement_computer():
     if request.method == 'POST':
         hostname = request.form.get('hostname-input')
         serialnumber = request.form.get('serialnumber-input')
-        assigneduser = request.form.get('assigneduser-input')
+        assigneduser = request.form.get('userlist-input')
         purchase = request.form.get('purchasedate-input')
         licenses = request.form.get('licenses-input')
         cur.execute("SELECT * FROM Computers WHERE serialnumber = ?", (serialnumber,))
@@ -258,7 +258,7 @@ def add_equipment_screen_form():
         model = request.form.get('model-input')
         serialnumber = request.form.get('serialnumber-input')
         purchasedate = request.form.get('purchase-input')
-        assigneduser = request.form.get('assigneduser-input')
+        assigneduser = request.form.get('userlist-input')
         if device_id_forced != 0:
             cur.execute("INSERT INTO Screens(id, make, model, serialnumber, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, make, model, serialnumber, purchasedate, assigneduser))
             device_id_forced = 0
@@ -320,7 +320,7 @@ def add_equipment_phone_form():
         phonenumber = request.form.get('phonenumber-input')
         purchase = request.form.get('purchase-input')
         make = request.form.get('make-input')
-        assigneduser = request.form.get('assigneduser-input')
+        assigneduser = request.form.get('userlist-input')
         if device_id_forced != 0:
             cur.execute("INSERT INTO Phones(id, make, model, serialnumber, purchasedate, phonenumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, make,model, serialnumber, purchase, phonenumber, assigneduser))
             device_id_forced = 0
@@ -364,7 +364,11 @@ def delete_equipement_phone():
     
 @app.route("/equipment_types/employee", methods=['GET','POST'])
 def add_employee():
-    return render_template('equipment_types/employee.html')
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    userlist = cur.execute('SELECT id from Users').fetchall()
+    userlist = [ i[0] for i in userlist]
+    return render_template('equipment_types/employee.html', userlist = userlist)
 
 @app.route("/add_equipment_form_employee_appliquer", methods = ['GET','POST'])
 def add_equipment_employee_form():
@@ -376,14 +380,45 @@ def add_equipment_employee_form():
         lastname = request.form.get('lastname-input')
         department = request.form.get('department-input')
         email = request.form.get('email-input')
-        computer = request.form.get('computer-input')
-        phone = request.form.get('phone-input')
-        mouse = request.form.get('mouse-input')
-        print("INSERT INTO Users(id, firstname, lastname, department, email, computer, phone, mouse) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(id,firstname, lastname, department, email, computer, phone, mouse))
-        cur.execute("INSERT INTO Users(id, firstname, lastname, department, email, computer, phone, mouse) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(id,firstname, lastname, department, email, computer, phone, mouse))
+        # computer = request.form.get('computer-input')
+        # phone = request.form.get('phone-input')
+        # mouse = request.form.get('mouse-input')
+        print("INSERT INTO Users(id, firstname, lastname, department, email) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(id,firstname, lastname, department, email))
+        cur.execute("INSERT INTO Users(id, firstname, lastname, department, email) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(id,firstname, lastname, department, email))
         conn.commit()
     return render_template('equipment_types/employee.html',validation_code = "The employee was successfully added")
 
+@app.route("/update_equipement_employee", methods = ['GET','POST'])
+def update_equipement_employee():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        id = request.form.get('id-input')
+        firstname = request.form.get('firstname-input')
+        lastname = request.form.get('lastname-input')
+        department = request.form.get('department-input')
+        email = request.form.get('email-input')
+        cur.execute("SELECT * FROM Users WHERE id = ?", (id,))
+        contenue_entree = cur.fetchall()
+        # cur.execute("SELECT id FROM Users WHERE id = '{}'".format(assigneduser))
+        # id_bdd = cur.fetchall()
+        # if id_bdd == []:
+        #     return render_template('Device_information_scan/computer.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)   
+        cur.execute("UPDATE Users SET id = '{}', firstname = '{}', lastname = '{}', department = '{}', email = '{}' WHERE id = '{}'".format(id, firstname, lastname, department, email, id))
+        conn.commit()
+        return render_template('scan.html',message_erreur = "The user has been updated")
+    
+@app.route("/delete_equipement_employee", methods = ['GET','POST'])
+def delete_equipement_employee():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        serialnumber = request.form.get('id-input')
+        print(serialnumber)
+        cur.execute("DELETE FROM Users WHERE id = ?", (id,))
+        conn.commit()
+    return render_template('scan.html', message_erreur = "The user has been removed")
+   
 @app.route("/equipment_types/mouse", methods=['GET','POST'])
 def add_mouse():
     conn = sqlite3.connect('inv_pichon.db')
@@ -509,7 +544,7 @@ def add_equipment_externaldrive_form():
         type = request.form.get('type-input')
         capacity = request.form.get('capacity-input')
         purchasedate = request.form.get('purchasedate-input')
-        mainuser = request.form.get('assigneduser-input')
+        mainuser = request.form.get('userlist-input')
         if device_id_forced != 0:
             cur.execute("INSERT INTO ExternalDrives(id, serialnumber, make, model, type, capacity, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced,serialnumber, make, model, type, capacity, purchasedate, mainuser))
             device_id_forced = 0
@@ -607,8 +642,8 @@ def redirection_scan_api():
     print(redirection)
     if ',' in redirection:
         liste_redirection = redirection.split(",")
-        if liste_redirection[0] in ["Computers","ExternalDrives","Phones","Printers","Screens"]:
-                if liste_redirection[0] in ['Computers', 'Screens', 'Phones', 'Printers', 'ExternalDrives']:
+        if liste_redirection[0] in ["Computers","ExternalDrives","Phones","Printers","Screens", "Users"]:
+                if liste_redirection[0] in ['Computers', 'Screens', 'Phones', 'Printers', 'ExternalDrives', 'Users']:
                     query = "SELECT * FROM \"{}\" WHERE id = ?".format(liste_redirection[0])
                 else:
                     query = "SELECT * FROM \"{}\" WHERE serialnumber = ?".format(liste_redirection[0])
@@ -647,6 +682,8 @@ def redirection_scan_api():
                         return redirect(url_for('add_externaldrive'))
 
                     return render_template("scan.html",message_erreur = "The equipment is not referenced in the database")
+                if liste_redirection[0] == "Users":
+                    return render_template("Device_information_scan/employee.html",contenue_entree = contenue_entree)
                 if liste_redirection[0] == "Computers":
                     return render_template("Device_information_scan/computer.html",contenue_entree = contenue_entree, userlist = userlist)
                 if liste_redirection[0] == "ExternalDrives":

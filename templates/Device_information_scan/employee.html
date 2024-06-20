@@ -19,43 +19,30 @@
         </div>
     </div>
     <div id="device-page">
-        <p id="title">Information - Phone</p>
-        <p id="secondary-text">* Not working for now *</p>
+        <p id="title">Information - Employee</p>
         <p id="message_erreur">{{message_erreur}}</p>
-        <form action="{{ url_for('update_equipement_phone') }}" method="POST">
+        <form action="{{ url_for('update_equipement_employee') }}" method="POST">
             <div id="info-box">
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
                 <div id="label-input">
-                    <label for="Make_entry" id="secondary-text"> Make </label>
-                    <input id="Make_entry" type="text" name="make-input">
+                    <label for="ID_entry" id="secondary-text"> ID </label>
+                    <input id="ID_entry" type="text" name="id-input">
                 </div>
                 <div id="label-input">
-                    <label for="Model_entry" id="secondary-text"> Model </label>
-                    <input id="Model_entry" type="text" name="model-input">
+                    <label for="Firstname_entry" id="secondary-text"> First name </label>
+                    <input id="Firstname_entry" type="text" name="firstname-input">
                 </div>
                 <div id="label-input">
-                    <label for="Serial_Number_entry" id="secondary-text"> Serial Number </label>
-                    <input id="Serial_Number_entry" type="text" name="serialnumber-input">
+                    <label for="Lastname_entry" id="secondary-text"> Last name </label>
+                    <input id="Lastname_entry" type="text" name="lastname-input">
                 </div>
                 <div id="label-input">
-                    <label for="Phone_Number_entry" id="secondary-text"> Phone Number </label>
-                    <input id="Phone_Number_entry" type="text" name="phonenumber-input">
+                    <label for="Department_entry" id="secondary-text"> Department </label>
+                    <input id="Department_entry" type="text" name="department-input">
                 </div>
                 <div id="label-input">
-                    <label for="Purchasedate_entry" id="secondary-text"> Purchase date </label>
-                    <input id="Purchasedate_entry" type="date" name="purchase-input">
-                </div>
-                <div id="label-input">
-                    <label for="Assigned_User_entry" id="secondary-text"> User </label>
-                    <select name="userlist-input" id="userlist">
-                        {% for i in userlist %}
-                            {% if (i == contenue_entree[0][3]) : %}
-                                <option value="{{i}}" selected>{{i}}</option>
-                            {% else : %}
-                                <option value="{{i}}">{{i}}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
+                    <label for="Email_entry" id="secondary-text"> E-mail </label>
+                    <input id="Email_entry" type="text" name="email-input">
                 </div>
             </div>
             <a href="">
@@ -65,34 +52,33 @@
         <a href="{{ url_for('scan') }}">
             <input type="button" class="retour_buton" value="Retour">
         </a>
-        <form action="{{ url_for('delete_equipement_phone') }}" method="POST" style="display:inline;">
-            <input type="hidden" name="serialnumber-input" value="{{contenue_entree[0][1]}}">
-            <input type="submit" class="delete_button" value="Remove Equipment">
+        <form action="{{ url_for('delete_equipement_employee') }}" method="POST" style="display:inline;">
+            <input type="hidden" name="id-input" value="{{contenue_entree[0][0]}}">
+            <input type="submit" class="delete_button" value="Remove User">
         </form>
         <script>
-            document.getElementById('Assigned_User_entry').value = "{{contenue_entree[0][6]}}";
-            document.getElementById('Purchasedate_entry').value = "{{contenue_entree[0][4]}}";
-            document.getElementById('Phone_Number_entry').value = "{{contenue_entree[0][5]}}";
-            document.getElementById('Serial_Number_entry').value = "{{contenue_entree[0][1]}}";
-            document.getElementById('Model_entry').value = "{{contenue_entree[0][3]}}";
-            document.getElementById('Make_entry').value = "{{contenue_entree[0][2]}}";
+            document.getElementById('ID_entry').value = "{{contenue_entree[0][0]}}";
+            document.getElementById('Firstname_entry').value = "{{contenue_entree[0][1]}}";
+            document.getElementById('Lastname_entry').value = "{{contenue_entree[0][2]}}";
+            document.getElementById('Department_entry').value = "{{contenue_entree[0][3]}}";
+            document.getElementById('Email_entry').value = "{{contenue_entree[0][4]}}";
         </script>
-        
     </div>
 
 </body>
 
 <style>
-    
+
 #message_erreur {
-    color: #ff0000;
-    font-family: Inter, 'Source Sans Pro';
-    font-size: 2rem;
-    font-weight: 800;
-    line-height: 1.2125;
-    margin: 0rem 0.1rem 2.7rem 0rem;
-    white-space: nowrap;
-}
+        color: #ff0000;
+        font-family: Inter, 'Source Sans Pro';
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1.2125;
+        margin: 0rem 0.1rem 2.7rem 0rem;
+        white-space: nowrap;
+    }
+
 #validation {
     color: #ffffff;
     font-family: Inter, 'Source Sans Pro';
@@ -133,7 +119,7 @@ body {
     text-align: right;
 }
 
-    input{
+    input {
         text-align: right;
         background-color: #404040;
         color: #ffffff;
@@ -148,24 +134,6 @@ body {
         padding: 1.1rem 2.7rem 1rem 2.7rem;
         border: 0;
 }
-
-select {
-    text-align: right;
-    background-color: #404040;
-    color: #ffffff;
-    border-radius: 2.55rem;
-    box-shadow: inset 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.25), 0.5rem 0.5rem 0.4rem rgba(0, 0, 0, 0.25);
-    box-sizing: border-box;
-    font-family: "Inter", 'Source Sans Pro';
-    font-size: 1.2rem;
-    font-weight: 800;
-    line-height: 1.2125;
-    margin: 0rem 0 3.3rem 0;
-    padding: 1.1rem 2.7rem 1rem 2.7rem;
-    border: 0;
-    width: 360px;
-}
-
     #logo_entreprise {
         display: flex;
         height: 4.7rem;
@@ -275,66 +243,59 @@ select {
         width: 1rem;
     }
 
-    a:link { 
-    text-decoration: none; 
-    } 
-    a:visited { 
-        text-decoration: none; 
-    } 
-    a:hover { 
-        text-decoration: none; 
-    } 
-    a:active { 
+    a:link, a:visited, a:hover, a:active { 
         text-decoration: none; 
     }
-    @media screen and (max-width: 767px) {
-        #title {
-            font-size: 1.5rem;
-            margin: 5rem 0.1rem 3rem 0rem;
-        }
-    
-        #secondary-text {
-            font-size: 1.2rem;
-        }
-    
-        #valider_bouton {
-            font-size: 1rem;
-            width: 14rem;
-            height: 2.5rem;
-            margin: 0rem 5rem;
-        }
-    
-        .retour_buton {
-            font-size: 1rem;
-            width: 7rem;
-            height: 2.5rem;
-            margin: 1rem;
-        }
-    
-        .delete_button {
-            font-size: 1rem;
-            width: 14rem;
-            height: 2.5rem;
-        }
-    
-        input[type=text] {
-            font-size: 1rem;
-            padding: 0.9rem 2rem;
-            margin: 0rem 0 2.5rem 0;
-            text-align: center;
-        }
-    
-        #label-input {
-            text-align: center;
-        }
-    
-        .samson-logo {
-            height: 3rem;
-            width: 12rem;
-            padding: 10px 10px;
-        }
-        #message_erreur {
-            font-size: 1.0rem;
-        }  
+
+@media screen and (max-width: 767px) {
+    #title {
+        font-size: 1.5rem;
+        margin: 5rem 0.1rem 3rem 0rem;
     }
+
+    #secondary-text {
+        font-size: 1.2rem;
+    }
+
+    #valider_bouton {
+        font-size: 1rem;
+        width: 14rem;
+        height: 2.5rem;
+        margin: 0rem 5rem;
+    }
+
+    .retour_buton {
+        font-size: 1rem;
+        width: 7rem;
+        height: 2.5rem;
+        margin: 1rem;
+    }
+
+    .delete_button {
+        font-size: 1rem;
+        width: 14rem;
+        height: 2.5rem;
+    }
+
+    input[type=text] {
+        font-size: 1rem;
+        padding: 0.9rem 2rem;
+        margin: 0rem 0 2.5rem 0;
+        text-align: center;
+    }
+
+    #label-input {
+        text-align: center;
+    }
+
+    .samson-logo {
+        height: 3rem;
+        width: 12rem;
+        padding: 10px 10px;
+    }
+    #message_erreur {
+        font-size: 1.0rem;
+    }  
+}
+
 </style>
