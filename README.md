@@ -14,3 +14,9 @@ Pour cela, exécuter la commande « pip install -r requirements.txt » 
 ## Etape 4 
 Si le serveur est sous Windows, lancer le script « start.bat » En double-cliquant dessus depuis l’explorateur de fichiers. 
 Si le serveur est sous Linux, ajouter les droits d’exécution au script « run.sh » grâce à la commande « chmod +x run.sh ». Puis lancer le script à l’aide de la commande « ./run.sh ». 
+
+## Lancement automatique au démarrage du serveur
+
+### Serveur Windows
+
+Créer un raccourci du fichier "start.bat" et le déplacer vers le dossier "C:\Users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup". Le programme se lancera automatiquement au démarrage du serveur, au moment de la connexion utilisateur.
