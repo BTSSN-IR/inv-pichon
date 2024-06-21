@@ -19,12 +19,18 @@
             </a>
         </div>
     </div>
-
+        
     <div id="scan-page">
         <p id="title">Scan QR Code</p>
         <p id="message_erreur">{{message_erreur}}</p>
         <div class="container">
             <div class="section">
+
+                <form method="POST" id="scan-text" action="{{ url_for('redirection_scan_api') }}">
+                    <input type="text" name="qr_data" autofocus>
+                    <input type="submit" hidden /> <!-- hidden submit button -->
+                </form>
+
                 <div id="my-qr-reader">
                 </div>
             </div>
@@ -32,6 +38,8 @@
     <form action="http://localhost:5000/upload" method="POST" enctype="multipart/form-data" id="upload-form">
         <input type="file" name="file" id="upload_button">
     </form>
+
+    
 
     <script>
         document.getElementById("upload_button").onchange = function() {
@@ -97,6 +105,13 @@
 </script>
 
 <style>
+
+#scan-text {
+    /* margin: 10%; */
+    padding: 1rem;
+    align-items: center;
+    text-align: center;
+}
 
 #message_erreur {
     color: #ffffff;
