@@ -44,6 +44,10 @@
                     <label for="Email_entry" id="secondary-text"> E-mail </label>
                     <input id="Email_entry" type="text" name="email-input">
                 </div>
+                <div id="label-input">
+                    <label for="Phone_entry" id="secondary-text"> Phone Number </label>
+                    <input id="Phone_entry" type="text" name="phone-input">
+                </div>
             </div>
             <a href="">
                 <button id="valider_bouton"> Update Information <img id="image_validaion" src="/static/download-svgrepo-com.svg" style="margin: 0 7px;"></button> 
@@ -62,6 +66,7 @@
             document.getElementById('Lastname_entry').value = "{{contenue_entree[0][2]}}";
             document.getElementById('Department_entry').value = "{{contenue_entree[0][3]}}";
             document.getElementById('Email_entry').value = "{{contenue_entree[0][4]}}";
+            document.getElementById('Phone_entry').value = "{{contenue_entree[0][5]}}";
         </script>
     </div>
 

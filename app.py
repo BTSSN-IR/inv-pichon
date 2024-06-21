@@ -398,13 +398,14 @@ def update_equipement_employee():
         lastname = request.form.get('lastname-input')
         department = request.form.get('department-input')
         email = request.form.get('email-input')
+        phone = request.form.get('phone-input')
         cur.execute("SELECT * FROM Users WHERE id = ?", (id,))
         contenue_entree = cur.fetchall()
         # cur.execute("SELECT id FROM Users WHERE id = '{}'".format(assigneduser))
         # id_bdd = cur.fetchall()
         # if id_bdd == []:
         #     return render_template('Device_information_scan/computer.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)   
-        cur.execute("UPDATE Users SET id = '{}', firstname = '{}', lastname = '{}', department = '{}', email = '{}' WHERE id = '{}'".format(id, firstname, lastname, department, email, id))
+        cur.execute("UPDATE Users SET id = '{}', firstname = '{}', lastname = '{}', department = '{}', email = '{}', phone = '{}' WHERE id = '{}'".format(id, firstname, lastname, department, email, phone, id))
         conn.commit()
         return render_template('scan.html',message_erreur = "The user has been updated")
     
