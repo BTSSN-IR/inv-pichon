@@ -1,3 +1,3 @@
 @echo off
-flask run --host 0.0.0.0 --cert=adhoc
+waitress-serve --listen=0.0.0.0:5000 wsgi:app
 pause

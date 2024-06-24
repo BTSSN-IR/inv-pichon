@@ -5,3 +5,5 @@ pyzbar==0.1.9
 qrcode==7.4.2
 Werkzeug==3.0.2
 redis
+python-dotenv
+waitress
