@@ -32,16 +32,18 @@
                     <label id="secondary-text" class="print-switch-black">Main user : {{ user_computer[0][3] }}</label><br>
                     <label id="secondary-text" class="print-switch-black">Purchase date : {{ user_computer[0][4] }}</label><br>      
                 </div>
+                
 
+                {% for i in user_screen %}
                 <div id="label-input">
                     <label id="secondary-title">Screen</label><br>
-                    <label id="secondary-text" class="print-switch-black">Serial number : {{ user_screen[0][1] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Manufacturer : {{ user_screen[0][2] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Model : {{ user_screen[0][3] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Purchase date : {{ user_screen[0][4] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Main user : {{ user_screen[0][5] }}</label><br>
-                                        
+                    <label id="secondary-text" class="print-switch-black">Serial number : {{ i[1] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Manufacturer : {{ i[2] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Model : {{ i[3] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Purchase date : {{ i[4] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Main user : {{ i[5] }}</label><br>   
                 </div>
+                {% endfor %}
 
                 <div id="label-input">
                     <label id="secondary-title">Mouse</label><br>
