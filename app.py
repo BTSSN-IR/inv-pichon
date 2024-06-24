@@ -435,7 +435,7 @@ def add_equipment_mouse_form():
     if request.method == 'POST':
         make = request.form.get('make-input')
         model = request.form.get('model-input')
-        mainuser = request.form.get('mainuser-input')
+        mainuser = request.form.get('userlist-input')
         cur.execute("INSERT INTO Mouse(make, model, user) VALUES (\"{}\",\"{}\",\"{}\")".format(make, model, mainuser))
         conn.commit()
     return render_template('equipment_types/mouse.html',validation_code = "The mouse was successfully added")
@@ -695,6 +695,8 @@ def redirection_scan_api():
                     return render_template("Device_information_scan/printer.html",contenue_entree = contenue_entree, userlist = userlist)
                 if liste_redirection[0] == "Screens":
                     return render_template("Device_information_scan/screen.html",contenue_entree = contenue_entree, userlist = userlist)
+                if liste_redirection[0] == "Mouse":
+                    return render_template("Device_information_scan/mouse.html",contenue_entree = contenue_entree, userlist = userlist)
         return render_template("scan.html", message_erreur = "The QR Code is not valid")
     return render_template("scan.html", message_erreur = "The QR Code is not valid")
 
