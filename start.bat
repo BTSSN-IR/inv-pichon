@@ -1,3 +1,3 @@
 @echo off
-flask run --host=10.0.0.165 --port=80 --cert="cert.pem" --key="key.pem"
+flask run --host=0.0.0.0 --port=443 --cert=cert.pem --key=key.pem
 pause
