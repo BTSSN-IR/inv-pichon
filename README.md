@@ -30,4 +30,4 @@ Si le serveur est sous Linux, ajouter les droits d’exécution au script « r
 
 #### Serveur Windows
 
-Créer un raccourci du fichier "start.bat" et le déplacer vers le dossier "C:\Users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup". Le programme se lancera automatiquement au démarrage du serveur, au moment de la connexion utilisateur.
+Créer un raccourci du fichier "start.bat" et le déplacer vers le dossier "C:\Users\\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup". Le programme se lancera automatiquement au démarrage du serveur, au moment de la connexion utilisateur.
