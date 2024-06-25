@@ -1,3 +1,3 @@
 @echo off
-waitress-serve --listen=0.0.0.0:5000 --url_scheme:'https' wsgi:app 
+flask run --host=10.0.0.165 --port=80 --cert="cert.pem" --key="key.pem"
 pause
