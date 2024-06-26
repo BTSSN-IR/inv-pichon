@@ -20,7 +20,7 @@
         </div>
     </div>
     <div id="device-page">
-        <p id="title">Equipment attached to {{user_name}}</p>
+        <p id="title">Name : {{user_name}}</p>
             <div id="info-box">
                 <!-- <div id="label-input">
                     <label id="secondary-text">Device Type : {{ device_type }}</label>
@@ -72,19 +72,26 @@
                     <label id="secondary-text" class="print-switch-black">Main user : {{ user_externaldrive[0][6] }}</label><br>
                 </div>
             </div>
+            <br>
+            <div id="signature">
+            Date : 
+            <br>
+            <br>
+            Signature : 
+            
+            </div>
             <button onclick="window.print()" id="print-button">Print</button>
     </div>
-
 </body>
 
 <style>
 
-#label-input {
-    padding: 15px 15px;
+#signature {
+    padding: 10px;
 }
 
-body {
-    background-color: #282828;
+#label-input {
+    padding: 0px 15px 0 0;
 }
 
 .barre {
@@ -100,60 +107,46 @@ body {
 
 .samson-logo {
     display: flex;
-    height: 4.7rem;
-    width: 16.4rem;
-    position: absolute;
+    height: 3rem;
+    /* position: absolute; */
     left: 0px;
-    padding: 20px 20px;
-    vertical-align: top;    
+    /* padding: 10px 10px; */
+    vertical-align: top;
+    margin: 0rem 0 0 0;
+    padding: 0 0 20px 0;
 }
 
-#logo_entreprise {
-    display: flex;
-    height: 4.7rem;
-    width: 16.4rem;
-    position: absolute;
-    left: 0px;
-    padding: 20px 20px;
-    vertical-align: top;
-}
-    
 #title {
-    color: #ffffff;
+    /* color: #ffffff; */
     font-family: Inter, 'Source Sans Pro';
-    font-size: 4rem;
+    font-size: 1.6rem;
     font-weight: 800;
     line-height: 1.2125;
-    margin: 7rem 0.1rem 4.7rem 0rem;
     white-space: nowrap;
+    margin: 0;
 }
 
 #secondary-text {
-    padding: 10px 20px;
+    padding: 10px 10px;
     text-align: left;
-    color: #ffffff;
     font-family: Inter, 'Source Sans Pro';
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: 800;
     line-height: 1.2125;
     white-space: nowrap;
 }
 
 #secondary-title {
-    padding: 10px 20px;
+    padding: 10px 15px;
     text-align: left;
-    color: #ffffff;
     font-family: Inter, 'Source Sans Pro';
-    font-size: 2rem;
+    font-size: 1.4rem;
     font-weight: 800;
     line-height: 2;
     white-space: nowrap;
 }
 
 #device-page {
-    align-items: center;
-    background-color: #282828;
-
     display: flex;
     flex-direction: column;
 }
@@ -166,13 +159,6 @@ a:link, a:visited, a:hover, a:active {
     text-decoration: none; 
 }
 
-/* Hide elements when printing the page */
-@media print {
-    #print-button {
-        display: none;
-    }
-}
-
 #print-button {
     align-items: center;
     background-color: #000000;
@@ -182,20 +168,21 @@ a:link, a:visited, a:hover, a:active {
     display: flex;
     flex-shrink: 0;
     font-family: Inter, 'Source Sans Pro';
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    height: 3rem;
+    height: 2rem;
     justify-content: center;
     line-height: 1.2125;
     text-align: center;
     white-space: nowrap;
-    width: 9rem;
-    margin: 2rem;
+    width: 7rem;
+    /* margin: 2rem; */
 }
 
+/* Hide elements when printing the page */
 @media print {
-    .print-switch-black {
-        color: #ff0000;
+    #print-button {
+        display: none;
     }
 }
 
