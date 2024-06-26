@@ -722,7 +722,7 @@ def login_form():
             loggedin = False
             print("Mauvais MDP")
             conn.close()
-            return render_template('login.html',mot_retour_connexion="Utilisateur ou Mot de passe invalide") # Affichage du message d'erreur
+            return render_template('login.html',mot_retour_connexion="Wrong username or password") # Affichage du message d'erreur
         if (userid, password) == (username_bdd[0][0], mdp_bdd[0][0]): # Cas ou le mot de passe et le nom d'utilisateur sont corrects ----------- Décryptage MDP à revoir -----------
             loggedin = True
             conn.close()
