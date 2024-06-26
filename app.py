@@ -227,7 +227,7 @@ def update_equipement_computer():
             return render_template('Device_information_scan/computer.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)   
         cur.execute("UPDATE Computers SET serialnumber = '{}', hostname = '{}', mainuser = '{}', purchasedate = '{}', licenses = '{}' WHERE serialnumber = '{}'".format(serialnumber, hostname, assigneduser, purchase, licenses, serialnumber))
         conn.commit()
-        return render_template('scan.html',message_erreur = "The equipment has been updated")    
+        return redirect(url_for('home'))    
 
 @app.route("/delete_equipement_computer", methods = ['GET','POST'])
 def delete_equipement_computer():
@@ -238,7 +238,7 @@ def delete_equipement_computer():
         print(serialnumber)
         cur.execute("DELETE FROM Computers WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
-    return render_template('scan.html', message_erreur = "The equipment has been removed")
+    return redirect(url_for('home'))
 
 @app.route("/equipment_types/screen", methods=['GET','POST'])
 def add_screen():
@@ -287,7 +287,7 @@ def update_equipement_screen():
             return render_template('Device_information_scan/computer.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)  
         cur.execute("UPDATE Screens SET serialnumber = '{}', make = '{}', model = '{}', purchasedate = '{}', mainuser = '{}' WHERE serialnumber = '{}'".format(serialnumber, make, model, purchasedate, assigneduser, serialnumber))
         conn.commit()
-        return render_template('scan.html',message_erreur = "The equipment has been updated")
+        return redirect(url_for('home'))
         
 
 @app.route("/delete_equipement_screen", methods = ['GET','POST'])
@@ -299,7 +299,7 @@ def delete_equipement_screen():
         print(serialnumber)
         cur.execute("DELETE FROM Screens WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
-    return render_template('scan.html', message_erreur = "The equipment has been removed")
+    return redirect(url_for('home'))
 
 @app.route("/equipment_types/phone", methods=['GET','POST'])
 def add_phone():
@@ -321,11 +321,12 @@ def add_equipment_phone_form():
         purchase = request.form.get('purchase-input')
         make = request.form.get('make-input')
         assigneduser = request.form.get('userlist-input')
+        datacap = request.form.get('data-input')
         if device_id_forced != 0:
-            cur.execute("INSERT INTO Phones(id, make, model, serialnumber, purchasedate, phonenumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, make,model, serialnumber, purchase, phonenumber, assigneduser))
+            cur.execute("INSERT INTO Phones(id, make, model, serialnumber, purchasedate, phonenumber, mainuser, datacap) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, make,model, serialnumber, purchase, phonenumber, assigneduser, datacap))
             device_id_forced = 0
         else:
-            cur.execute("INSERT INTO Phones(make, model, serialnumber, purchasedate, phonenumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make,model, serialnumber, purchase, phonenumber, assigneduser))
+            cur.execute("INSERT INTO Phones(make, model, serialnumber, purchasedate, phonenumber, mainuser, datacap) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make,model, serialnumber, purchase, phonenumber, assigneduser, datacap))
         conn.commit()
     return render_template('equipment_types/phone.html',validation_code = "The phone was successfully added")
 
@@ -339,16 +340,17 @@ def update_equipement_phone():
         phonenumber = request.form.get('phonenumber-input')
         purchase = request.form.get('purchase-input')
         make = request.form.get('make-input')
-        assigneduser = request.form.get('assigneduser-input')
+        assigneduser = request.form.get('userlist-input')
+        datacap = request.form.get('data-input')
         cur.execute("SELECT * FROM Phones WHERE serialnumber = ?", (serialnumber,))
         contenue_entree = cur.fetchall()
         cur.execute("SELECT id FROM Users WHERE id = '{}'".format(assigneduser))
         id_bdd = cur.fetchall()
         if id_bdd == []:
-            return render_template('Device_information_scan/computer.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)  
-        cur.execute("UPDATE Phones SET make = '{}', model = '{}', serialnumber = '{}', purchasedate = '{}', phonenumber = '{}', mainuser = '{}' WHERE serialnumber = '{}'".format(make, model, serialnumber, purchase, phonenumber, assigneduser, serialnumber))
+            return render_template('Device_information_scan/phone.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)  
+        cur.execute("UPDATE Phones SET make = '{}', model = '{}', serialnumber = '{}', purchasedate = '{}', phonenumber = '{}', mainuser = '{}', datacap = '{}' WHERE serialnumber = '{}'".format(make, model, serialnumber, purchase, phonenumber, assigneduser, datacap, serialnumber))
         conn.commit()
-        return render_template('scan.html',message_erreur = "The equipment has been updated")
+        return redirect(url_for('home'))
         
         
 @app.route("/delete_equipement_phone", methods = ['GET','POST'])
@@ -360,7 +362,7 @@ def delete_equipement_phone():
         print(serialnumber)
         cur.execute("DELETE FROM Phones WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
-    return render_template('scan.html', message_erreur = "The equipment has been removed")
+    return redirect(url_for('home'))
     
 @app.route("/equipment_types/employee", methods=['GET','POST'])
 def add_employee():
@@ -407,7 +409,7 @@ def update_equipement_employee():
         #     return render_template('Device_information_scan/computer.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)   
         cur.execute("UPDATE Users SET id = '{}', firstname = '{}', lastname = '{}', department = '{}', email = '{}', phone = '{}' WHERE id = '{}'".format(id, firstname, lastname, department, email, phone, id))
         conn.commit()
-        return render_template('scan.html',message_erreur = "The user has been updated")
+        return redirect(url_for('home'))
     
 @app.route("/delete_equipement_employee", methods = ['GET','POST'])
 def delete_equipement_employee():
@@ -418,7 +420,7 @@ def delete_equipement_employee():
         print(serialnumber)
         cur.execute("DELETE FROM Users WHERE id = ?", (id,))
         conn.commit()
-    return render_template('scan.html', message_erreur = "The user has been removed")
+    return redirect(url_for('home'))
    
 @app.route("/equipment_types/mouse", methods=['GET','POST'])
 def add_mouse():
@@ -497,7 +499,7 @@ def update_equipement_printer():
         ip = request.form.get('ip-input')
         cur.execute("UPDATE Printers SET serialnumber = '{}', make = '{}', model = '{}', hostname = '{}', purchasedate = '{}', ip = '{}' WHERE serialnumber = '{}'".format(serialnumber, make, model, hostname, purchasedate, ip, serialnumber))
         conn.commit()
-    return render_template('scan.html',message_erreur = "The equipment has been updated")
+    return redirect(url_for('home'))
 
 @app.route("/delete_equipement_printer", methods = ['GET','POST'])
 def delete_equipement_printer():
@@ -508,7 +510,7 @@ def delete_equipement_printer():
         print(serialnumber)
         cur.execute("DELETE FROM Printers WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
-    return render_template('scan.html', message_erreur = "The equipment has been removed")
+    return redirect(url_for('home'))
 
 @app.route("/equipment_types/software", methods=['GET','POST'])
 def add_software():
@@ -568,7 +570,7 @@ def update_equipement_externaldrive():
         mainuser = request.form.get('mainuser-input')
         cur.execute("UPDATE ExternalDrives SET serialnumber = '{}', make = '{}', model = '{}', type = '{}', capacity = '{}', purchasedate = '{}', mainuser = '{}' WHERE serialnumber = '{}'".format(serialnumber, make, model, type, capacity, purchasedate, serialnumber, mainuser))
         conn.commit()
-    return render_template('scan.html', message_erreur = "The equipment has been updated")
+    return redirect(url_for('home'))
 
 @app.route("/delete_equipement_externaldrive", methods = ['GET','POST'])
 def delete_equipement_externaldrive():
@@ -579,7 +581,7 @@ def delete_equipement_externaldrive():
         print(serialnumber)
         cur.execute("DELETE FROM ExternalDrives WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
-    return render_template('scan.html', message_erreur = "The equipment has been removed")
+    return redirect(url_for('home'))
 
 def allowed_file(filename):
     valid_extensions = ('.jpg', '.jpeg', '.png')

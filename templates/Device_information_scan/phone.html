@@ -21,7 +21,6 @@
     </div>
     <div id="device-page">
         <p id="title">Information - Phone</p>
-        <p id="secondary-text">* Not working for now *</p>
         <p id="message_erreur">{{message_erreur}}</p>
         <form action="{{ url_for('update_equipement_phone') }}" method="POST">
             <div id="info-box">
@@ -43,6 +42,10 @@
                     <input id="Phone_Number_entry" type="text" name="phonenumber-input">
                 </div>
                 <div id="label-input">
+                    <label for="Data_entry" id="secondary-text"> Data (Go)</label>
+                    <input id="Data_entry" type="text" name="data-input">
+                </div>
+                <div id="label-input">
                     <label for="Purchasedate_entry" id="secondary-text"> Purchase date </label>
                     <input id="Purchasedate_entry" type="date" name="purchase-input">
                 </div>
@@ -50,7 +53,7 @@
                     <label for="Assigned_User_entry" id="secondary-text"> User </label>
                     <select name="userlist-input" id="userlist">
                         {% for i in userlist %}
-                            {% if (i == contenue_entree[0][3]) : %}
+                            {% if (i == contenue_entree[0][6]) : %}
                                 <option value="{{i}}" selected>{{i}}</option>
                             {% else : %}
                                 <option value="{{i}}">{{i}}</option>
@@ -71,12 +74,16 @@
             <input type="submit" class="delete_button" value="Remove Equipment">
         </form>
         <script>
-            document.getElementById('Assigned_User_entry').value = "{{contenue_entree[0][6]}}";
-            document.getElementById('Purchasedate_entry').value = "{{contenue_entree[0][4]}}";
-            document.getElementById('Phone_Number_entry').value = "{{contenue_entree[0][5]}}";
-            document.getElementById('Serial_Number_entry').value = "{{contenue_entree[0][1]}}";
-            document.getElementById('Model_entry').value = "{{contenue_entree[0][3]}}";
             document.getElementById('Make_entry').value = "{{contenue_entree[0][2]}}";
+            document.getElementById('Model_entry').value = "{{contenue_entree[0][3]}}";
+            document.getElementById('Serial_Number_entry').value = "{{contenue_entree[0][1]}}";
+            document.getElementById('Phone_Number_entry').value = "{{contenue_entree[0][5]}}";
+            document.getElementById('Purchasedate_entry').value = "{{contenue_entree[0][4]}}";
+            document.getElementById('Data_entry').value = "{{contenue_entree[0][7]}}";
+            document.getElementById('Assigned_User_entry').value = "{{contenue_entree[0][6]}}";
+            
+            
+            
         </script>
         
     </div>
@@ -164,7 +171,7 @@ select {
     margin: 0rem 0 3.3rem 0;
     padding: 1.1rem 2.7rem 1rem 2.7rem;
     border: 0;
-    width: 360px;
+    /* width: 360px; */
 }
 
     #logo_entreprise {
