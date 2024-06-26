@@ -202,7 +202,7 @@ def add_equipment_computer_form():
         purchase = request.form.get('purchasedate-input')
         licenses = request.form.get('licenses-input')
         if device_id_forced != 0:
-            cur.execute("INSERT INTO Computers(id, hostname, serialnumber, mainuser, purchasedate, licenses) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(10000+device_id_forced, hostname, serialnumber, assigneduser, purchase, licenses))
+            cur.execute("INSERT INTO Computers(id, hostname, serialnumber, mainuser, purchasedate, licenses) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, hostname, serialnumber, assigneduser, purchase, licenses))
             device_id_forced = 0
         else:
             cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser, purchasedate, licenses) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname, serialnumber, assigneduser, purchase, licenses))
