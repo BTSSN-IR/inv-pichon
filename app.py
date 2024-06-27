@@ -383,10 +383,10 @@ def add_equipment_employee_form():
         department = request.form.get('department-input')
         email = request.form.get('email-input')
         # computer = request.form.get('computer-input')
-        # phone = request.form.get('phone-input')
+        phone = request.form.get('phone-input')
         # mouse = request.form.get('mouse-input')
-        print("INSERT INTO Users(id, firstname, lastname, department, email) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(id,firstname, lastname, department, email))
-        cur.execute("INSERT INTO Users(id, firstname, lastname, department, email) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(id,firstname, lastname, department, email))
+        print("INSERT INTO Users(id, firstname, lastname, department, email, phone) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(id,firstname, lastname, department, email, phone))
+        cur.execute("INSERT INTO Users(id, firstname, lastname, department, email, phone) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(id,firstname, lastname, department, email, phone))
         conn.commit()
     return render_template('equipment_types/employee.html',validation_code = "The employee was successfully added")
 
