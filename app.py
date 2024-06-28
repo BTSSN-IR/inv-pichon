@@ -207,7 +207,8 @@ def add_equipment_computer_form():
         else:
             cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser, purchasedate, licenses) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname, serialnumber, assigneduser, purchase, licenses))
         conn.commit()
-    return render_template('equipment_types/computer.html',validation_code = "The computer was successfully added")
+    return redirect(url_for("add_computer"))
+    # return render_template('equipment_types/computer.html',validation_code = "The computer was successfully added")
     
 @app.route("/update_equipement_computer", methods = ['GET','POST'])
 def update_equipement_computer():
@@ -267,7 +268,8 @@ def add_equipment_screen_form():
             cur.execute("INSERT INTO Screens(make, model, serialnumber, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make, model, serialnumber, purchasedate, assigneduser))
         # Validation des changements
         conn.commit()
-    return render_template('equipment_types/screen.html',validation_code = "The screen was successfully added") # Affichage de la page avec un message de validation ajouté
+    return redirect(url_for("add_screen"))
+    # return render_template('equipment_types/screen.html',validation_code = "The screen was successfully added") # Affichage de la page avec un message de validation ajouté
 
 @app.route("/update_equipement_screen", methods = ['GET','POST'])
 def update_equipement_screen():
@@ -328,7 +330,8 @@ def add_equipment_phone_form():
         else:
             cur.execute("INSERT INTO Phones(make, model, serialnumber, purchasedate, phonenumber, mainuser, datacap) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make,model, serialnumber, purchase, phonenumber, assigneduser, datacap))
         conn.commit()
-    return render_template('equipment_types/phone.html',validation_code = "The phone was successfully added")
+    return redirect(url_for("add_phone"))
+    # return render_template('equipment_types/phone.html',validation_code = "The phone was successfully added")
 
 @app.route("/update_equipement_phone", methods = ['GET','POST'])
 def update_equipement_phone():
@@ -388,7 +391,8 @@ def add_equipment_employee_form():
         print("INSERT INTO Users(id, firstname, lastname, department, email, phone) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(id,firstname, lastname, department, email, phone))
         cur.execute("INSERT INTO Users(id, firstname, lastname, department, email, phone) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(id,firstname, lastname, department, email, phone))
         conn.commit()
-    return render_template('equipment_types/employee.html',validation_code = "The employee was successfully added")
+    return redirect(url_for("add_employee"))
+    # return render_template('equipment_types/employee.html',validation_code = "The employee was successfully added")
 
 @app.route("/update_equipement_employee", methods = ['GET','POST'])
 def update_equipement_employee():
@@ -440,7 +444,8 @@ def add_equipment_mouse_form():
         mainuser = request.form.get('userlist-input')
         cur.execute("INSERT INTO Mouse(make, model, user) VALUES (\"{}\",\"{}\",\"{}\")".format(make, model, mainuser))
         conn.commit()
-    return render_template('equipment_types/mouse.html',validation_code = "The mouse was successfully added")
+    return redirect(url_for("add_computer"))
+    # return render_template('equipment_types/mouse.html',validation_code = "The mouse was successfully added")
 
 @app.route("/equipment_types/keyboard", methods=['GET','POST'])
 def add_keyboard():
@@ -459,7 +464,8 @@ def add_equipment_keyboard_form():
         serialnumber = request.form.get('serialnumber')
         assigneduser = request.form.get('assigned-user')
         cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
-    return render_template('equipment_types/keyboard.html',validation_code = "The keyboard was successfully added")
+    return redirect(url_for("add_keyboard"))
+    # return render_template('equipment_types/keyboard.html',validation_code = "The keyboard was successfully added")
 
 @app.route("/equipment_types/printer", methods=['GET','POST'])
 def add_printer():
@@ -483,7 +489,8 @@ def add_equipment_printer_form():
         else:
             cur.execute("INSERT INTO Printers(hostname, make, model, serialnumber, purchasedate, ip) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname,make,model,serialnumber,purchasedate, ip))
         conn.commit()
-    return render_template('equipment_types/printer.html',validation_code = "The printer was successfully added")
+    return redirect(url_for("add_printer"))
+    # return render_template('equipment_types/printer.html',validation_code = "The printer was successfully added")
 
 @app.route("/update_equipement_printer", methods = ['GET','POST'])
 def update_equipement_printer():
@@ -554,7 +561,8 @@ def add_equipment_externaldrive_form():
         else:
             cur.execute("INSERT INTO ExternalDrives(serialnumber, make, model, type, capacity, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(serialnumber, make, model, type, capacity, purchasedate, mainuser))
         conn.commit()
-    return render_template('equipment_types/externaldrive.html',validation_code = "The drive was successfully added")
+    return redirect(url_for("add_externaldrive"))
+    # return render_template('equipment_types/externaldrive.html',validation_code = "The drive was successfully added")
 
 @app.route("/update_equipement_externaldrive", methods = ['GET','POST'])
 def update_equipement_externaldrive():
