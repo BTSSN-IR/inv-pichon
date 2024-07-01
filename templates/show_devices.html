@@ -235,6 +235,61 @@
             });
         </script>
 
+
+        <div class="table-block" style="width: 50%;">
+            <p class="table-title">Tablets</p>
+            <table class="devices-table" id="TabletsTable">
+                <thead>
+                    <tr>
+                        <th>Device ID</th>
+                        <th>Serial Number</th>
+                        <th>Hostname</th>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>Purchase Date</th>
+                        <th>Main User</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in tablets %}
+                    <tr class="devices-column">
+                        <td> {{ row[0] }}</td>
+                        <td> {{ row[1] }}</td>
+                        <td> {{ row[2] }}</td>
+                        <td> {{ row[3] }}</td>
+                        <td> {{ row[4] }}</td>
+                        <td> {{ row[5] }}</td>
+                        <td> {{ row[6] }}</td>
+                        <td>Show Details</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p1 class="device-Jfo1" >{{html}}</p1>
+        </div>
+
+        <script> // Documentation ->  https://datatables.net/manual/index
+            let table_tablets = new DataTable('#TabletsTable', {
+                // options
+                "columnDefs": [{
+                    "targets": -1,
+                    "render": function (data, type, row, meta) {
+                        console.log(window.location.host)
+                        return "<a href='javascript:;' onclick='" + "RedirectToDevicePage(" + "\"Tablets," + row[0] + "\")'>" + data + '</a>';
+                    }}
+                ]
+            });
+        </script>
+
+
+
+
+
+
+
+
+
         <div class="table-block" style="width: 50%;">
             <p class="table-title">Printers</p>
             <table class="devices-table" id="PrintersTable">

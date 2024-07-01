@@ -29,6 +29,7 @@
                     <option value="computer">Computer</option>
                     <option value="screen">Screen</option>
                     <option value="phone">Phone</option>
+                    <option value="tablet">Tablet</option>
                     <option value="mouse">Mouse</option>
                     <option value="printer">Printer</option>
                     <!-- <option value="software">Software</option> -->
@@ -45,6 +46,9 @@
                     }
                     if (sel.options[sel.selectedIndex].text == "Phone") {
                         window.location.href = "/equipment_types/phone";
+                    }
+                    if (sel.options[sel.selectedIndex].text == "Tablet") {
+                        window.location.href = "/equipment_types/tablet";
                     }
                     if (sel.options[sel.selectedIndex].text == "Employee") {
                         window.location.href = "/equipment_types/employee";
