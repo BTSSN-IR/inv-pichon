@@ -1,7 +1,7 @@
 import os
 import qrcode
 from docx import Document
-from docx.shared import Cm, Pt
+from docx.shared import Cm, Pt, Mm
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 
 
@@ -22,6 +22,8 @@ def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_wi
 
     sections = document.sections
     for section in sections:
+        section.page_height = Mm(297)
+        section.page_width = Mm(210)
         section.top_margin = Cm(1)
         section.bottom_margin = Cm(0)
         section.left_margin = Cm(0.5)
@@ -74,6 +76,8 @@ def gen_qrcodes_bulk(table, starting_index):
         return [ f'Printers,{i}' for i in range(starting_index,starting_index + 65) ]
     elif table == 'ExternalDrives':
         return [ f'ExternalDrives,{i}' for i in range(starting_index,starting_index + 65) ]
+    elif table == 'Tablets':
+        return [ f'Tablets,{i}' for i in range(starting_index,starting_index + 65) ]
 
 
 # Exemple d'utilisation
@@ -96,6 +100,9 @@ def choose(table_input,filename, starting_id = 0):
                 starting_id += 65
             case '5':
                 data_list = gen_qrcodes_bulk('ExternalDrives', 50000+starting_id)
+                starting_id += 65
+            case '6':
+                data_list = gen_qrcodes_bulk('Tablets', 60000+starting_id)
                 starting_id += 65
             case _:
                 print("Invalid option")
@@ -124,7 +131,7 @@ qr_path = 'qrcodes/'
 if not os.path.exists(qr_path):
     os.makedirs(qr_path)
 
-print("Choose the type of labels to print :\n1 - Computers\n2 - Screens\n3 - Phones\n4 - Printers\n5 - External Drives")
+print("Choose the type of labels to print :\n1 - Computers\n2 - Screens\n3 - Phones\n4 - Printers\n5 - External Drives\n6 - Tablets")
 table_input = input('Please choose an option : ')
 starting_id = int(input('From which ID the labels should start ? : '))
 nb_pages = int(input('Number of pages to print (65 labels per page) : '))
