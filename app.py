@@ -292,7 +292,6 @@ def update_equipement_screen():
         conn.commit()
         return redirect(url_for('home'))
         
-
 @app.route("/delete_equipement_screen", methods = ['GET','POST'])
 def delete_equipement_screen():
     conn = sqlite3.connect('inv_pichon.db')
@@ -355,7 +354,6 @@ def update_equipement_phone():
         cur.execute("UPDATE Phones SET make = '{}', model = '{}', serialnumber = '{}', purchasedate = '{}', phonenumber = '{}', mainuser = '{}', datacap = '{}' WHERE serialnumber = '{}'".format(make, model, serialnumber, purchase, phonenumber, assigneduser, datacap, serialnumber))
         conn.commit()
         return redirect(url_for('home'))
-        
         
 @app.route("/delete_equipement_phone", methods = ['GET','POST'])
 def delete_equipement_phone():
@@ -592,7 +590,6 @@ def delete_equipement_externaldrive():
         conn.commit()
     return redirect(url_for('home'))
 
-
 @app.route("/equipment_types/tablet", methods=['GET','POST'])
 def add_tablet(device_id = None):
     conn = sqlite3.connect('inv_pichon.db')
@@ -653,9 +650,6 @@ def delete_equipement_tablet():
         cur.execute("DELETE FROM Tablets WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
     return redirect(url_for('home'))
-
-
-
 
 def allowed_file(filename):
     valid_extensions = ('.jpg', '.jpeg', '.png')

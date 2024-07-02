@@ -4,7 +4,6 @@ from docx import Document
 from docx.shared import Cm, Pt, Mm
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 
-
 def generate_qr_code(data, filename):
     qr = qrcode.QRCode(
         version=1,
@@ -64,7 +63,6 @@ def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_wi
 
     document.save(output_filename)
 
-
 def gen_qrcodes_bulk(table, starting_index):
     if table == 'Computers':
         return [ f'Computers,{i}' for i in range(starting_index,starting_index + 65) ]
@@ -79,11 +77,9 @@ def gen_qrcodes_bulk(table, starting_index):
     elif table == 'Tablets':
         return [ f'Tablets,{i}' for i in range(starting_index,starting_index + 65) ]
 
-
 # Exemple d'utilisation
 def choose(table_input,filename, starting_id = 0):
     data_list = []
-    
     while data_list == []:
         match table_input:
             case '1':
@@ -106,8 +102,6 @@ def choose(table_input,filename, starting_id = 0):
                 starting_id += 65
             case _:
                 print("Invalid option")
-        
-        
     create_labels_with_qr_codes(data_list, rows, cols, f'wordfiles\\labels_with_pichon{filename}.docx', label_width, label_height, cube_image_path)
     os.system(f'start wordfiles\\labels_with_pichon{filename}.docx')
 
@@ -137,7 +131,6 @@ starting_id = int(input('From which ID the labels should start ? : '))
 nb_pages = int(input('Number of pages to print (65 labels per page) : '))
 
 for i in range(1,nb_pages+1):
-
     choose(table_input, i, starting_id)
     if i >=1:
         starting_id += 65
@@ -149,4 +142,4 @@ for i in range(1,nb_pages+1):
 # os.startfile('labels_with_pichon.docx', "print") # Lancement de l'impression sur l'imprimante par défaut
 
 if os.path.exists('favicon-pichon.png'):
-  os.remove('favicon-pichon.png')
+    os.remove('favicon-pichon.png')
