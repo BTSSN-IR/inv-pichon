@@ -52,7 +52,7 @@ def logout():
     session.pop('utilisateur_connecte', None) # Supression de l'utilisateur connecté dans la liste
     session.pop('loggedin')
     loggedin = False
-    return render_template('login.html')
+    return redirect(url_for("login"))
 
 def allowed_file(filename):
     return '.' in filename and \
