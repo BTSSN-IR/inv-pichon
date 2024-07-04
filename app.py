@@ -54,10 +54,6 @@ def logout():
     loggedin = False
     return redirect(url_for("login"))
 
-def allowed_file(filename):
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 @app.route("/generate_qrcode")
 def generate_qrcode(): # Utilisation de la biliothèque qrcode pour générer un QR Code avec les données demandées
     match request.args.get('table'):
