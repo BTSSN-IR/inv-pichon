@@ -212,6 +212,7 @@ def update_equipement_computer():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
+        device_id = request.form.get('id-input')
         hostname = request.form.get('hostname-input')
         serialnumber = request.form.get('serialnumber-input')
         assigneduser = request.form.get('userlist-input')
@@ -223,7 +224,7 @@ def update_equipement_computer():
         id_bdd = cur.fetchall()
         if id_bdd == []:
             return render_template('Device_information_scan/computer.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)   
-        cur.execute("UPDATE Computers SET serialnumber = '{}', hostname = '{}', mainuser = '{}', purchasedate = '{}', licenses = '{}' WHERE serialnumber = '{}'".format(serialnumber, hostname, assigneduser, purchase, licenses, serialnumber))
+        cur.execute("UPDATE Computers SET serialnumber = '{}', hostname = '{}', mainuser = '{}', purchasedate = '{}', licenses = '{}' WHERE id = '{}'".format(serialnumber, hostname, assigneduser, purchase, licenses, device_id))
         conn.commit()
         return redirect(url_for('home'))    
 
@@ -273,6 +274,7 @@ def update_equipement_screen():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
+        device_id = request.form.get('id-input')
         make = request.form.get('make-input') # Récupération des champs tapés par l'utilisateur
         model = request.form.get('model-input')
         serialnumber = request.form.get('serialnumber-input')
@@ -284,7 +286,7 @@ def update_equipement_screen():
         id_bdd = cur.fetchall()
         if id_bdd == []:
             return render_template('Device_information_scan/screen.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)  
-        cur.execute("UPDATE Screens SET serialnumber = '{}', make = '{}', model = '{}', purchasedate = '{}', mainuser = '{}' WHERE serialnumber = '{}'".format(serialnumber, make, model, purchasedate, assigneduser, serialnumber))
+        cur.execute("UPDATE Screens SET serialnumber = '{}', make = '{}', model = '{}', purchasedate = '{}', mainuser = '{}' WHERE id = '{}'".format(serialnumber, make, model, purchasedate, assigneduser, device_id))
         conn.commit()
         return redirect(url_for('home'))
         
@@ -334,6 +336,7 @@ def update_equipement_phone():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
+        device_id = request.form.get('id-input')
         model = request.form.get('model-input')
         serialnumber = request.form.get('serialnumber-input')
         phonenumber = request.form.get('phonenumber-input')
@@ -347,7 +350,7 @@ def update_equipement_phone():
         id_bdd = cur.fetchall()
         if id_bdd == []:
             return render_template('Device_information_scan/phone.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)  
-        cur.execute("UPDATE Phones SET make = '{}', model = '{}', serialnumber = '{}', purchasedate = '{}', phonenumber = '{}', mainuser = '{}', datacap = '{}' WHERE serialnumber = '{}'".format(make, model, serialnumber, purchase, phonenumber, assigneduser, datacap, serialnumber))
+        cur.execute("UPDATE Phones SET make = '{}', model = '{}', serialnumber = '{}', purchasedate = '{}', phonenumber = '{}', mainuser = '{}', datacap = '{}' WHERE id = '{}'".format(make, model, serialnumber, purchase, phonenumber, assigneduser, datacap, device_id))
         conn.commit()
         return redirect(url_for('home'))
         
@@ -472,6 +475,7 @@ def add_equipment_printer_form():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
+        device_id = request.form.get('id-input')
         hostname = request.form.get('hostname-input')
         make = request.form.get('make-input')
         model = request.form.get('model-input')
@@ -493,13 +497,14 @@ def update_equipement_printer():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
+        device_id = request.form.get('id-input')
         hostname = request.form.get('hostname-input')
         make = request.form.get('make-input')
         model = request.form.get('model-input')
         purchasedate = request.form.get('purchasedate-input')
         serialnumber = request.form.get('serialnumber-input')
         ip = request.form.get('ip-input')
-        cur.execute("UPDATE Printers SET serialnumber = '{}', make = '{}', model = '{}', hostname = '{}', purchasedate = '{}', ip = '{}' WHERE serialnumber = '{}'".format(serialnumber, make, model, hostname, purchasedate, ip, serialnumber))
+        cur.execute("UPDATE Printers SET serialnumber = '{}', make = '{}', model = '{}', hostname = '{}', purchasedate = '{}', ip = '{}' WHERE id = '{}'".format(serialnumber, make, model, hostname, purchasedate, ip, device_id))
         conn.commit()
     return redirect(url_for('home'))
 
@@ -564,6 +569,7 @@ def update_equipement_externaldrive():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
+        device_id = request.form.get('id-input')
         serialnumber = request.form.get('serialnumber-input')
         make = request.form.get('make-input')
         model = request.form.get('model-input')
@@ -571,7 +577,7 @@ def update_equipement_externaldrive():
         capacity = request.form.get('capacity-input')
         purchasedate = request.form.get('purchasedate-input')
         mainuser = request.form.get('mainuser-input')
-        cur.execute("UPDATE ExternalDrives SET serialnumber = '{}', make = '{}', model = '{}', type = '{}', capacity = '{}', purchasedate = '{}', mainuser = '{}' WHERE serialnumber = '{}'".format(serialnumber, make, model, type, capacity, purchasedate, serialnumber, mainuser))
+        cur.execute("UPDATE ExternalDrives SET serialnumber = '{}', make = '{}', model = '{}', type = '{}', capacity = '{}', purchasedate = '{}', mainuser = '{}' WHERE id = '{}'".format(serialnumber, make, model, type, capacity, purchasedate, mainuser, device_id))
         conn.commit()
     return redirect(url_for('home'))
 
@@ -620,6 +626,7 @@ def update_equipement_tablet():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
+        device_id = request.form.get('id-input')
         hostname = request.form.get('hostname-input')
         brand = request.form.get('brand-input')
         model = request.form.get('model-input')
@@ -632,9 +639,9 @@ def update_equipement_tablet():
         id_bdd = cur.fetchall()
         if id_bdd == []:
             return render_template('Device_information_scan/tablet.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)   
-        cur.execute("UPDATE Tablets SET serialnumber = '{}', hostname = '{}', brand = '{}', model = '{}', mainuser = '{}', purchasedate = '{}' WHERE serialnumber = '{}'".format(serialnumber, hostname, brand, model, assigneduser, purchase, serialnumber))
+        cur.execute("UPDATE Tablets SET serialnumber = '{}', hostname = '{}', brand = '{}', model = '{}', mainuser = '{}', purchasedate = '{}' WHERE id = '{}'".format(serialnumber, hostname, brand, model, assigneduser, purchase, device_id))
         conn.commit()
-        return redirect(url_for('home'))    
+        return redirect(url_for('home'))
 
 @app.route("/delete_equipement_tablet", methods = ['GET','POST'])
 def delete_equipement_tablet():

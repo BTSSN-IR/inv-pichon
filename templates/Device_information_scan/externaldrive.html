@@ -23,6 +23,7 @@
         <p id="title">Information - External Drive</p>
         <form action="{{ url_for('update_equipement_externaldrive') }}" method="POST">
             <div id="info-box">
+                <input id="zoneInvisible" type="hidden" name="id-input">
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
                 <div id="label-input">
                     <label for="Serial_Number_entry" id="secondary-text"> Serial Number </label>
@@ -79,6 +80,7 @@
             document.getElementById('Type_entry').value = "{{contenue_entree[0][4]}}";
             document.getElementById('Capacity_entry').value = "{{contenue_entree[0][5]}}";
             document.getElementById('Purchasedate_entry').value = "{{contenue_entree[0][6]}}";
+            document.getElementById('zoneInvisible').value = "{{contenue_entree[0][0]}}";
         </script>
     </div>
 

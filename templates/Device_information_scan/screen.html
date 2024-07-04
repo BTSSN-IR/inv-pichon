@@ -24,6 +24,7 @@
         <p id="message_erreur">{{message_erreur}}</p>
         <form action="{{ url_for('update_equipement_screen') }}" method="POST"> 
             <div id="info-box">
+                <input id="zoneInvisible" type="hidden" name="id-input">
                 <!-- L'utilisateur entre les valeurs souhaitées dans le formulaire -->
                 <div id="label-input">
                     <label for="Make_entry" id="secondary-text"> Manufacturer </label>
@@ -71,7 +72,7 @@
             document.getElementById('Serial_Number_entry').value = "{{contenue_entree[0][1]}}";
             document.getElementById('Purchase_date_entry').value = "{{contenue_entree[0][4]}}";
             document.getElementById('Assigned_User_entry').value = "{{contenue_entree[0][5]}}";
-            document.getElementById('zoneInvisible').value = "{{contenue_entree[0][1]}}";
+            document.getElementById('zoneInvisible').value = "{{contenue_entree[0][0]}}";
         </script>
     </div>
 
