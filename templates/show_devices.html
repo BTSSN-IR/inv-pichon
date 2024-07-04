@@ -379,7 +379,7 @@
                     "targets": -2,
                     "render": function (data, type, row, meta) {
                         console.log(window.location.host)
-                        return "<a href='" + "{{url_for('generate_qrcode') }}" + "?table=Screens&device=" + row[0] + "' download>"  + data + '</a>'; // Generates QR Code and downloads it on the client device
+                        return "<a href='" + "{{url_for('generate_qrcode') }}" + "?table=Screens&device=" + row[0].toString() + "' download>"  + data + '</a>'; // Generates QR Code and downloads it on the client device
                     }},
                     {"targets": -1,
                     "render": function (data, type, row, meta) {

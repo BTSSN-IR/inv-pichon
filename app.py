@@ -56,6 +56,7 @@ def logout():
 
 @app.route("/generate_qrcode")
 def generate_qrcode(): # Utilisation de la biliothèque qrcode pour générer un QR Code avec les données demandées
+    print(request.args.get('table'))
     match request.args.get('table'):
         case 'Computers':
             pass
