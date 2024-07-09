@@ -1,4 +1,4 @@
-from flask import Flask, request, url_for, redirect, render_template, flash, send_file, session
+from flask import Flask, request, url_for, redirect, render_template, flash, send_from_directory, session
 import os
 import mysql.connector
 import sqlite3
@@ -54,28 +54,16 @@ def logout():
     loggedin = False
     return redirect(url_for("login"))
 
-@app.route("/generate_qrcode")
-def generate_qrcode(): # Utilisation de la biliothèque qrcode pour générer un QR Code avec les données demandées
-    print(request.args.get('table'))
-    match request.args.get('table'):
-        case 'Computers':
-            pass
-        case 'Screens':
-            pass
-        case 'Phones':
-            pass
-        case 'Printers':
-            pass
-        case 'ExternalDrives':
-            pass
-        case _:
-            data = request.args.get('table') + ',' + request.args.get('device') 
+@app.route("/generate_qrcode/<filename>")
+def generate_qrcode(filename): # Utilisation de la biliothèque qrcode pour générer un QR Code avec les données demandées
+    data = filename
     qr = qrcode.QRCode(version = 1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size = 10, border = 4)
     qr.add_data(data)
     qr.make(fit = True)
     image = qr.make_image(fill_color = "black", back_color = "white")
     image.save(f"qrcodes/{data}.png")
-    return send_file(f"qrcodes/{data}.png")
+    directory = os.path.join(app.root_path, 'qrcodes')
+    return send_from_directory(directory, f"{data}.png", as_attachment=True)
 
 @app.route("/")
 def home():
@@ -840,5 +828,5 @@ def details_equipment_user():
     return render_template('user_equipment.html', id_user = id_user, user_name = user_name, user_mouse = user_mouse, user_computer = user_computer, user_screen = user_screen, user_phone = user_phone, user_externaldrive = user_externaldrive, user_tablet =user_tablet)
 
 if __name__ == '__main__':
-    #app.run(host='0.0.0.0', port=5000, ssl_context='adhoc', debug=True)
-    app.run(host='0.0.0.0', port=5000, debug=True, ssl_context=('cert.pem', 'key.pem'))
+    #app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=443, debug=True, ssl_context=('cert.pem', 'key.pem'))
