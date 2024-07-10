@@ -42,6 +42,8 @@ Le logiciel d'impression des étiquiettes est prévu pour une feuille d'étiquet
 - Ecart horizontal entre étiquettes : 0.24cm
 - Ecart vertical entre étiquettes : 0cm
 
+[Exemple de modèle d'étiquettes](https://www.avery.fr/produit/etiquette-mini-l7651-100)
+
 Pour utiliser le logiciel, il faut également avoir Microsoft Word installé sur le PC.
 
 Pour imprimer les QR Codes sur ces étiquettes, il faut utiliser le logiciel "IT Inventory - QRCode Printer.exe" présent dans le dépôt.
