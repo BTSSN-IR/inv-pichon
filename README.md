@@ -31,3 +31,27 @@ Si le serveur est sous Linux, ajouter les droits d’exécution au script « r
 #### Serveur Windows
 
 Créer un raccourci du fichier "start.bat" et le déplacer vers le dossier "C:\Users\\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup". Le programme se lancera automatiquement au démarrage du serveur, au moment de la connexion utilisateur.
+
+## Impression des étiquettes
+
+Le logiciel d'impression des étiquiettes est prévu pour une feuille d'étiquettes aux caractéristiques suivantes :
+- Marge supérieure : 1cm
+- Marge latérale : 0.47cm
+- Longueur étiquette : 3.81cm
+- Hauteur étiquette : 2.12cm
+- Ecart horizontal entre étiquettes : 0.24cm
+- Ecart vertical entre étiquettes : 0cm
+
+Pour utiliser le logiciel, il faut également avoir Microsoft Word installé sur le PC.
+
+Pour imprimer les QR Codes sur ces étiquettes, il faut utiliser le logiciel "IT Inventory - QRCode Printer.exe" présent dans le dépôt.
+
+### Aperçu du logiciel
+
+![image](https://github.com/BTSSN-IR/inv-pichon/assets/61947142/fa803c46-c00c-4bab-91d0-03bb2067009f)
+
+On peut choisir le type d'équipement pour lequel les codes seront imprimés, et combien de pages imprimer. Pour l'identifiant de départ, on choisit soit "1" soit la suite de la page précédemment imprimée.
+
+__Note :__ *Lors de l'impression de plusieurs pages, les identifiants sont incrémentés automatiquement entre chaque page.*
+
+Une fois la configuration terminée, le logiciel génère les étiquettes et ouvre le ou les fichiers Word automatiquement. Il ne reste plus qu'a les imprimer.
