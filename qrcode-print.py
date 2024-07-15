@@ -16,7 +16,7 @@ def generate_qr_code(data, filename):
     img = qr.make_image(fill_color="black", back_color="white")
     img.save(filename)
 
-def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_width, label_height, cube_image_path):
+def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_width, label_height, cube_image_path, single_run = False):
     document = Document()
 
     sections = document.sections
@@ -39,27 +39,47 @@ def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_wi
             cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
 
     # Insérer les QR codes, les images de cubes et le texte dans les cellules du tableau
+    
     data_index = 0
-    for i in range(rows):
-        for j in range(cols):
-            if data_index < len(data_list):
-                filename = f'qrcodes/qrcode_{data_index}.png'
-                generate_qr_code(data_list[data_index], filename)
-                cell = table.cell(i, j)
-                paragraph = cell.paragraphs[0]
-                run = paragraph.add_run()
-                run.font.size = Pt(4)
 
-                # Ajouter le QR code
-                run.add_picture(filename, width=Cm(label_width * 0.4))
-                
-                # Ajouter l'image du logo Pichon
-                run.add_picture(cube_image_path, width=Cm(label_width * 0.2))
-                
-                # Ajouter le texte
-                run.add_text(str(data_list[data_index]))
-                
-                data_index += 1
+    if single_run == True:
+        i, j = input('Row number (from 1 to 5) : '), input('Column number (from 1 to 13) : ')
+        filename = f'qrcodes/qrcode_{data_index}.png'
+        generate_qr_code(data_list[data_index], filename)
+        cell = table.cell(i, j)
+        paragraph = cell.paragraphs[0]
+        run = paragraph.add_run()
+        run.font.size = Pt(4)
+
+        # Ajouter le QR code
+        run.add_picture(filename, width=Cm(label_width * 0.4))
+        
+        # Ajouter l'image du logo Pichon
+        run.add_picture(cube_image_path, width=Cm(label_width * 0.2))
+        
+        # Ajouter le texte
+        run.add_text(str(data_list[data_index]))
+    else:
+        for i in range(rows):
+            for j in range(cols):
+                if data_index < len(data_list):
+                    filename = f'qrcodes/qrcode_{data_index}.png'
+                    generate_qr_code(data_list[data_index], filename)
+                    cell = table.cell(i, j)
+                    paragraph = cell.paragraphs[0]
+                    run = paragraph.add_run()
+                    run.font.size = Pt(4)
+
+                    # Ajouter le QR code
+                    run.add_picture(filename, width=Cm(label_width * 0.4))
+                    
+                    # Ajouter l'image du logo Pichon
+                    run.add_picture(cube_image_path, width=Cm(label_width * 0.2))
+                    
+                    # Ajouter le texte
+                    run.add_text(str(data_list[data_index]))
+                    
+                    data_index += 1
 
     document.save(output_filename)
 
@@ -78,7 +98,7 @@ def gen_qrcodes_bulk(table, starting_index):
         return [ f'Tablets,{i}' for i in range(starting_index,starting_index + 65) ]
 
 # Exemple d'utilisation
-def choose(table_input,filename, starting_id = 0):
+def choose(table_input,filename, starting_id = 0, single_run = False):
     data_list = []
     while data_list == []:
         match table_input:
@@ -105,7 +125,6 @@ def choose(table_input,filename, starting_id = 0):
     create_labels_with_qr_codes(data_list, rows, cols, f'wordfiles\\labels_with_pichon{filename}.docx', label_width, label_height, cube_image_path)
     os.system(f'start wordfiles\\labels_with_pichon{filename}.docx')
 
-
 from urllib.request import urlretrieve
 
 url = 'https://samson-agro.fr/android-icon-192x192.png'
@@ -127,8 +146,13 @@ if not os.path.exists(qr_path):
 
 print("Choose the type of labels to print :\n1 - Computers\n2 - Screens\n3 - Phones\n4 - Printers\n5 - External Drives\n6 - Tablets")
 table_input = input('Please choose an option : ')
-starting_id = int(input('From which ID the labels should start ? : '))
-nb_pages = int(input('Number of pages to print (65 labels per page) : '))
+single_run = input('Print a single label ? :\nY - Yes\nN - No\nPlease choose an option : ')
+if single_run.lower() == 'y':
+    starting_id = int(input('Label number (Ex: 52) : '))
+    nb_pages = 1
+else:
+    starting_id = int(input('From which ID the labels should start ? : '))
+    nb_pages = int(input('Number of pages to print (65 labels per page) : '))
 
 for i in range(1,nb_pages+1):
     choose(table_input, i, starting_id)
