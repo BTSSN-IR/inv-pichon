@@ -36,7 +36,7 @@
 
                 {% for i in user_screen %}
                 <div id="label-input">
-                    <label id="secondary-title">Screen</label><br>
+                    <label id="secondary-title">Screen {{loop.index}}</label><br>
                     <label id="secondary-text" class="print-switch-black">Serial number : {{ i[1] }}</label><br>
                     <label id="secondary-text" class="print-switch-black">Manufacturer : {{ i[2] }}</label><br>
                     <label id="secondary-text" class="print-switch-black">Model : {{ i[3] }}</label><br>
