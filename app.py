@@ -82,10 +82,8 @@ def login():
 @app.route("/show_devices")
 def show_devices():
     if 'loggedin' in session and session['loggedin']:
-        print('Logged in')
         conn = sqlite3.connect('inv_pichon.db')
         cur = conn.cursor()
-        print(cur.execute("SELECT * from Computers").fetchall())
         computers_table = cur.execute("SELECT * from Computers").fetchall() # Récupération des données des tables depuis la base de données
         printers_table = cur.execute("SELECT * from Printers").fetchall()
         screens_table = cur.execute("SELECT * from Screens").fetchall()
@@ -119,16 +117,11 @@ def add_user_form():
             userid = request.form.get('userid')
             password = request.form.get('password')
             confirm_password =  request.form.get('confirm_password')
-            print(userid, password, confirm_password)
             if password == confirm_password: # Test si les deux mots de passe fournis sont les mêmes
-                print("SELECT username FROM Admins WHERE username = '{}'".format(userid))
                 cur.execute("SELECT username FROM Admins WHERE username = '{}'".format(userid))
                 username_bdd = cur.fetchall()
                 # pass_encoded = encrypt_password(password, SECRET_KEY) # Cryptage du mot de passe avec une clé secrète
                 pass_encoded = password
-                print(pass_encoded)
-                # print(decrypt_password(pass_encoded))
-                print("SELECT password FROM Admins WHERE password = '{}'".format(pass_encoded))
                 cur.execute("SELECT password FROM Admins WHERE password = '{}'".format(pass_encoded))
                 mdp_bdd = cur.fetchall()
                 if (username_bdd, mdp_bdd) == ([], []): # Test si l'utilisateur n'est pas déjà dans la base de données
@@ -149,7 +142,6 @@ def scan():
 
 @app.route("/device_information", methods=['POST'])
 def device_information():
-    print(request.json.get('qr_code'))
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     device_data = [request.args.get('table'), request.args.get('device')] # Récupération des données depuis le formulaire HTML
@@ -223,7 +215,6 @@ def delete_equipement_computer():
     cur = conn.cursor()
     if request.method == 'POST':
         serialnumber = request.form.get('serialnumber-input')
-        print(serialnumber)
         cur.execute("DELETE FROM Computers WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
     return redirect(url_for('home'))
@@ -285,7 +276,6 @@ def delete_equipement_screen():
     cur = conn.cursor()
     if request.method == 'POST':
         serialnumber = request.form.get('serialnumber-input')
-        print(serialnumber)
         cur.execute("DELETE FROM Screens WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
     return redirect(url_for('home'))
@@ -342,14 +332,13 @@ def update_equipement_phone():
         cur.execute("UPDATE Phones SET make = '{}', model = '{}', serialnumber = '{}', purchasedate = '{}', phonenumber = '{}', mainuser = '{}', datacap = '{}' WHERE id = '{}'".format(make, model, serialnumber, purchase, phonenumber, assigneduser, datacap, device_id))
         conn.commit()
         return redirect(url_for('home'))
-        
+
 @app.route("/delete_equipement_phone", methods = ['GET','POST'])
 def delete_equipement_phone():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
         serialnumber = request.form.get('serialnumber-input')
-        print(serialnumber)
         cur.execute("DELETE FROM Phones WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
     return redirect(url_for('home'))
@@ -375,7 +364,6 @@ def add_equipment_employee_form():
         # computer = request.form.get('computer-input')
         phone = request.form.get('phone-input')
         # mouse = request.form.get('mouse-input')
-        print("INSERT INTO Users(id, firstname, lastname, department, email, phone) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(id,firstname, lastname, department, email, phone))
         cur.execute("INSERT INTO Users(id, firstname, lastname, department, email, phone) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(id,firstname, lastname, department, email, phone))
         conn.commit()
     return redirect(url_for("add_employee"))
@@ -408,7 +396,6 @@ def delete_equipement_employee():
     cur = conn.cursor()
     if request.method == 'POST':
         serialnumber = request.form.get('id-input')
-        print(serialnumber)
         cur.execute("DELETE FROM Users WHERE id = ?", (id,))
         conn.commit()
     return redirect(url_for('home'))
@@ -503,7 +490,6 @@ def delete_equipement_printer():
     cur = conn.cursor()
     if request.method == 'POST':
         serialnumber = request.form.get('serialnumber-input')
-        print(serialnumber)
         cur.execute("DELETE FROM Printers WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
     return redirect(url_for('home'))
@@ -576,7 +562,6 @@ def delete_equipement_externaldrive():
     cur = conn.cursor()
     if request.method == 'POST':
         serialnumber = request.form.get('serialnumber-input')
-        print(serialnumber)
         cur.execute("DELETE FROM ExternalDrives WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
     return redirect(url_for('home'))
@@ -638,7 +623,6 @@ def delete_equipement_tablet():
     cur = conn.cursor()
     if request.method == 'POST':
         serialnumber = request.form.get('serialnumber-input')
-        print(serialnumber)
         cur.execute("DELETE FROM Tablets WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
     return redirect(url_for('home'))
@@ -702,7 +686,6 @@ def redirection_scan_api():
     conn = sqlite3.connect('inv_pichon.db') # Connexion à la base de données
     cur = conn.cursor()
     redirection = request.form.get('qr_data')
-    print(redirection)
     if ',' in redirection:
         liste_redirection = redirection.split(",")
         if liste_redirection[0] in ["Computers","ExternalDrives","Phones","Printers","Screens", "Users", "Tablets"]:
@@ -712,7 +695,6 @@ def redirection_scan_api():
                     query = "SELECT * FROM \"{}\" WHERE serialnumber = ?".format(liste_redirection[0])
                 cur.execute(query, (liste_redirection[1],))
                 contenue_entree = cur.fetchall()
-                print(contenue_entree)
 
                 userlist = cur.execute('SELECT id from Users').fetchall()
                 userlist = [ i[0] for i in userlist]
@@ -787,13 +769,12 @@ def login_form():
         mdp_bdd = cur.fetchall()
         if username_bdd == [] or mdp_bdd == []: # Cas ou l'utilisateur n'existe pas dans la base de données
             loggedin = False
-            print("Mauvais MDP")
+            print("Wrong password")
             conn.close()
             return render_template('login.html',mot_retour_connexion="Wrong username or password") # Affichage du message d'erreur
         if (userid, password) == (username_bdd[0][0], mdp_bdd[0][0]): # Cas ou le mot de passe et le nom d'utilisateur sont corrects ----------- Décryptage MDP à revoir -----------
             loggedin = True
             conn.close()
-            print('logged in')
             session['loggedin'] = True
             session['utilisateur_connecte'] = request.form['userid']
             return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin) # Redirection vers l'accueil
@@ -803,9 +784,7 @@ def details_equipment_user():
     conn = sqlite3.connect('inv_pichon.db') # Connexion à la base de données
     cur = conn.cursor()
     id_user = request.form.get('userid')
-    print(id_user)
     user_name = cur.execute(f'SELECT firstname, lastname FROM Users WHERE id=\'{id_user}\'').fetchall()[0]
-    print(user_name)
     user_name = str(user_name[0] + ' ' + user_name[1])
     user_mouse = cur.execute(f'SELECT * FROM Mouse WHERE user=\'{id_user}\'').fetchall()
     if user_mouse == []:
