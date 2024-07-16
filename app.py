@@ -338,7 +338,7 @@ def update_equipement_phone():
         cur.execute("SELECT id FROM Users WHERE id = '{}'".format(assigneduser))
         id_bdd = cur.fetchall()
         if id_bdd == []:
-            return render_template('Device_information_scan/phone.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)  
+            return render_template('Device_information_scan/phone.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)
         cur.execute("UPDATE Phones SET make = '{}', model = '{}', serialnumber = '{}', purchasedate = '{}', phonenumber = '{}', mainuser = '{}', datacap = '{}' WHERE id = '{}'".format(make, model, serialnumber, purchase, phonenumber, assigneduser, datacap, device_id))
         conn.commit()
         return redirect(url_for('home'))

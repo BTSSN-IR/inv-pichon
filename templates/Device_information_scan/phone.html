@@ -75,6 +75,7 @@
             <input type="submit" class="delete_button" value="Remove Equipment">
         </form>
         <script>
+            document.getElementById('zoneInvisible').value = "{{contenue_entree[0][0]}}";
             document.getElementById('Make_entry').value = "{{contenue_entree[0][2]}}";
             document.getElementById('Model_entry').value = "{{contenue_entree[0][3]}}";
             document.getElementById('Serial_Number_entry').value = "{{contenue_entree[0][1]}}";
@@ -82,9 +83,6 @@
             document.getElementById('Purchasedate_entry').value = "{{contenue_entree[0][4]}}";
             document.getElementById('Data_entry').value = "{{contenue_entree[0][7]}}";
             document.getElementById('Assigned_User_entry').value = "{{contenue_entree[0][6]}}";
-            document.getElementById('zoneInvisible').value = "{{contenue_entree[0][0]}}";
-            
-            
         </script>
         
     </div>
