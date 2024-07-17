@@ -42,8 +42,6 @@ def update_password_form():
         new_pass_confirmation = request.form.get('new_password_confirm')
         
         dbpass = cur.execute(f"SELECT password FROM Admins WHERE username = '{username}'").fetchall()[0][0]
-        print(f'current : {username}')
-        print(username)
         if current_pass == dbpass:
             if new_pass == new_pass_confirmation:
                 cur.execute(f"UPDATE Admins SET password = '{new_pass}' WHERE username = '{username}'")
