@@ -31,7 +31,7 @@
                 </div> -->
 
                 {% if logged_in %}
-                <a href="{{ url_for('logout') }}"><input type="button" class="login-button" value="Log out"></a>
+                <a href="{{ url_for('logout') }}"><input type="button" class="login-button" value="Log out"></a><a href="{{ url_for('edit_password') }}"><input type="button" class="edit-button" value="Edit password"></a>
                 {% else %}
                 <a href="{{ url_for('login') }}"><input type="button" class="login-button" value="Log in"></a>
                 {% endif %}
@@ -188,6 +188,27 @@ body {
     position: relative;
     white-space: nowrap;
     width: 8.2rem;
+}
+
+.edit-button {
+    align-items: center;
+    background-color: #1b855d;
+    border-radius: 2.5rem;
+    color: #ccd0cf;
+    display: flex;
+    flex-shrink: 0;
+    font-family: Inter, 'Source Sans Pro';
+    font-size: 1.8rem;
+    font-weight: 800;
+    height: 3.4rem;
+    justify-content: center;
+    line-height: 1.2125;
+    margin-top: 1rem;
+    overflow: hidden;
+    margin-left: 1rem;
+    position: relative;
+    white-space: nowrap;
+    width: 14rem;
 }
 
 #rechercher{

@@ -27,6 +27,33 @@ import PIL.Image
 
 from werkzeug.utils import secure_filename
 
+@app.route("/edit_password")
+def edit_password():
+    return render_template("edit_password.html")
+
+@app.route("/update_password_form", methods = ['GET', 'POST'])
+def update_password_form():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        username = request.form.get('userid')
+        current_pass = request.form.get('old_password')
+        new_pass = request.form.get('new_password')
+        new_pass_confirmation = request.form.get('new_password_confirm')
+        
+        dbpass = cur.execute(f"SELECT password FROM Admins WHERE username = '{username}'").fetchall()[0][0]
+        print(f'current : {username}')
+        print(username)
+        if current_pass == dbpass:
+            if new_pass == new_pass_confirmation:
+                cur.execute(f"UPDATE Admins SET password = '{new_pass}' WHERE username = '{username}'")
+                conn.commit()
+            else:
+                return render_template("edit_password.html", message="New passwords don't match")
+        else:
+            return render_template("edit_password.html", message="Current password is wrong")
+        return redirect(url_for("home"))
+
 def generate_hash_key(key): # Génération d'une clé de hashage pour crypter le mot de passe
     hash_object = hashlib.sha256()
     hash_object.update(key.encode('utf-8'))
@@ -771,13 +798,15 @@ def login_form():
             loggedin = False
             print("Wrong password")
             conn.close()
-            return render_template('login.html',mot_retour_connexion="Wrong username or password") # Affichage du message d'erreur
+            # return render_template('login.html',mot_retour_connexion="Wrong username or password") # Affichage du message d'erreur
+            return redirect(url_for("login",mot_retour_connexion="Wrong username or password"))
         if (userid, password) == (username_bdd[0][0], mdp_bdd[0][0]): # Cas ou le mot de passe et le nom d'utilisateur sont corrects ----------- Décryptage MDP à revoir -----------
             loggedin = True
             conn.close()
             session['loggedin'] = True
             session['utilisateur_connecte'] = request.form['userid']
-            return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin) # Redirection vers l'accueil
+            # return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin) # Redirection vers l'accueil
+            return redirect(url_for('home', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin)) # Redirection vers l'accueil
 
 @app.route('/details_equipment_user', methods = ['POST'])
 def details_equipment_user():
