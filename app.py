@@ -29,7 +29,7 @@ from werkzeug.utils import secure_filename
 
 @app.route("/edit_password")
 def edit_password():
-    return render_template("edit_password.html")
+    return render_template("edit_password.html", useraccount = utilisateur_connecte)
 
 @app.route("/update_password_form", methods = ['GET', 'POST'])
 def update_password_form():
@@ -121,7 +121,8 @@ def show_devices():
         tablets_table = cur.execute("SELECT * from Tablets").fetchall()
         employees_table = cur.execute("SELECT * from Users").fetchall()
         externaldrives_table = cur.execute("SELECT * from ExternalDrives").fetchall()
-        return render_template('show_devices.html',computers=computers_table, printers=printers_table, screens=screens_table, admins=admins_table, phones=phones_table, tablets=tablets_table, externaldrives=externaldrives_table, employees=employees_table)
+        mouse_table = cur.execute("SELECT * FROM Mouse").fetchall()
+        return render_template('show_devices.html',computers=computers_table, printers=printers_table, screens=screens_table, admins=admins_table, phones=phones_table, tablets=tablets_table, externaldrives=externaldrives_table, employees=employees_table, mouse=mouse_table)
     else:
         return render_template('login.html')
 
@@ -439,16 +440,51 @@ def add_mouse():
 
 @app.route("/add_equipment_form_mouse_appliquer", methods = ['GET','POST'])
 def add_equipment_mouse_form():
+    global device_id_forced
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
-        make = request.form.get('make-input')
+        manufacturer = request.form.get('manufacturer-input')
         model = request.form.get('model-input')
-        mainuser = request.form.get('userlist-input')
-        cur.execute("INSERT INTO Mouse(make, model, user) VALUES (\"{}\",\"{}\",\"{}\")".format(make, model, mainuser))
+        serialnumber = request.form.get('serialnumber-input')
+        assigneduser = request.form.get('userlist-input')
+        if device_id_forced != 0:
+            cur.execute("INSERT INTO Mouse(id, make, model, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, manufacturer, model, assigneduser))
+            device_id_forced = 0
+        else:
+            cur.execute("INSERT INTO Mouse(make, model, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\")".format(manufacturer, model, serialnumber, assigneduser))
         conn.commit()
-    return redirect(url_for("add_computer"))
-    # return render_template('equipment_types/mouse.html',validation_code = "The mouse was successfully added")
+    return redirect(url_for("add_mouse"))
+
+@app.route("/update_equipment_mouse", methods = ['GET','POST'])
+def update_equipement_mouse():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        device_id = request.form.get('id-input')
+        manufacturer = request.form.get('manufacturer-input')
+        model = request.form.get('model-input')
+        serialnumber = request.form.get('serialnumber-input')
+        assigneduser = request.form.get('userlist-input')
+        cur.execute("SELECT * FROM Mouse WHERE serialnumber = ?", (serialnumber,))
+        contenue_entree = cur.fetchall()
+        cur.execute("SELECT id FROM Users WHERE id = '{}'".format(assigneduser))
+        id_bdd = cur.fetchall()
+        if id_bdd == []:
+            return render_template('Device_information_scan/mouse.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)
+        cur.execute("UPDATE Mouse SET make = '{}', model = '{}', serialnumber = '{}', mainuser = '{}' WHERE id = '{}'".format(manufacturer, model, serialnumber, assigneduser, device_id))
+        conn.commit()
+        return redirect(url_for('home'))
+
+@app.route("/delete_equipement_mouse", methods = ['GET','POST'])
+def delete_equipement_mouse():
+    conn = sqlite3.connect('inv_pichon.db')
+    cur = conn.cursor()
+    if request.method == 'POST':
+        serialnumber = request.form.get('serialnumber-input')
+        cur.execute("DELETE FROM Mouse WHERE serialnumber = ?", (serialnumber,))
+        conn.commit()
+    return redirect(url_for('home'))
 
 @app.route("/equipment_types/keyboard", methods=['GET','POST'])
 def add_keyboard():
@@ -717,14 +753,14 @@ def redirection_scan_api():
     redirection = request.form.get('qr_data')
     if ',' in redirection:
         liste_redirection = redirection.split(",")
-        if liste_redirection[0] in ["Computers","ExternalDrives","Phones","Printers","Screens", "Users", "Tablets"]:
-                if liste_redirection[0] in ['Computers', 'Screens', 'Phones', 'Printers', 'ExternalDrives', 'Users', 'Tablets']:
+        if liste_redirection[0] in ["Computers","ExternalDrives","Phones","Printers","Screens", "Users", "Tablets", "Mouse"]:
+                if liste_redirection[0] in ['Computers', 'Screens', 'Phones', 'Printers', 'ExternalDrives', 'Users', 'Tablets', "Mouse"]:
                     query = "SELECT * FROM \"{}\" WHERE id = ?".format(liste_redirection[0])
                 else:
                     query = "SELECT * FROM \"{}\" WHERE serialnumber = ?".format(liste_redirection[0])
                 cur.execute(query, (liste_redirection[1],))
                 contenue_entree = cur.fetchall()
-
+                print(contenue_entree)
                 userlist = cur.execute('SELECT id from Users').fetchall()
                 userlist = [ i[0] for i in userlist]
 
@@ -759,6 +795,11 @@ def redirection_scan_api():
                         # return render_template('equipment_types/screen.html',validation_code = "Device didn't exist")
                         device_id_forced = int(liste_redirection[1])
                         return redirect(url_for('add_externaldrive'))
+                    
+                    elif liste_redirection[0] == 'Mouse':
+                        # return render_template('equipment_types/computer.html',validation_code = "Device didn't exist")
+                        device_id_forced = int(liste_redirection[1])
+                        return redirect(url_for('add_mouse'))
 
                     return render_template("scan.html",message_erreur = "The equipment is not referenced in the database")
                 if liste_redirection[0] == "Users":
@@ -783,6 +824,7 @@ def redirection_scan_api():
 @app.route('/login_form', methods = ['GET', 'POST'])
 def login_form():
     global loggedin
+    global utilisateur_connecte
     loggedin = False
     conn = sqlite3.connect('inv_pichon.db') # Connexion à la base de données
     cur = conn.cursor()
@@ -800,15 +842,14 @@ def login_form():
             loggedin = False
             print("Wrong password")
             conn.close()
-            # return render_template('login.html',mot_retour_connexion="Wrong username or password") # Affichage du message d'erreur
-            return redirect(url_for("login",mot_retour_connexion="Wrong username or password"))
+            return render_template('login.html',mot_retour_connexion="Wrong username or password") # Affichage du message d'erreur
         if (userid, password) == (username_bdd[0][0], mdp_bdd[0][0]): # Cas ou le mot de passe et le nom d'utilisateur sont corrects ----------- Décryptage MDP à revoir -----------
             loggedin = True
             conn.close()
             session['loggedin'] = True
             session['utilisateur_connecte'] = request.form['userid']
-            # return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin) # Redirection vers l'accueil
-            return redirect(url_for('home', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin)) # Redirection vers l'accueil
+            utilisateur_connecte = request.form['userid']
+            return render_template('home.html', utilisateur_connecte=session['utilisateur_connecte'], logged_in=loggedin) # Redirection vers l'accueil
 
 @app.route('/details_equipment_user', methods = ['POST'])
 def details_equipment_user():
@@ -817,7 +858,7 @@ def details_equipment_user():
     id_user = request.form.get('userid')
     user_name = cur.execute(f'SELECT firstname, lastname FROM Users WHERE id=\'{id_user}\'').fetchall()[0]
     user_name = str(user_name[0] + ' ' + user_name[1])
-    user_mouse = cur.execute(f'SELECT * FROM Mouse WHERE user=\'{id_user}\'').fetchall()
+    user_mouse = cur.execute(f'SELECT * FROM Mouse WHERE mainuser=\'{id_user}\'').fetchall()
     if user_mouse == []:
         user_mouse = [('None', 'None', 'None', 'None')]
     user_computer = cur.execute(f'SELECT * FROM Computers WHERE mainuser=\'{id_user}\'').fetchall()

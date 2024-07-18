@@ -21,22 +21,28 @@
     </div>
     <div id="device-page">
         <p id="title">Information - Mouse</p>
-        <form action="{{ url_for('add_equipment_mouse_form') }}" method="POST">
+        <p id="message_erreur">{{message_erreur}}</p>
+        <form action="{{ url_for('update_equipement_mouse') }}" method="POST">
             <div id="info-box">
+                <input id="zoneInvisible" type="hidden" name="id-input">
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
                 <div id="label-input">
-                    <label for="make_entry" id="secondary-text"> Make </label>
-                    <input id="make_entry" type="text" name="make-input" value = {{contenue_entree[0][1]}}>
+                    <label for="Make_entry" id="secondary-text"> Manufacturer </label>
+                    <input id="Make_entry" type="text" name="manufacturer-input">
                 </div>
                 <div id="label-input">
                     <label for="Model_entry" id="secondary-text"> Model </label>
-                    <input id="Model_entry" type="text" name="model-input" value = {{contenue_entree[0][2]}}>
+                    <input id="Model_entry" type="text" name="model-input">
+                </div>
+                <div id="label-input">
+                    <label for="Serial_Number_entry" id="secondary-text"> Serial Number </label>
+                    <input id="Serial_Number_entry" type="text" name="serialnumber-input">
                 </div>
                 <div id="label-input">
                     <label for="Assigned_User_entry" id="secondary-text"> User </label>
                     <select name="userlist-input" id="userlist">
                         {% for i in userlist %}
-                            {% if (i == contenue_entree[0][3]) : %}
+                            {% if (i == contenue_entree[0][6]) : %}
                                 <option value="{{i}}" selected>{{i}}</option>
                             {% else : %}
                                 <option value="{{i}}">{{i}}</option>
@@ -49,9 +55,20 @@
                 <button id="valider_bouton"> Update Information <img id="image_validaion" src="/static/download-svgrepo-com.svg" style="margin: 0 7px;"></button> 
             </a>
         </form>
-        <a href="{{ url_for('scan') }}">
+        <a href="{{ url_for('home') }}">
             <input type="button" class="retour_buton" value="Retour">
         </a>
+        <form action="{{ url_for('delete_equipement_mouse') }}" method="POST" style="display:inline;">
+            <input type="hidden" name="serialnumber-input" value="{{contenue_entree[0][3]}}">
+            <input type="submit" class="delete_button" value="Remove Equipment">
+        </form>
+        <script>
+            document.getElementById('zoneInvisible').value = "{{contenue_entree[0][0]}}";
+            document.getElementById('Make_entry').value = "{{contenue_entree[0][1]}}";
+            document.getElementById('Model_entry').value = "{{contenue_entree[0][2]}}";
+            document.getElementById('Serial_Number_entry').value = "{{contenue_entree[0][3]}}";
+            document.getElementById('Assigned_User_entry').value = "{{contenue_entree[0][4]}}";
+        </script>
         
     </div>
 
@@ -190,6 +207,24 @@ select {
         white-space: nowrap;
         width: 18rem;
         margin: 0rem 10rem;
+    }
+    .delete_button{
+        align-items: center;
+        background-color: #ff0000;
+        border-radius: 5.2rem;
+        box-shadow: inset 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.25), 0.5rem 0.5rem 0.4rem rgba(0, 0, 0, 0.25);
+        color: #ffffff;
+        display: flex;
+        flex-shrink: 0;
+        font-family: Inter, 'Source Sans Pro';
+        font-size: 1.5rem;
+        font-weight: 700;
+        height: 3rem;
+        justify-content: center;
+        line-height: 1.2125;
+        text-align: center;
+        white-space: nowrap;
+        width: 18rem;
     }
     .retour_buton{
         align-items: center;
