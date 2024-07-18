@@ -44,8 +44,12 @@ def update_password_form():
         dbpass = cur.execute(f"SELECT password FROM Admins WHERE username = '{username}'").fetchall()[0][0]
         if current_pass == dbpass:
             if new_pass == new_pass_confirmation:
-                cur.execute(f"UPDATE Admins SET password = '{new_pass}' WHERE username = '{username}'")
-                conn.commit()
+                if new_pass != '':
+                    cur.execute(f"UPDATE Admins SET password = '{new_pass}' WHERE username = '{username}'")
+                    conn.commit()
+                    print(f"Changed {username}'s password : Was {current_pass} now is {new_pass}")
+                else:
+                    return render_template("edit_password.html", message="Password can't be empty")
             else:
                 return render_template("edit_password.html", message="New passwords don't match")
         else:
