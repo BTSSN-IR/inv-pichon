@@ -60,6 +60,7 @@ def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_wi
         
         # Ajouter le texte
         run.add_text(str(data_list[data_index]))
+        print(data_list[data_index])
     else:
         for i in range(rows):
             for j in range(cols):
@@ -93,32 +94,32 @@ def gen_qrcodes_bulk(table, starting_index, single_run = None):
         
     elif table == 'Phones':
         if single_run == True:
-            return f'{table},{starting_index}'
+            return [f'{table},{starting_index}']
         else:
             return [ f'Phones,{i}' for i in range(starting_index,starting_index + 65) ]
     elif table == 'Screens':
         if single_run == True:
-            return f'{table},{starting_index}'
+            return [f'{table},{starting_index}']
         else:
             return [ f'Screens,{i}' for i in range(starting_index,starting_index + 65) ]
     elif table == 'Printers':
         if single_run == True:
-            return f'{table},{starting_index}'
+            return [f'{table},{starting_index}']
         else:
             return [ f'Printers,{i}' for i in range(starting_index,starting_index + 65) ]
     elif table == 'ExternalDrives':
         if single_run == True:
-            return f'{table},{starting_index}'
+            return [f'{table},{starting_index}']
         else:
             return [ f'ExternalDrives,{i}' for i in range(starting_index,starting_index + 65) ]
     elif table == 'Tablets':
         if single_run == True:
-            return f'{table},{starting_index}'
+            return [f'{table},{starting_index}']
         else:
             return [ f'Tablets,{i}' for i in range(starting_index,starting_index + 65) ]
     elif table == 'Mouse':
         if single_run == True:
-            return f'{table},{starting_index}'
+            return [f'{table},{starting_index}']
         else:
             return [ f'Mouse,{i}' for i in range(starting_index,starting_index + 65) ]
 
