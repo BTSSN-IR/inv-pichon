@@ -28,7 +28,7 @@
             <div class="section">
 
                 <form method="POST" id="scan-text" action="{{ url_for('redirection_scan_api') }}">
-                    <input type="text" name="qr_data" autofocus>
+                    <input id="text_input" type="text" name="qr_data" autofocus>
                     <input type="submit" hidden /> <!-- hidden submit button -->
                 </form>
 
@@ -40,6 +40,13 @@
         <input type="file" name="file" id="upload_button">
     </form>
 
+    <script type="text/javascript">
+        $(document).ready(function() {
+           setTimeout(function() {
+               $("#text_input").focus();
+           }, 1500);
+        });
+     </script>
     
 
     <script>
