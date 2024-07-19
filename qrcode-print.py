@@ -3,6 +3,7 @@ import qrcode
 from docx import Document
 from docx.shared import Cm, Pt, Mm
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
+import time
 
 def generate_qr_code(data, filename):
     qr = qrcode.QRCode(
@@ -16,7 +17,7 @@ def generate_qr_code(data, filename):
     img = qr.make_image(fill_color="black", back_color="white")
     img.save(filename)
 
-def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_width, label_height, cube_image_path, single_run = False):
+def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_width, label_height, cube_image_path, single_run = None):
     document = Document()
 
     sections = document.sections
@@ -43,10 +44,10 @@ def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_wi
     data_index = 0
 
     if single_run == True:
-        i, j = input('Row number (from 1 to 5) : '), input('Column number (from 1 to 13) : ')
+        i, j = input('Row number (from 1 to 13) : '), input('Column number (from 1 to 5) : ')
         filename = f'qrcodes/qrcode_{data_index}.png'
         generate_qr_code(data_list[data_index], filename)
-        cell = table.cell(i, j)
+        cell = table.cell(int(i)-1, int(j)-1)
         paragraph = cell.paragraphs[0]
         run = paragraph.add_run()
         run.font.size = Pt(4)
@@ -83,46 +84,98 @@ def create_labels_with_qr_codes(data_list, rows, cols, output_filename, label_wi
 
     document.save(output_filename)
 
-def gen_qrcodes_bulk(table, starting_index):
+def gen_qrcodes_bulk(table, starting_index, single_run = None):
     if table == 'Computers':
-        return [ f'Computers,{i}' for i in range(starting_index,starting_index + 65) ]
+        if single_run == True:
+            return [f'{table},{starting_index}']
+        else:
+            return [ f'Computers,{i}' for i in range(starting_index,starting_index + 65) ]
+        
     elif table == 'Phones':
-        return [ f'Phones,{i}' for i in range(starting_index,starting_index + 65) ]
+        if single_run == True:
+            return f'{table},{starting_index}'
+        else:
+            return [ f'Phones,{i}' for i in range(starting_index,starting_index + 65) ]
     elif table == 'Screens':
-        return [ f'Screens,{i}' for i in range(starting_index,starting_index + 65) ]
+        if single_run == True:
+            return f'{table},{starting_index}'
+        else:
+            return [ f'Screens,{i}' for i in range(starting_index,starting_index + 65) ]
     elif table == 'Printers':
-        return [ f'Printers,{i}' for i in range(starting_index,starting_index + 65) ]
+        if single_run == True:
+            return f'{table},{starting_index}'
+        else:
+            return [ f'Printers,{i}' for i in range(starting_index,starting_index + 65) ]
     elif table == 'ExternalDrives':
-        return [ f'ExternalDrives,{i}' for i in range(starting_index,starting_index + 65) ]
+        if single_run == True:
+            return f'{table},{starting_index}'
+        else:
+            return [ f'ExternalDrives,{i}' for i in range(starting_index,starting_index + 65) ]
     elif table == 'Tablets':
-        return [ f'Tablets,{i}' for i in range(starting_index,starting_index + 65) ]
+        if single_run == True:
+            return f'{table},{starting_index}'
+        else:
+            return [ f'Tablets,{i}' for i in range(starting_index,starting_index + 65) ]
+    elif table == 'Mouse':
+        if single_run == True:
+            return f'{table},{starting_index}'
+        else:
+            return [ f'Mouse,{i}' for i in range(starting_index,starting_index + 65) ]
 
 # Exemple d'utilisation
-def choose(table_input,filename, starting_id = 0, single_run = False):
+def choose(table_input,filename, starting_id = 0, single_run = None):
     data_list = []
     while data_list == []:
         match table_input:
             case '1':
-                data_list = gen_qrcodes_bulk('Computers', 10000+starting_id)
-                starting_id += 65
+                if single_run == True:
+                    data_list = gen_qrcodes_bulk('Computers', 10000+starting_id, single_run = True)
+                else:
+                    data_list = gen_qrcodes_bulk('Computers', 10000+starting_id)
+                    starting_id += 65
             case '2':
-                data_list = gen_qrcodes_bulk('Screens', 20000+starting_id)
-                starting_id += 65
+                if single_run == True:
+                    data_list = gen_qrcodes_bulk('Screens', 20000+starting_id, single_run = True)
+                else:
+                    data_list = gen_qrcodes_bulk('Screens', 20000+starting_id)
+                    starting_id += 65
             case '3':
-                data_list = gen_qrcodes_bulk('Phones', 30000+starting_id)
-                starting_id += 65
+                if single_run == True:
+                    data_list = gen_qrcodes_bulk('Phones', 30000+starting_id, single_run = True)
+                else:
+                    data_list = gen_qrcodes_bulk('Phones', 30000+starting_id)
+                    starting_id += 65
             case '4':
-                data_list = gen_qrcodes_bulk('Printers', 40000+starting_id)
-                starting_id += 65
+                if single_run == True:
+                    data_list = gen_qrcodes_bulk('Printers', 40000+starting_id, single_run = True)
+                else:
+                    data_list = gen_qrcodes_bulk('Printers', 40000+starting_id)
+                    starting_id += 65
             case '5':
-                data_list = gen_qrcodes_bulk('ExternalDrives', 50000+starting_id)
-                starting_id += 65
+                if single_run == True:
+                    data_list = gen_qrcodes_bulk('ExternalDrives', 50000+starting_id, single_run = True)
+                else:
+                    data_list = gen_qrcodes_bulk('ExternalDrives', 50000+starting_id)
+                    starting_id += 65
             case '6':
-                data_list = gen_qrcodes_bulk('Tablets', 60000+starting_id)
-                starting_id += 65
+                if single_run == True:
+                    data_list = gen_qrcodes_bulk('Tablets', 60000+starting_id, single_run = True)
+                else:
+                    data_list = gen_qrcodes_bulk('Tablets', 60000+starting_id)
+                    starting_id += 65
+            case '7':
+                if single_run == True:
+                    data_list = gen_qrcodes_bulk('Mouse', 70000+starting_id, single_run = True)
+                else:
+                    data_list = gen_qrcodes_bulk('Mouse', 70000+starting_id)
+                    starting_id += 65
             case _:
                 print("Invalid option")
-    create_labels_with_qr_codes(data_list, rows, cols, f'wordfiles\\labels_with_pichon{filename}.docx', label_width, label_height, cube_image_path)
+    if single_run == True:
+        create_labels_with_qr_codes(data_list, rows, cols, f'wordfiles\\labels_with_pichon{filename}.docx', label_width, label_height, cube_image_path, single_run=True)
+
+    else:
+        create_labels_with_qr_codes(data_list, rows, cols, f'wordfiles\\labels_with_pichon{filename}.docx', label_width, label_height, cube_image_path)
     os.system(f'start wordfiles\\labels_with_pichon{filename}.docx')
 
 from urllib.request import urlretrieve
@@ -144,8 +197,10 @@ qr_path = 'qrcodes/'
 if not os.path.exists(qr_path):
     os.makedirs(qr_path)
 
-print("Choose the type of labels to print :\n1 - Computers\n2 - Screens\n3 - Phones\n4 - Printers\n5 - External Drives\n6 - Tablets")
-table_input = input('Please choose an option : ')
+table_input = ''
+while table_input == '':
+    print("Choose the type of labels to print :\n1 - Computers\n2 - Screens\n3 - Phones\n4 - Printers\n5 - External Drives\n6 - Tablets\n7 - Mouse")
+    table_input = input('Please choose an option : ')
 single_run = input('Print a single label ? :\nY - Yes\nN - No\nPlease choose an option : ')
 if single_run.lower() == 'y':
     starting_id = int(input('Label number (Ex: 52) : '))
@@ -155,6 +210,8 @@ else:
     nb_pages = int(input('Number of pages to print (65 labels per page) : '))
 
 for i in range(1,nb_pages+1):
+    if single_run.lower() == 'y':
+        choose(table_input, i, starting_id, single_run = True)
     choose(table_input, i, starting_id)
     if i >=1:
         starting_id += 65
