@@ -192,7 +192,7 @@ def choose(table_input,filename, starting_id = 0, single_run = None):
 
 from urllib.request import urlretrieve
 
-url = 'https://samson-agro.fr/android-icon-192x192.png'
+url = 'http://www.samson-agro.com/android-icon-192x192.png'
 urlretrieve(url, 'favicon-pichon.png')
 
 rows = 13  # Nombre de rangées d'étiquettes
@@ -253,5 +253,14 @@ for i in range(1,nb_pages+1):
 
 # os.startfile('labels_with_pichon.docx', "print") # Lancement de l'impression sur l'imprimante par défaut
 
-if os.path.exists('favicon-pichon.png'):
-    os.remove('favicon-pichon.png')
+#Cleanup
+
+import glob
+
+os.remove('favicon-pichon.png')
+
+files = glob.glob('qrcodes/*')
+for f in files:
+    os.remove(f)
+
+os.rmdir('qrcodes/')
