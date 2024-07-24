@@ -54,6 +54,10 @@ Pour imprimer les QR Codes sur ces étiquettes, il faut utiliser le logiciel "IT
 
 On peut choisir le type d'équipement pour lequel les codes seront imprimés, et combien de pages imprimer. Pour l'identifiant de départ, on choisit soit "1" soit la suite de la page précédemment imprimée.
 
+Une fonction pour imprimer une seule étiquette est également disponible, dans le cas de la perte d'une étiquette ou encore s'il faut imprimer une étiquette pour un type de matériel qui n'est pas commun.
+
+Pour imprimer une seule étiquette, il faudra préciser la ligne et la colonne à laquelle on veut imprimer.
+
 __Note :__ *Lors de l'impression de plusieurs pages, les identifiants sont incrémentés automatiquement entre chaque page.*
 
 Une fois la configuration terminée, le logiciel génère les étiquettes et ouvre le ou les fichiers Word automatiquement. Il ne reste plus qu'a les imprimer.
