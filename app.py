@@ -916,7 +916,7 @@ def details_equipment_user():
     id_user = request.form.get('userid')
     user_name = cur.execute(f'SELECT firstname, lastname FROM Users WHERE id=\'{id_user}\'').fetchall()[0]
     user_name = str(user_name[0] + ' ' + user_name[1])
-    user_mouse = cur.execute(f'SELECT * FROM Mouse WHERE mainuser=\'{id_user}\'').fetchall()
+    user_mouse = cur.execute(f'SELECT * FROM Mouse WHERE user=\'{id_user}\'').fetchall()
     if user_mouse == []:
         user_mouse = [('None', 'None', 'None', 'None')]
     user_computer = cur.execute(f'SELECT * FROM Computers WHERE mainuser=\'{id_user}\'').fetchall()
