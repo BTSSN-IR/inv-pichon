@@ -209,10 +209,13 @@ def add_equipment_computer_form():
         assigneduser = request.form.get('userlist-input')
         purchase = request.form.get('purchasedate-input')
         licenses = request.form.get('licenses-input')
-        existing_serialnumber = cur.execute(f'SELECT serialnumber FROM Computers WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
-        print(existing_serialnumber, serialnumber)
-        if existing_serialnumber == serialnumber:
-            return render_template('equipment_types/computer.html',validation_code = "The computer already exists")
+        try:
+            existing_serialnumber = cur.execute(f'SELECT serialnumber FROM Computers WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
+            print(existing_serialnumber, serialnumber)
+            if existing_serialnumber == serialnumber:
+                return render_template('equipment_types/computer.html',validation_code = "The computer already exists")
+        except:
+            pass
         if device_id_forced != 0:
             cur.execute("INSERT INTO Computers(id, hostname, serialnumber, mainuser, purchasedate, licenses) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, hostname, serialnumber, assigneduser, purchase, licenses))
             device_id_forced = 0
@@ -272,10 +275,13 @@ def add_equipment_screen_form():
         serialnumber = request.form.get('serialnumber-input')
         purchasedate = request.form.get('purchase-input')
         assigneduser = request.form.get('userlist-input')
-        existing_serialnumber = cur.execute(f'SELECT serialnumber FROM Screens WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
-        print(existing_serialnumber, serialnumber)
-        if existing_serialnumber == serialnumber:
-            return render_template('equipment_types/screen.html',validation_code = "The screen already exists")
+        try:
+            existing_serialnumber = cur.execute(f'SELECT serialnumber FROM Screens WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
+            print(existing_serialnumber, serialnumber)
+            if existing_serialnumber == serialnumber:
+                return render_template('equipment_types/screen.html',validation_code = "The screen already exists")
+        except:
+            pass
         if device_id_forced != 0:
             cur.execute("INSERT INTO Screens(id, make, model, serialnumber, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, make, model, serialnumber, purchasedate, assigneduser))
             device_id_forced = 0
@@ -339,10 +345,13 @@ def add_equipment_phone_form():
         make = request.form.get('make-input')
         assigneduser = request.form.get('userlist-input')
         datacap = request.form.get('data-input')
-        existing_serialnumber = cur.execute(f'SELECT serialnumber FROM Phones WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
-        print(existing_serialnumber, serialnumber)
-        if existing_serialnumber == serialnumber:
-            return render_template('equipment_types/phone.html',validation_code = "The phone already exists")
+        try:
+            existing_serialnumber = cur.execute(f'SELECT serialnumber FROM Phones WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
+            print(existing_serialnumber, serialnumber)
+            if existing_serialnumber == serialnumber:
+                return render_template('equipment_types/phone.html',validation_code = "The phone already exists")
+        except:
+            pass
         if device_id_forced != 0:
             cur.execute("INSERT INTO Phones(id, make, model, serialnumber, purchasedate, phonenumber, mainuser, datacap) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, make,model, serialnumber, purchase, phonenumber, assigneduser, datacap))
             device_id_forced = 0
@@ -406,10 +415,13 @@ def add_equipment_employee_form():
         # computer = request.form.get('computer-input')
         phone = request.form.get('phone-input')
         # mouse = request.form.get('mouse-input')
-        existing_id = cur.execute(f'SELECT id FROM Users WHERE id = "{id}";').fetchall()[0][0]
-        print(existing_id, id)
-        if existing_id == id:
-            return render_template('equipment_types/employee.html',validation_code = "The user already exists")
+        try:
+            existing_id = cur.execute(f'SELECT id FROM Users WHERE id = "{id}";').fetchall()[0][0]
+            print(existing_id, id)
+            if existing_id == id:
+                return render_template('equipment_types/employee.html',validation_code = "The user already exists")
+        except:
+            pass
         cur.execute("INSERT INTO Users(id, firstname, lastname, department, email, phone) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(id,firstname, lastname, department, email, phone))
         conn.commit()
     return redirect(url_for("add_employee"))
@@ -464,10 +476,13 @@ def add_equipment_mouse_form():
         model = request.form.get('model-input')
         serialnumber = request.form.get('serialnumber-input')
         assigneduser = request.form.get('userlist-input')
-        existing_serialnumber = cur.execute(f'SELECT serialnumber FROM Mouse WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
-        print(existing_serialnumber, serialnumber)
-        if existing_serialnumber == serialnumber:
-            return render_template('equipment_types/mouse.html',validation_code = "The mouse already exists")
+        try:
+            existing_serialnumber = cur.execute(f'SELECT serialnumber FROM Mouse WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
+            print(existing_serialnumber, serialnumber)
+            if existing_serialnumber == serialnumber:
+                return render_template('equipment_types/mouse.html',validation_code = "The mouse already exists")
+        except:
+            pass
         if device_id_forced != 0:
             cur.execute("INSERT INTO Mouse(id, make, model, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, manufacturer, model, assigneduser))
             device_id_forced = 0
@@ -543,10 +558,13 @@ def add_equipment_printer_form():
         purchasedate = request.form.get('purchasedate-input')
         serialnumber = request.form.get('serialnumber-input')
         ip = request.form.get('ip-input')
-        existing_serialnumber = cur.execute(f'SELECT serialnumber FROM Printers WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
-        print(existing_serialnumber, serialnumber)
-        if existing_serialnumber == serialnumber:
-            return render_template('equipment_types/printer.html',validation_code = "The printer already exists")
+        try:
+            existing_serialnumber = cur.execute(f'SELECT serialnumber FROM Printers WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
+            print(existing_serialnumber, serialnumber)
+            if existing_serialnumber == serialnumber:
+                return render_template('equipment_types/printer.html',validation_code = "The printer already exists")
+        except:
+            pass
         if device_id_forced != 0:
             cur.execute("INSERT INTO Printers(id, hostname, make, model, serialnumber, purchasedate, ip) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced,hostname,make,model,serialnumber,purchasedate, ip))
             device_id_forced = 0
@@ -619,10 +637,13 @@ def add_equipment_externaldrive_form():
         capacity = request.form.get('capacity-input')
         purchasedate = request.form.get('purchasedate-input')
         mainuser = request.form.get('userlist-input')
-        existing_serialnumber = cur.execute(f'SELECT serialnumber FROM ExternalDrives WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
-        print(existing_serialnumber, serialnumber)
-        if existing_serialnumber == serialnumber:
-            return render_template('equipment_types/externaldrive.html',validation_code = "The external drive already exists")
+        try:
+            existing_serialnumber = cur.execute(f'SELECT serialnumber FROM ExternalDrives WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
+            print(existing_serialnumber, serialnumber)
+            if existing_serialnumber == serialnumber:
+                return render_template('equipment_types/externaldrive.html',validation_code = "The external drive already exists")
+        except:
+            pass
         if device_id_forced != 0:
             cur.execute("INSERT INTO ExternalDrives(id, serialnumber, make, model, type, capacity, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced,serialnumber, make, model, type, capacity, purchasedate, mainuser))
             device_id_forced = 0
@@ -679,15 +700,19 @@ def add_equipment_tablet_form():
         serialnumber = request.form.get('serialnumber-input')
         assigneduser = request.form.get('userlist-input')
         purchase = request.form.get('purchasedate-input')
-        existing_serialnumber = cur.execute(f'SELECT serialnumber FROM Tablets WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
-        print(existing_serialnumber, serialnumber)
-        if existing_serialnumber == serialnumber:
-            return render_template('equipment_types/tablet.html',validation_code = "The tablet already exists")
+        comments = request.form.get('comments-input')
+        try:
+            existing_serialnumber = cur.execute(f'SELECT serialnumber FROM Tablets WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
+            print(existing_serialnumber, serialnumber)
+            if existing_serialnumber == serialnumber:
+                return render_template('equipment_types/tablet.html',validation_code = "The tablet already exists")
+        except:
+            pass
         if device_id_forced != 0:
-            cur.execute("INSERT INTO Tablets(id, hostname, brand, model, serialnumber, mainuser, purchasedate) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, hostname, brand, model, serialnumber, assigneduser, purchase))
+            cur.execute("INSERT INTO Tablets(id, hostname, brand, model, serialnumber, mainuser, purchasedate, comments) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, hostname, brand, model, serialnumber, assigneduser, purchase, comments))
             device_id_forced = 0
         else:
-            cur.execute("INSERT INTO Tablets(hostname, brand, model, serialnumber, mainuser, purchasedate) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname, brand, model,  serialnumber, assigneduser, purchase))
+            cur.execute("INSERT INTO Tablets(hostname, brand, model, serialnumber, mainuser, purchasedate, comments) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname, brand, model,  serialnumber, assigneduser, purchase, comments))
         conn.commit()
     return redirect(url_for("add_tablet"))
     # return render_template('equipment_types/computer.html',validation_code = "The computer was successfully added")
@@ -704,13 +729,14 @@ def update_equipement_tablet():
         serialnumber = request.form.get('serialnumber-input')
         assigneduser = request.form.get('userlist-input')
         purchase = request.form.get('purchasedate-input')
+        comments = request.form.get('comments-input')
         cur.execute("SELECT * FROM Tablets WHERE serialnumber = ?", (serialnumber,))
         contenue_entree = cur.fetchall()
         cur.execute("SELECT id FROM Users WHERE id = '{}'".format(assigneduser))
         id_bdd = cur.fetchall()
         if id_bdd == []:
             return render_template('Device_information_scan/tablet.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)   
-        cur.execute("UPDATE Tablets SET serialnumber = '{}', hostname = '{}', brand = '{}', model = '{}', mainuser = '{}', purchasedate = '{}' WHERE id = '{}'".format(serialnumber, hostname, brand, model, assigneduser, purchase, device_id))
+        cur.execute("UPDATE Tablets SET serialnumber = '{}', hostname = '{}', brand = '{}', model = '{}', mainuser = '{}', purchasedate = '{}', comments = '{}' WHERE id = '{}'".format(serialnumber, hostname, brand, model, assigneduser, purchase, comments, device_id))
         conn.commit()
         return redirect(url_for('home'))
 
@@ -895,10 +921,10 @@ def details_equipment_user():
         user_mouse = [('None', 'None', 'None', 'None')]
     user_computer = cur.execute(f'SELECT * FROM Computers WHERE mainuser=\'{id_user}\'').fetchall()
     if user_computer == []:
-        user_computer = [('None', 'None', 'None', 'None', 'None')]
+        user_computer = [('None', 'None', 'None', 'None', 'None', 'None')]
     user_tablet = cur.execute(f'SELECT * FROM Tablets WHERE mainuser=\'{id_user}\'').fetchall()
     if user_tablet == []:
-        user_tablet = [('None', 'None', 'None', 'None', 'None', 'None')]
+        user_tablet = [('None', 'None', 'None', 'None', 'None', 'None', 'None', 'None')]
     user_screen = cur.execute(f'SELECT * FROM Screens WHERE mainuser=\"{id_user}\"').fetchall()
     if user_screen == []:
         user_screen = [('None', 'None', 'None', 'None', 'None', 'None')]

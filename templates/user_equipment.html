@@ -26,13 +26,16 @@
                     <label id="secondary-text">Device Type : {{ device_type }}</label>
                 </div> -->
                 <!-- Mettre le type d'appareil (souris, ordinateur, telephone...) -->
+                {% for i in user_computer %}
                 <div id="label-input">
-                    <label id="secondary-title">Computer</label><br>
-                    <label id="secondary-text" class="print-switch-black">Serial number : {{ user_computer[0][1] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Hostname : {{ user_computer[0][2] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Main user : {{ user_computer[0][3] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Purchase date : {{ user_computer[0][4] }}</label><br>      
+                    <label id="secondary-title">Computer {{loop.index}}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Serial number : {{ i[1] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Hostname : {{ i[2] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Main user : {{ i[3] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Purchase date : {{ i[4] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Software / Comments : {{ i[5] }}</label><br>      
                 </div>
+                {% endfor %}
 
                 {% for i in user_screen %}
                 <div id="label-input">
@@ -62,15 +65,18 @@
                     <label id="secondary-text" class="print-switch-black">Main user : {{ user_phone[0][6] }}</label><br>
                 </div>
 
+                {% for i in user_tablet %}
                 <div id="label-input">
-                    <label id="secondary-title">Tablet</label><br>
-                    <label id="secondary-text" class="print-switch-black">Serial number : {{ user_tablet[0][1] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Hostname : {{ user_tablet[0][2] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Brand : {{ user_tablet[0][3] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Model : {{ user_tablet[0][4] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Main user : {{ user_tablet[0][5] }}</label><br>
-                    <label id="secondary-text" class="print-switch-black">Purchase date : {{ user_tablet[0][6] }}</label><br>      
+                    <label id="secondary-title">Tablet {{loop.index}}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Serial number : {{ i[1] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Hostname : {{ i[2] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Brand : {{ i[3] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Model : {{ i[4] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Main user : {{ i[5] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Purchase date : {{ i[6] }}</label><br>
+                    <label id="secondary-text" class="print-switch-black">Comments : {{ i[7] }}</label><br>      
                 </div>
+                {% endfor %}
 
                 <div id="label-input">
                     <label id="secondary-title">External Drive</label><br>
