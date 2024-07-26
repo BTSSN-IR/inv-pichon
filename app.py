@@ -275,19 +275,19 @@ def add_equipment_screen_form():
         serialnumber = request.form.get('serialnumber-input')
         purchasedate = request.form.get('purchase-input')
         assigneduser = request.form.get('userlist-input')
+        comments = request.form.get('comments-input')
         try:
             existing_serialnumber = cur.execute(f'SELECT serialnumber FROM Screens WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
-            print(existing_serialnumber, serialnumber)
             if existing_serialnumber == serialnumber:
                 return render_template('equipment_types/screen.html',validation_code = "The screen already exists")
         except:
             pass
         if device_id_forced != 0:
-            cur.execute("INSERT INTO Screens(id, make, model, serialnumber, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, make, model, serialnumber, purchasedate, assigneduser))
+            cur.execute("INSERT INTO Screens(id, make, model, serialnumber, purchasedate, mainuser, comments) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(device_id_forced, make, model, serialnumber, purchasedate, assigneduser, comments))
             device_id_forced = 0
         else:
         # Insertion dans la base de données de l'équipement avec les informations récupérées dans le formulaire
-            cur.execute("INSERT INTO Screens(make, model, serialnumber, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make, model, serialnumber, purchasedate, assigneduser))
+            cur.execute("INSERT INTO Screens(make, model, serialnumber, purchasedate, mainuser, comments) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make, model, serialnumber, purchasedate, assigneduser, comments))
         # Validation des changements
         conn.commit()
     return redirect(url_for("add_screen"))
@@ -304,13 +304,14 @@ def update_equipement_screen():
         serialnumber = request.form.get('serialnumber-input')
         purchasedate = request.form.get('purchase-input')
         assigneduser = request.form.get('userlist-input')
+        comments = request.form.get('comments-input')
         cur.execute("SELECT * FROM Screens WHERE serialnumber = ?", (serialnumber,))
         contenue_entree = cur.fetchall()
         cur.execute("SELECT id FROM Users WHERE id = '{}'".format(assigneduser))
         id_bdd = cur.fetchall()
         if id_bdd == []:
             return render_template('Device_information_scan/screen.html', message_erreur = "User is not in the database", contenue_entree = contenue_entree)  
-        cur.execute("UPDATE Screens SET serialnumber = '{}', make = '{}', model = '{}', purchasedate = '{}', mainuser = '{}' WHERE id = '{}'".format(serialnumber, make, model, purchasedate, assigneduser, device_id))
+        cur.execute("UPDATE Screens SET serialnumber = '{}', make = '{}', model = '{}', purchasedate = '{}', mainuser = '{}', comments = '{}' WHERE id = '{}'".format(serialnumber, make, model, purchasedate, assigneduser, comments, device_id))
         conn.commit()
         return redirect(url_for('home'))
         
@@ -927,7 +928,7 @@ def details_equipment_user():
         user_tablet = [('None', 'None', 'None', 'None', 'None', 'None', 'None', 'None')]
     user_screen = cur.execute(f'SELECT * FROM Screens WHERE mainuser=\"{id_user}\"').fetchall()
     if user_screen == []:
-        user_screen = [('None', 'None', 'None', 'None', 'None', 'None')]
+        user_screen = [('None', 'None', 'None', 'None', 'None', 'None', 'None')]
     user_phone = cur.execute(f'SELECT * FROM Phones WHERE mainuser=\"{id_user}\"').fetchall()
     if user_phone == []:
         user_phone = [('None', 'None', 'None', 'None', 'None', 'None', 'None')]

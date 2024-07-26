@@ -54,6 +54,10 @@
                         {% endfor %}
                     </select>
                 </div>
+                <div id="label-input">
+                    <label for="Comments_entry" id="secondary-text"> Comments </label>
+                    <input id="Comments_entry" type="text" name="comments-input">
+                </div>
             </div>
             <a href="">
                 <button id="valider_bouton"> Update Information <img id="image_validaion" src="/static/download-svgrepo-com.svg" style="margin: 0 7px;"></button> 
@@ -72,6 +76,7 @@
             document.getElementById('Serial_Number_entry').value = "{{contenue_entree[0][1]}}";
             document.getElementById('Purchase_date_entry').value = "{{contenue_entree[0][4]}}";
             document.getElementById('Assigned_User_entry').value = "{{contenue_entree[0][5]}}";
+            document.getElementById('Comments_entry').value = "{{contenue_entree[0][6]}}";
             document.getElementById('zoneInvisible').value = "{{contenue_entree[0][0]}}";
         </script>
     </div>
