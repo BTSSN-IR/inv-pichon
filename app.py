@@ -7,6 +7,22 @@ import qrcode.constants
 import time
 from redis import Redis
 
+# Logging
+
+import logging as log
+
+import werkzeug
+werkzeug.serving._log_add_style = False # Remove color from logs to prevent strange characters appearing in the log file
+
+try:
+    os.mkdir('logs')
+except:
+    pass
+
+log.basicConfig(filename='logs/inv-logs.log', encoding='utf-8', format='[%(levelname)s] - %(asctime)s %(message)s', datefmt='%d/%m/%Y, %H:%M:%S', level=log.NOTSET)
+
+log.info('Serveur démarré')
+
 import hashlib, base64
 
 global loggedin
@@ -47,10 +63,11 @@ def update_password_form():
                 if new_pass != '':
                     cur.execute(f"UPDATE Admins SET password = '{new_pass}' WHERE username = '{username}'")
                     conn.commit()
-                    print(f"Changed {username}'s password : Was {current_pass} now is {new_pass}")
+                    log.warning(f"Changed {username}'s password : Was {current_pass} now is {new_pass}")
                 else:
                     return render_template("edit_password.html", message="Password can't be empty")
             else:
+                log.warning(f'Wrong new password for {username}')
                 return render_template("edit_password.html", message="New passwords don't match")
         else:
             return render_template("edit_password.html", message="Current password is wrong")
@@ -78,6 +95,7 @@ def decrypt_password(encrypted_password, key=SECRET_KEY):
 
 @app.route("/logout")
 def logout():
+    log.info(f'{session[utilisateur_connecte]} logged out')
     session.pop('utilisateur_connecte', None) # Supression de l'utilisateur connecté dans la liste
     session.pop('loggedin')
     loggedin = False
@@ -92,6 +110,7 @@ def generate_qrcode(filename): # Utilisation de la biliothèque qrcode pour gén
     image = qr.make_image(fill_color = "black", back_color = "white")
     image.save(f"qrcodes/{data}.png")
     directory = os.path.join(app.root_path, 'qrcodes')
+    log.info(f'Generated QR Code for {data}')
     return send_from_directory(directory, f"{data}.png", as_attachment=True)
 
 @app.route("/")
@@ -156,6 +175,7 @@ def add_user_form():
                 mdp_bdd = cur.fetchall()
                 if (username_bdd, mdp_bdd) == ([], []): # Test si l'utilisateur n'est pas déjà dans la base de données
                     cur.execute("INSERT INTO Admins(username, password) VALUES (\"{}\",\"{}\")".format(userid,pass_encoded))
+                    log.info(f'Added {userid} to admins')
                     conn.commit()
                     return render_template('home.html')
                 return render_template('add_user.html',user_error="Le compte existe deja")
@@ -221,6 +241,7 @@ def add_equipment_computer_form():
             device_id_forced = 0
         else:
             cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser, purchasedate, licenses) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname, serialnumber, assigneduser, purchase, licenses))
+        log.info(f'Added {hostname} to Computers')
         conn.commit()
     return redirect(url_for("add_computer"))
     # return render_template('equipment_types/computer.html',validation_code = "The computer was successfully added")
@@ -252,6 +273,7 @@ def delete_equipement_computer():
     cur = conn.cursor()
     if request.method == 'POST':
         serialnumber = request.form.get('serialnumber-input')
+        log.info(f'Removed {cur.execute(f"SELECT hostname FROM Computers WHERE serialnumber = '{serialnumber}';").fetchall()[0][0]} from Computers')
         cur.execute("DELETE FROM Computers WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
     return redirect(url_for('home'))
@@ -289,6 +311,7 @@ def add_equipment_screen_form():
         # Insertion dans la base de données de l'équipement avec les informations récupérées dans le formulaire
             cur.execute("INSERT INTO Screens(make, model, serialnumber, purchasedate, mainuser, comments) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make, model, serialnumber, purchasedate, assigneduser, comments))
         # Validation des changements
+        log.info(f'Added {serialnumber} to Screens')
         conn.commit()
     return redirect(url_for("add_screen"))
     # return render_template('equipment_types/screen.html',validation_code = "The screen was successfully added") # Affichage de la page avec un message de validation ajouté
@@ -321,6 +344,7 @@ def delete_equipement_screen():
     cur = conn.cursor()
     if request.method == 'POST':
         serialnumber = request.form.get('serialnumber-input')
+        log.info(f'Removed {serialnumber} from Screens')
         cur.execute("DELETE FROM Screens WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
     return redirect(url_for('home'))
@@ -348,7 +372,6 @@ def add_equipment_phone_form():
         datacap = request.form.get('data-input')
         try:
             existing_serialnumber = cur.execute(f'SELECT serialnumber FROM Phones WHERE serialnumber = "{serialnumber}";').fetchall()[0][0]
-            print(existing_serialnumber, serialnumber)
             if existing_serialnumber == serialnumber:
                 return render_template('equipment_types/phone.html',validation_code = "The phone already exists")
         except:
@@ -358,6 +381,7 @@ def add_equipment_phone_form():
             device_id_forced = 0
         else:
             cur.execute("INSERT INTO Phones(make, model, serialnumber, purchasedate, phonenumber, mainuser, datacap) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(make,model, serialnumber, purchase, phonenumber, assigneduser, datacap))
+        log.info(f'Added {serialnumber} to Phones')
         conn.commit()
     return redirect(url_for("add_phone"))
     # return render_template('equipment_types/phone.html',validation_code = "The phone was successfully added")
@@ -391,6 +415,7 @@ def delete_equipement_phone():
     cur = conn.cursor()
     if request.method == 'POST':
         serialnumber = request.form.get('serialnumber-input')
+        log.info(f'Removed {serialnumber} from Phones')
         cur.execute("DELETE FROM Phones WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
     return redirect(url_for('home'))
@@ -424,6 +449,7 @@ def add_equipment_employee_form():
         except:
             pass
         cur.execute("INSERT INTO Users(id, firstname, lastname, department, email, phone) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(id,firstname, lastname, department, email, phone))
+        log.info(f'Added {firstname} {lastname} to Employees')
         conn.commit()
     return redirect(url_for("add_employee"))
     # return render_template('equipment_types/employee.html',validation_code = "The employee was successfully added")
@@ -454,7 +480,8 @@ def delete_equipement_employee():
     conn = sqlite3.connect('inv_pichon.db')
     cur = conn.cursor()
     if request.method == 'POST':
-        serialnumber = request.form.get('id-input')
+        id = request.form.get('id-input')
+        log.info(f'Removed {cur.execute(f"SELECT firstname FROM Users WHERE id = '{id}';").fetchall()[0][0]} {cur.execute(f"SELECT lastname FROM Users WHERE id = '{id}';").fetchall()[0][0]} from Employees')
         cur.execute("DELETE FROM Users WHERE id = ?", (id,))
         conn.commit()
     return redirect(url_for('home'))
@@ -489,6 +516,7 @@ def add_equipment_mouse_form():
             device_id_forced = 0
         else:
             cur.execute("INSERT INTO Mouse(make, model, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\")".format(manufacturer, model, serialnumber, assigneduser))
+        log.info(f'Added {serialnumber} to Mouse')
         conn.commit()
     return redirect(url_for("add_mouse"))
 
@@ -518,29 +546,10 @@ def delete_equipement_mouse():
     cur = conn.cursor()
     if request.method == 'POST':
         serialnumber = request.form.get('serialnumber-input')
+        log.info(f'Removed {serialnumber} from Mouse')
         cur.execute("DELETE FROM Mouse WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
     return redirect(url_for('home'))
-
-@app.route("/equipment_types/keyboard", methods=['GET','POST'])
-def add_keyboard():
-    conn = sqlite3.connect('inv_pichon.db')
-    cur = conn.cursor()
-    userlist = cur.execute('SELECT id from Users').fetchall()
-    userlist = [ i[0] for i in userlist]
-    return render_template('equipment_types/keyboard.html', userlist = userlist)
-
-@app.route("/add_equipment_form_keyboard_appliquer", methods = ['GET','POST'])
-def add_equipment_keyboard_form():
-    conn = sqlite3.connect('inv_pichon.db')
-    cur = conn.cursor()
-    if request.method == 'POST':
-        hostname = request.form.get('hostname-input')
-        serialnumber = request.form.get('serialnumber')
-        assigneduser = request.form.get('assigned-user')
-        cur.execute("INSERT INTO Computers(hostname, serialnumber, mainuser) VALUES (\"{}\",\"{}\",\"{}\")".format(hostname,serialnumber, assigneduser))
-    return redirect(url_for("add_keyboard"))
-    # return render_template('equipment_types/keyboard.html',validation_code = "The keyboard was successfully added")
 
 @app.route("/equipment_types/printer", methods=['GET','POST'])
 def add_printer():
@@ -571,6 +580,7 @@ def add_equipment_printer_form():
             device_id_forced = 0
         else:
             cur.execute("INSERT INTO Printers(hostname, make, model, serialnumber, purchasedate, ip) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname,make,model,serialnumber,purchasedate, ip))
+        log.info(f'Added {serialnumber} to Printers')
         conn.commit()
     return redirect(url_for("add_printer"))
     # return render_template('equipment_types/printer.html',validation_code = "The printer was successfully added")
@@ -598,6 +608,7 @@ def delete_equipement_printer():
     cur = conn.cursor()
     if request.method == 'POST':
         serialnumber = request.form.get('serialnumber-input')
+        log.info(f'Removed {serialnumber} from Printers')
         cur.execute("DELETE FROM Printers WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
     return redirect(url_for('home'))
@@ -650,6 +661,7 @@ def add_equipment_externaldrive_form():
             device_id_forced = 0
         else:
             cur.execute("INSERT INTO ExternalDrives(serialnumber, make, model, type, capacity, purchasedate, mainuser) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(serialnumber, make, model, type, capacity, purchasedate, mainuser))
+        log.info(f'Added {serialnumber} to External Drives')
         conn.commit()
     return redirect(url_for("add_externaldrive"))
     # return render_template('equipment_types/externaldrive.html',validation_code = "The drive was successfully added")
@@ -677,6 +689,7 @@ def delete_equipement_externaldrive():
     cur = conn.cursor()
     if request.method == 'POST':
         serialnumber = request.form.get('serialnumber-input')
+        log.info(f'Removed {serialnumber} from External Drives')
         cur.execute("DELETE FROM ExternalDrives WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
     return redirect(url_for('home'))
@@ -714,6 +727,7 @@ def add_equipment_tablet_form():
             device_id_forced = 0
         else:
             cur.execute("INSERT INTO Tablets(hostname, brand, model, serialnumber, mainuser, purchasedate, comments) VALUES (\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(hostname, brand, model,  serialnumber, assigneduser, purchase, comments))
+        log.info(f'Added {hostname} to Tablets')
         conn.commit()
     return redirect(url_for("add_tablet"))
     # return render_template('equipment_types/computer.html',validation_code = "The computer was successfully added")
@@ -747,6 +761,7 @@ def delete_equipement_tablet():
     cur = conn.cursor()
     if request.method == 'POST':
         serialnumber = request.form.get('serialnumber-input')
+        log.info(f'Removed {cur.execute(f"SELECT hostname FROM Tablets WHERE serialnumber = {serialnumber}").fetchall()[0][0]}')
         cur.execute("DELETE FROM Tablets WHERE serialnumber = ?", (serialnumber,))
         conn.commit()
     return redirect(url_for('home'))
