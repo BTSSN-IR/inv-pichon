@@ -5,3 +5,4 @@ wordfiles/
 inv_pichon.db
 inv_pichon.db-shm
 inv_pichon.db-wal
+logs/
